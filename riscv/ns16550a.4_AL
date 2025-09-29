@@ -1,0 +1,183 @@
+
+#define UART_REG_TRANSMIT 0
+#define UART_REG_RECEIVE 0
+#define UART_REG_FCR 2
+#define UART_REG_LCR 3 
+#define UART_REG_LSR 5
+#define UART_REG_IER 0x1
+
+#define UART_REG_FCF_FIFOENABLE 1
+#define UART_REG_LCR_THRE 1 5 <<
+#define UART_REG_LSR_DR 1
+
+
+\ "ns16550a compatible" UART DRIVER
+
+CODE initUart
+    # taken from https://github.com/safinsingh/ns16550a/tree/master
+    # Args:
+    # a0 - UART base address
+    mv  t0, a0
+80000020	82AA	c.mv	t0,a0
+
+    # 0x3 -> 8 bit word length
+    li  t1, 0x3
+80000022	430D	li	t1,3
+    sb  t1, UART_REG_LCR(t0)
+80000024	81A3 0062		sb	t1,3(t0)
+
+    # 0x1 -> enable FIFOs
+    li  t1, 0x1
+80000028	4305	li	t1,1
+    sb  t1, UART_REG_LCR(t0)
+8000002A	81A3 0062		sb	t1,3(t0)
+
+    # 0x1 -> enable reciever interrupts
+    sb  t1, UART_REG_IER(t0)
+8000002E	80A3 0062		sb	t1,1(t0)
+    ret
+80000032	8082		ret
+END-CODE
+
+CODE putc
+    # Args:
+    # a0 - character to output
+    # a1 - UART base address
+    addi sp, sp, -16  # allocate 16 bytes on stack
+80000034	1141	c.addi	sp,-16
+    sw   ra, 12(sp)   # store return address on stack
+80000036	C606	c.swsp	ra,12(sp)
+
+0:
+    lb t0, UART_REG_LCR(a1)
+80000038	8283 0035		lb	t0,3(a1)
+    andi t1, t0, UART_REG_LCR_THRE
+8000003C	F313 0202		andi	t1,t0,32
+    beqz t1, 1f
+80000040	0363 3 	L???
+    j 0b
+80000044	BFD5	c.j	0x7FFFFC38
+1:
+    sb a0, UART_REG_TRANSMIT(a1)
+80000046	8023 00A5		sb	a0,0(a1)
+
+    lw   ra, 12(sp)  # load return address from stack
+8000004A	40B2	c.lwsp	ra,12(sp)
+    addi sp, sp, 16  # restore stack pointer
+8000004C	0141	c.addi	sp,16
+    ret
+8000004E	8082		ret
+
+END-CODE
+
+CODE puts
+    # Args:
+    # a0 - string address
+    # a1 - UART base address
+    # while string byte not null
+    SaveReturnAddress
+80000050	1141	c.addi	sp,-16
+80000052	C606	c.swsp	ra,12(sp)
+    mv t3, a0
+80000054	8E2A	c.mv	t3,a0
+1:
+    lb t0, 0(t3)
+80000056	0283 000E		lb	t0,0(t3)
+    beq t0, zero, 2f
+8000005A	8663 2 	L???
+    mv a0, t0
+8000005E	8516	c.mv	a0,t0
+    call ' putc
+80000060	3FD1	c.jal	0x7FFFFC34
+    addi t3, t3, 1
+80000062	0E05	c.addi	t3,1
+    j 1b
+80000064	BFCD	c.j	0x7FFFFC56
+2:
+    RestoreReturnAddress
+80000066	40B2	c.lwsp	ra,12(sp)
+80000068	0141	c.addi	sp,16
+    ret
+8000006A	8082		ret
+
+END-CODE
+
+CODE getc_block
+    # Args:
+    # a0 - UART base address
+    # Returns:
+    # a0 - char from uart
+    SaveReturnAddress
+8000006C	1141	c.addi	sp,-16
+8000006E	C606	c.swsp	ra,12(sp)
+    mv t0, a0
+80000070	82AA	c.mv	t0,a0
+CODL getc_block_loop_start
+    call  ' getc
+80000072	2811	c.jal	0x80000086
+    beqz a0, ' notgotchar
+80000074	C501	c.beqz	s2,0x8000007C
+    RestoreReturnAddress
+80000076	40B2	c.lwsp	ra,12(sp)
+80000078	0141	c.addi	sp,16
+    ret
+8000007A	8082		ret
+END-CODE
+    
+CODE notgotchar
+    mv a0, t0
+8000007C	8516	c.mv	a0,t0
+    j ' getc_block_loop_start
+8000007E	BFD5	c.j	0x7FFFFC72
+    # should never get here
+    RestoreReturnAddress
+80000080	40B2	c.lwsp	ra,12(sp)
+80000082	0141	c.addi	sp,16
+    ret
+80000084	8082		ret
+END-CODE
+
+CODE getc
+    # Args:
+    # a0 - UART base address
+    # Returns:
+    # a0 - char from uart
+    SaveReturnAddress
+80000086	1141	c.addi	sp,-16
+80000088	C606	c.swsp	ra,12(sp)
+    add sp, sp, -8
+8000008A	1161	c.addi	sp,-8
+    sw t0, 0(sp)
+8000008C	C016	c.swsp	t0,0(sp)
+    sw t1, 4(sp)
+8000008E	C21A	c.swsp	t1,4(sp)
+    lbu t0, UART_REG_LSR(a0)
+80000090	4283 0055		lbu	t0,5(a0)
+    andi t1, t0, UART_REG_LSR_DR
+80000094	F313 0012		andi	t1,t0,1
+    beqz t1, 1f \ bytenotread
+80000098	0363 3 	L???
+    j 0f \ byteread
+8000009C	A019	c.j	0x800000A2
+1: \ bytenotread:
+    li a0, 0
+8000009E	4501	li	a0,0
+    j 2f \ end
+800000A0	A019	c.j	0x800000A6
+0: \ byteread:
+    lb a0, UART_REG_RECEIVE(a0)
+800000A2	0503 0005		lb	a0,0(a0)
+2: \ end:
+    lw t0, 0(sp)
+800000A6	4282	c.lwsp	t0,0(sp)
+    lw t1, 4(sp)
+800000A8	4312	c.lwsp	t1,4(sp)
+    add sp, sp, 8
+800000AA	0121	c.addi	sp,8
+    RestoreReturnAddress
+800000AC	40B2	c.lwsp	ra,12(sp)
+800000AE	0141	c.addi	sp,16
+    ret
+800000B0	8082		ret
+
+END-CODE

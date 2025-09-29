@@ -1,0 +1,34 @@
+
+CODE _start
+
+    call 0f
+80000000	2009	c.jal	0x80000002
+0:
+    li sp, RAM_END
+80000002	0137 8800		lui	sp,88000
+    li a0, UART_BASE
+80000006	0537 1000		lui	a0,10000
+
+    call ' initUart
+8000000A	2819	c.jal	0x80000020
+
+    li a1, UART_BASE
+8000000C	05B7 1000		lui	a1,10000
+
+    la a0, title_string_f
+80000010	4517 0000		auipc	a0,4
+80000014	0513 26F5		addi	a0,a0,623
+
+    call ' puts
+80000018	2825	c.jal	0x80000050
+
+    call ' vm_run
+8000001A	20D9	c.jal	0x800000E0
+
+    j HERE
+8000001C	A001	c.j	0x8000001C
+	ret
+8000001E	8082		ret
+
+END-CODE
+

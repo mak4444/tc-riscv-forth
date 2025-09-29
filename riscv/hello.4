@@ -1,0 +1,23 @@
+
+CODE _start
+
+    call 0f
+0:
+    li sp, RAM_END
+    li a0, UART_BASE
+
+    call ' initUart
+
+    li a1, UART_BASE
+
+    la a0, title_string_f
+
+    call ' puts
+
+    call ' vm_run
+
+    j HERE
+	ret
+
+END-CODE
+

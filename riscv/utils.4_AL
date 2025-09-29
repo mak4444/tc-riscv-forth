@@ -1,0 +1,799 @@
+
+\ .section .data
+
+.DATA_SEG SEG_SET
+
+HERE $F + $F ANDC DP M!
+
+ICREATE itofa_hex_LUT S" 0123456789abcdef" $,
+
+.TEXT_SEG SEG_SET
+
+CODE print_forth_string
+    # Args:
+    # a0 - string
+    # a1 - stringlen
+    SaveReturnAddress
+80001016	1141	c.addi	sp,-16
+80001018	C606	c.swsp	ra,12(sp)
+    mv t3, a0
+8000101A	8E2A	c.mv	t3,a0
+    mv t4, a1
+8000101C	8EAE	c.mv	t4,a1
+1:
+    beq t4, zero, 2f
+8000101E	8B63 E 	L???
+    lb a0, 0(t3)
+80001022	0503 000E		lb	a0,0(t3)
+    li a1, UART_BASE
+80001026	05B7 1000		lui	a1,10000
+    call ' putc
+8000102A	F0EF 80AF 	L???
+    addi t4, t4, -1
+8000102E	1EFD	c.addi	t4,-1
+    addi t3, t3, 1
+80001030	0E05	c.addi	t3,1
+    j 1b
+80001032	B7F5	c.j	0x80000C1E
+2:
+    RestoreReturnAddress
+80001034	40B2	c.lwsp	ra,12(sp)
+80001036	0141	c.addi	sp,16
+    ret
+80001038	8082		ret
+END-CODE
+
+CODE strcpy_max
+    # Args:
+    # a0 - string src
+    # a1 - string dst
+    # a2 - max len
+    SaveReturnAddress
+8000103A	1141	c.addi	sp,-16
+8000103C	C606	c.swsp	ra,12(sp)
+
+    addi sp, sp, -16  # allocate 16 bytes on stack
+8000103E	1141	c.addi	sp,-16
+    sw   ra, 12(sp)   # store return address on stack
+80001040	C606	c.swsp	ra,12(sp)
+
+
+    li t1, 0 # counter
+80001042	4301	li	t1,0
+    mv t2, a2
+80001044	83B2	c.mv	t2,a2
+    addi t2, t2, -1
+80001046	13FD	c.addi	t2,-1
+1:  
+    
+    lb t0, 0(a0)
+80001048	0283 0005		lb	t0,0(a0)
+    sb t0, 0(a1)
+8000104C	8023 0055		sb	t0,0(a1)
+    addi a0, a0, 1
+80001050	0505	c.addi	a0,1
+    addi a1, a1, 1
+80001052	0585	c.addi	a1,1
+    
+    addi t1, t1, 1
+80001054	0305	c.addi	t1,1
+    beq t1, t2, 2f
+80001056	0363 73 	L???
+    j 1b
+8000105A	B7FD	c.j	0x80000C48
+2:
+    li t0, '0'
+8000105C	0293 0300		addi	t0,zero,48
+    sb t0, 0(a1)
+80001060	8023 0055		sb	t0,0(a1)
+
+    lw   ra, 12(sp)  # load return address from stack
+80001064	40B2	c.lwsp	ra,12(sp)
+    addi sp, sp, 16  # restore stack pointer
+80001066	0141	c.addi	sp,16
+
+    RestoreReturnAddress
+80001068	40B2	c.lwsp	ra,12(sp)
+8000106A	0141	c.addi	sp,16
+    ret
+8000106C	8082		ret
+END-CODE
+ 
+CODE memcpy
+    # Args:
+    # a0 - destination
+    # a1 - src
+    # a2 - length
+    SaveReturnAddress
+8000106E	1141	c.addi	sp,-16
+80001070	C606	c.swsp	ra,12(sp)
+    li t0, 0
+80001072	4281	li	t0,0
+1:
+    beq t0, a2, 2f
+80001074	8C63 C2 	L???
+
+    add t1, a0, t0 # t1 = destination ptr
+80001078	0333 0055		add	t1,a0,t0
+    add t2, a1, t0 # t2 = src ptr
+8000107C	83B3 0055		add	t2,a1,t0
+    lb t3, 0(t2)
+80001080	8E03 0003		lb	t3,0(t2)
+    sb t3, 0(t1)
+80001084	0023 01C3		sb	t3,0(t1)
+
+    addi t0, t0, 1
+80001088	0285	c.addi	t0,1
+    j 1b
+8000108A	B7ED	c.j	0x80000C74
+2:
+
+    RestoreReturnAddress
+8000108C	40B2	c.lwsp	ra,12(sp)
+8000108E	0141	c.addi	sp,16
+    ret
+80001090	8082		ret
+
+END-CODE  \ of
+
+CODE memset
+    # Args:
+    # a0 - destination
+    # a1 - val (byte)
+    # a2 - length
+    SaveReturnAddress
+80001092	1141	c.addi	sp,-16
+80001094	C606	c.swsp	ra,12(sp)
+    li t0, 0
+80001096	4281	li	t0,0
+1:
+    beq t0, a2, 2f
+80001098	8863 C2 	L???
+    add t1, a0, t0 # t1 = destination ptr
+8000109C	0333 0055		add	t1,a0,t0
+    sb a1, 0(t1)
+800010A0	0023 00B3		sb	a1,0(t1)
+    addi t0, t0, 1
+800010A4	0285	c.addi	t0,1
+    j 1b
+800010A6	BFCD	c.j	0x80000C98
+2:
+
+    RestoreReturnAddress
+800010A8	40B2	c.lwsp	ra,12(sp)
+800010AA	0141	c.addi	sp,16
+    ret
+800010AC	8082		ret
+END-CODE  \ eof
+
+CODE strlen
+    # Args:
+    # a0 - string
+    # Returns:
+    # a1 - length
+    SaveReturnAddress
+800010AE	1141	c.addi	sp,-16
+800010B0	C606	c.swsp	ra,12(sp)
+    li a1, 0
+800010B2	4581	li	a1,0
+1:
+    lw t0, 0(a0)
+800010B4	2283 0005		lw	t0,0(a0)
+    beq t0, zero, 2f
+800010B8	8563 2 	L???
+    addi a1, a1, 1
+800010BC	0585	c.addi	a1,1
+    addi a0, a0, 1
+800010BE	0505	c.addi	a0,1
+    j 1b
+800010C0	BFD5	c.j	0x80000CB4
+2:
+    RestoreReturnAddress
+800010C2	40B2	c.lwsp	ra,12(sp)
+800010C4	0141	c.addi	sp,16
+    ret
+800010C6	8082		ret
+END-CODE  \ eof
+
+CODE strcmp
+    # Args:
+    # a0 - C string 1
+    # a1 - C string 2
+    # Returns:
+    # a2 - 1 if string 1 contents == string 2 contents else 0
+    SaveReturnAddress
+800010C8	1141	c.addi	sp,-16
+800010CA	C606	c.swsp	ra,12(sp)
+    li a2, 0
+800010CC	4601	li	a2,0
+    mv t0, a0
+800010CE	82AA	c.mv	t0,a0
+    mv t1, a1
+800010D0	832E	c.mv	t1,a1
+    call ' strlen 
+800010D2	3FF1	c.jal	0x80000CAE
+    mv t2, a1      # t2 == str1 length
+800010D4	83AE	c.mv	t2,a1
+    mv a0, t1
+800010D6	851A	c.mv	a0,t1
+    call ' strlen
+800010D8	3FD9	c.jal	0x80000CAE
+    mv t3, a1      # t3 == str2 length
+800010DA	8E2E	c.mv	t3,a1
+    bne t2, t3, 1f   
+800010DC	9E63 1C3 	L???
+    # lengths are equal
+2:
+    lw a0, 0(t0)
+800010E0	A503 0002		lw	a0,0(t0)
+    lw a1, 0(t1)
+800010E4	2583 0003		lw	a1,0(t1)
+    bne a0, a1, 1f
+800010E8	1863 B5 	L???
+    addi t0, t0, 1
+800010EC	0285	c.addi	t0,1
+    addi t1, t1, 1
+800010EE	0305	c.addi	t1,1
+    addi t2, t2, -1
+800010F0	13FD	c.addi	t2,-1
+    bne t2, zero, 2b
+800010F2	97E3 FE03 	L???
+    li a2, 1
+800010F6	4605	li	a2,1
+1:
+    
+    RestoreReturnAddress
+800010F8	40B2	c.lwsp	ra,12(sp)
+800010FA	0141	c.addi	sp,16
+    ret
+800010FC	8082		ret
+END-CODE  \ eof
+
+\ Compare a forth string to a C string
+CODE strcmp_fs_cs
+    # Args:
+    # a0 - C string 
+    # a1 - F string 
+    # a2 - F string length
+    # Returns:
+    # a3 - 1 if string 1 contents == string 2 contents else 0
+    # SaveReturnAddress
+    # j c_fs_notequal
+    mv t6, ra
+800010FE	8F86	c.mv	t6,ra
+    mv t4, a1
+80001100	8EAE	c.mv	t4,a1
+    mv t5, a0
+80001102	8F2A	c.mv	t5,a0
+
+
+    call ' strlen
+80001104	376D	c.jal	0x80000CAE
+
+
+    mv a0, t5
+80001106	857A	c.mv	a0,t5
+    bne a1, a2, 3f \ c_fs_notequal
+80001108	9463 2C5 	L???
+    mv a1, t4
+8000110C	85F6	c.mv	a1,t4
+    li t0, 0
+8000110E	4281	li	t0,0
+1:
+    mv t1, a0
+80001110	832A	c.mv	t1,a0
+    mv t2, a1
+80001112	83AE	c.mv	t2,a1
+    add t1, t1, t0
+80001114	9316	c.add	t1,t0
+    add t2, t2, t0
+80001116	9396	c.add	t2,t0
+    lb t1, 0(t1)
+80001118	0303 0003		lb	t1,0(t1)
+    lb t2, 0(t2)
+8000111C	8383 0003		lb	t2,0(t2)
+    bne t1, t2, 3f \ c_fs_notequal
+80001120	1863 73 	L???
+    addi t0, t0, 1
+80001124	0285	c.addi	t0,1
+    bne t0, a2, 1b
+80001126	95E3 FEC2 	L???
+4: \ c_fs_equal:  !!!!!
+    li a3, 1
+8000112A	4685	li	a3,1
+    mv ra, t6
+8000112C	80FE	c.mv	ra,t6
+    # RestoreReturnAddress
+    ret
+8000112E	8082		ret
+3: \ c_fs_notequal:
+    li a3, 0
+80001130	4681	li	a3,0
+    mv ra, t6
+80001132	80FE	c.mv	ra,t6
+    # RestoreReturnAddress
+    ret
+80001134	8082		ret
+END-CODE
+
+ICREATE fatoi_error_msg S" fatoi error" $, $A C, 0 C,
+80001136	6166		???
+80001138	6F74		???
+8000113A	2069	c.jal	0x800011C4
+8000113C	7265		???
+8000113E	6F72		???
+80001140	0A72	c.slli	s4,28
+80001142	6600		???
+ICREATE fatoi_error_msg_malformed S" fatoi error malformed string. '-' must be at end" $, $A C, 0 C,
+80001144	7461		???
+80001146	696F 6520 	L???
+8000114A	7272		???
+8000114C	726F 6D20 	L???
+80001150	6C61		???
+80001152	6F66		???
+80001154	6D72		???
+80001156	6465		???
+80001158	7320		???
+8000115A	7274		???
+8000115C	6E69		???
+8000115E	2E67 2720 	L???
+80001162	272D	c.jal	0x8000148C
+80001164	6D20		???
+80001166	7375		???
+80001168	2074		???
+8000116A	6562		???
+8000116C	6120		???
+8000116E	2074		???
+80001170	6E65		???
+80001172	0A64		???
+80001174	6600		???
+ICREATE fatoi_error_msg_invalid S" fatoi error invalid chars" $, $A C, 0 C,
+80001176	7461		???
+80001178	696F 6520 	L???
+8000117C	7272		???
+8000117E	726F 6920 	L???
+80001182	766E		???
+80001184	6C61		???
+80001186	6469		???
+80001188	6320		???
+8000118A	6168		???
+8000118C	7372		???
+8000118E	000A	c.slli	zero,2
+
+CODE fatoi
+    # Args:
+    # a0 - forth string
+    # a1 - string length
+    # Returns:
+    # a2 - converted num
+    SaveReturnAddress
+80001190	1141	c.addi	sp,-16
+80001192	C606	c.swsp	ra,12(sp)
+    li a2, 0
+80001194	4601	li	a2,0
+    bltz a1, 2f \ fatoi_end
+80001196	CF63 405 	L???
+    beqz a1, 2f \ fatoi_end
+8000119A	CDA9	c.beqz	s3,0x800011F4
+    # length > 0
+    li t0, 1  # t0 = order of magnitude
+8000119C	4285	li	t0,1
+    addi a1, a1, -1
+8000119E	15FD	c.addi	a1,-1
+1:
+    add t1, a1, a0 # t1 points to end of string
+800011A0	8333 00A5		add	t1,a1,a0
+    lb t1, 0(t1)   # deref byte at end of string
+800011A4	0303 0003		lb	t1,0(t1)
+    
+    li t2, '-'
+800011A8	0393 02D0		addi	t2,zero,45
+    beq t1, t2, 3f \ fatoi_minus
+800011AC	0963 273 	L???
+
+    la t3, fatoi_error_msg_invalid
+800011B0	0E17 0000		auipc	t3,0
+800011B4	0E13 FC5E		addi	t3,t3,1989
+    li t2, '0'
+800011B8	0393 0300		addi	t2,zero,48
+    blt t1, t2, 4f \ fatoi_error_end
+800011BC	4F63 273 	L???
+    li t2, '9'
+800011C0	0393 0390		addi	t2,zero,57
+    bgt t1, t2, 4f \ fatoi_error_end
+800011C4	CB63 263 	L???
+    
+    li t2, '0'       
+800011C8	0393 0300		addi	t2,zero,48
+    sub t1, t1, t2 # convert from ascii to a number from 0-9
+800011CC	0333 4073		sub	t1,t1,t2
+    mul t1, t1, t0 # multiply by order of magnitude
+800011D0	0333 0253		mul	t1,t1,t0
+    add a2, a2, t1 # add to total
+800011D4	961A	c.add	a2,t1
+    li t2, 10
+800011D6	43A9	li	t2,10
+    mul t0, t0, t2 # increase order of magnitude
+800011D8	82B3 0272		mul	t0,t0,t2
+    j 5f \ fatoi_minus_end
+800011DC	A809	c.j	0x800011EE
+3: \ fatoi_minus:
+    li t2, -1
+800011DE	53FD	li	t2,-1
+    mul a2, a2, t2
+800011E0	0633 0276		mul	a2,a2,t2
+    la t3, fatoi_error_msg_malformed
+800011E4	0E17 0000		auipc	t3,0
+800011E8	0E13 F5FE		addi	t3,t3,1887
+    bnez a1, 4f \ fatoi_error_end
+800011EC	E599	c.bnez	s3,0x800011FA
+5: \ fatoi_minus_end:
+    beqz a1, 2f
+800011EE	C199	c.beqz	s3,0x800011F4
+    addi a1, a1, -1
+800011F0	15FD	c.addi	a1,-1
+    j 1b
+800011F2	B77D	c.j	0x80000DA0
+2: \ fatoi_end:
+    RestoreReturnAddress
+800011F4	40B2	c.lwsp	ra,12(sp)
+800011F6	0141	c.addi	sp,16
+    ret
+800011F8	8082		ret
+4: \ fatoi_error_end:
+    # report error
+    mv a0, t3
+800011FA	8572	c.mv	a0,t3
+    li a1, UART_BASE
+800011FC	05B7 1000		lui	a1,10000
+    call ' puts
+80001200	E0EF E51F 	L???
+    RestoreReturnAddress
+80001204	40B2	c.lwsp	ra,12(sp)
+80001206	0141	c.addi	sp,16
+    ret
+80001208	8082		ret
+END-CODE
+
+CODE abs
+    # Args:
+    # a0 - integer
+    # Returns:
+    # a0 - integer
+    SaveReturnAddress
+8000120A	1141	c.addi	sp,-16
+8000120C	C606	c.swsp	ra,12(sp)
+    li t0, 0
+8000120E	4281	li	t0,0
+    blt a0, t0, 1f
+80001210	4563 55 	L???
+    RestoreReturnAddress
+80001214	40B2	c.lwsp	ra,12(sp)
+80001216	0141	c.addi	sp,16
+    ret
+80001218	8082		ret
+1:
+    li t0, -1
+8000121A	52FD	li	t0,-1
+    mul a0, a0, t0
+8000121C	0533 0255		mul	a0,a0,t0
+    RestoreReturnAddress
+80001220	40B2	c.lwsp	ra,12(sp)
+80001222	0141	c.addi	sp,16
+    ret
+80001224	8082		ret
+END-CODE
+
+CODE num_chars_required
+    # Args:
+    # a0 - integer
+    # Return:
+    # a1 - outNumChars
+    # Note:
+    # Expects that a0 > 0
+    SaveReturnAddress
+80001226	1141	c.addi	sp,-16
+80001228	C606	c.swsp	ra,12(sp)
+
+    li a1, 1
+8000122A	4585	li	a1,1
+1:
+    li t0, 10
+8000122C	42A9	li	t0,10
+    blt a0, t0, 3f \ num_between_0_and_9
+8000122E	4663 55 	L???
+    addi a1, a1, 1
+80001232	0585	c.addi	a1,1
+    div a0, a0, t0
+80001234	4533 0255		div	a0,a0,t0
+    j 1b
+80001238	BFD5	c.j	0x80000E2C
+3: \ num_between_0_and_9:
+
+    RestoreReturnAddress
+8000123A	40B2	c.lwsp	ra,12(sp)
+8000123C	0141	c.addi	sp,16
+    ret
+8000123E	8082		ret
+
+END-CODE
+
+CODE itofa
+    # Args:
+    # a0 - integer
+    # a1 - outBuf
+    # a2 - outBufMaxSize
+    SaveReturnAddress
+80001240	1141	c.addi	sp,-16
+80001242	C606	c.swsp	ra,12(sp)
+    la t0, vm_flags
+80001244	7297 0000		auipc	t0,7
+80001248	8293 DBC2		addi	t0,t0,1468
+    lw t0, 0(t0)
+8000124C	A283 0002		lw	t0,0(t0)
+    andi t0, t0, 8 # NUM_IO_HEX_BIT
+80001250	F293 0082		andi	t0,t0,8
+    beqz t0, 3f \ decimal_io
+80001254	8463 2 	L???
+\ hex_io:
+    call 4f \ itofa_hex
+80001258	2031	c.jal	0x80001264
+    j 5f \ num_io_end
+8000125A	A011	c.j	0x8000125E
+3: \ decimal_io:
+    call ' itofa_dec
+8000125C	2875	c.jal	0x80001318
+5: \ num_io_end:
+    RestoreReturnAddress
+8000125E	40B2	c.lwsp	ra,12(sp)
+80001260	0141	c.addi	sp,16
+    ret
+80001262	8082		ret
+4:
+END-CODE
+
+CODE itofa_hex
+    # Args:
+    # a0 - integer
+    # a1 - outBuf
+    # a2 - outBufMaxSize
+    SaveReturnAddress
+80001264	1141	c.addi	sp,-16
+80001266	C606	c.swsp	ra,12(sp)
+    li t0, '0'
+80001268	0293 0300		addi	t0,zero,48
+    sb t0, 0(a1)
+8000126C	8023 0055		sb	t0,0(a1)
+    li t0, 'x'
+80001270	0293 0780		addi	t0,zero,120
+    sb t0, 1(a1)
+80001274	80A3 0055		sb	t0,1(a1)
+
+    la t2, itofa_hex_LUT
+80001278	7397 0000		auipc	t2,7
+8000127C	8393 0183		addi	t2,t2,24
+
+    srli t1, a0, 28
+80001280	5313 01C5		srli	t1,a0,28
+    andi t0, t1, 0xf
+80001284	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+80001288	929E	c.add	t0,t2
+    lb t0, 0(t0)
+8000128A	8283 0002		lb	t0,0(t0)
+    sb t0, 2(a1)
+8000128E	8123 0055		sb	t0,2(a1)
+
+    srli t1, a0, 24
+80001292	5313 0185		srli	t1,a0,24
+    andi t0, t1, 0xf
+80001296	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+8000129A	929E	c.add	t0,t2
+    lb t0, 0(t0)
+8000129C	8283 0002		lb	t0,0(t0)
+    sb t0, 3(a1)
+800012A0	81A3 0055		sb	t0,3(a1)
+
+    srli t1, a0, 20
+800012A4	5313 0145		srli	t1,a0,20
+    andi t0, t1, 0xf
+800012A8	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+800012AC	929E	c.add	t0,t2
+    lb t0, 0(t0)
+800012AE	8283 0002		lb	t0,0(t0)
+    sb t0, 4(a1)
+800012B2	8223 0055		sb	t0,4(a1)
+
+    srli t1, a0, 16
+800012B6	5313 0105		srli	t1,a0,16
+    andi t0, t1, 0xf
+800012BA	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+800012BE	929E	c.add	t0,t2
+    lb t0, 0(t0)
+800012C0	8283 0002		lb	t0,0(t0)
+    sb t0, 5(a1)
+800012C4	82A3 0055		sb	t0,5(a1)
+
+    srli t1, a0, 12
+800012C8	5313 00C5		srli	t1,a0,12
+    andi t0, t1, 0xf
+800012CC	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+800012D0	929E	c.add	t0,t2
+    lb t0, 0(t0)
+800012D2	8283 0002		lb	t0,0(t0)
+    sb t0, 6(a1)
+800012D6	8323 0055		sb	t0,6(a1)
+
+    srli t1, a0, 8
+800012DA	5313 0085		srli	t1,a0,8
+    andi t0, t1, 0xf
+800012DE	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+800012E2	929E	c.add	t0,t2
+    lb t0, 0(t0)
+800012E4	8283 0002		lb	t0,0(t0)
+    sb t0, 7(a1)
+800012E8	83A3 0055		sb	t0,7(a1)
+
+    srli t1, a0, 4
+800012EC	5313 0045		srli	t1,a0,4
+    andi t0, t1, 0xf
+800012F0	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+800012F4	929E	c.add	t0,t2
+    lb t0, 0(t0)
+800012F6	8283 0002		lb	t0,0(t0)
+    sb t0, 8(a1)
+800012FA	8423 0055		sb	t0,8(a1)
+
+    mv t1, a0
+800012FE	832A	c.mv	t1,a0
+    andi t0, t1, 0xf
+80001300	7293 00F3		andi	t0,t1,15
+    add t0, t0, t2
+80001304	929E	c.add	t0,t2
+    lb t0, 0(t0)
+80001306	8283 0002		lb	t0,0(t0)
+    sb t0, 9(a1)
+8000130A	84A3 0055		sb	t0,9(a1)
+
+    sb zero, 10(a1)
+8000130E	8523 0005		sb	zero,10(a1)
+
+    RestoreReturnAddress
+80001312	40B2	c.lwsp	ra,12(sp)
+80001314	0141	c.addi	sp,16
+    ret
+80001316	8082		ret
+END-CODE
+
+CODE itofa_dec
+    # Args:
+    # a0 - integer
+    # a1 - outBuf
+    # a2 - outBufMaxSize
+    SaveReturnAddress
+80001318	1141	c.addi	sp,-16
+8000131A	C606	c.swsp	ra,12(sp)
+    
+    li t0, 0
+8000131C	4281	li	t0,0
+    blt a0, t0, 3f \ itofa_neg
+8000131E	4463 55 	L???
+\ itofa_pos:
+    li t6, 0   # t6 == do we add the '-' sign at start of string
+80001322	4F81	li	t6,0
+    j 1f
+80001324	A019	c.j	0x8000132A
+3: \ itofa_neg:
+    li t6, 1
+80001326	4F85	li	t6,1
+    call ' abs
+80001328	35CD	c.jal	0x80000E0A
+1:
+    # by here a0 is > 0
+    mv t1, a0
+8000132A	832A	c.mv	t1,a0
+    mv t2, a1
+8000132C	83AE	c.mv	t2,a1
+    call ' num_chars_required
+8000132E	3DE5	c.jal	0x80000E26
+    mv t3, a1        # t3 = number of chars required
+80001330	8E2E	c.mv	t3,a1
+    add t3, t3, t6   # possibly add 1 for the - sign
+80001332	9E7E	c.add	t3,t6
+    mv a0, t1        # restore a0
+80001334	851A	c.mv	a0,t1
+    mv a1, t2        # restore a1
+80001336	859E	c.mv	a1,t2
+    add t1, t3, a1   # t1 - ptr for zero terminator
+80001338	0333 00BE		add	t1,t3,a1
+    sb zero, 0(t1)   # store zero at end
+8000133C	0023 0003		sb	zero,0(t1)
+    addi t3, t3, -1  # -1 to get index of last char  
+80001340	1E7D	c.addi	t3,-1
+1:
+    li t0, 10
+80001342	42A9	li	t0,10
+    rem t1, a0, t0   # t1 = a0 % 10  
+80001344	6333 0255		rem	t1,a0,t0
+    addi t1, t1, '0' # t1 = char
+80001348	0313 0303		addi	t1,t1,48
+    add t0, a1, t3   # t0 = ptr to write char to
+8000134C	82B3 01C5		add	t0,a1,t3
+    sb t1, 0(t0)     # store byte at char
+80001350	8023 0062		sb	t1,0(t0)
+    li t0, 10        # 
+80001354	42A9	li	t0,10
+    blt a0, t0, 2f   # terminate loop if a0 < 10
+80001356	4663 55 	L???
+    div a0, a0, t0   # a0 /= 10
+8000135A	4533 0255		div	a0,a0,t0
+    addi t3, t3, -1  # t3-- . move write index 1 to the left
+8000135E	1E7D	c.addi	t3,-1
+    j 1b             # 
+80001360	B7CD	c.j	0x80000F42
+2:
+    bgtz t6, 4f \ add_neg_sign
+80001362	4363 1F0 	L???
+    j 5f \ add_neg_sign_end
+80001366	A029	c.j	0x80001370
+4: \ add_neg_sign:
+    li t0, '-'
+80001368	0293 02D0		addi	t0,zero,45
+    sb t0, 0(a1)
+8000136C	8023 0055		sb	t0,0(a1)
+5: \ add_neg_sign_end:
+
+    RestoreReturnAddress
+80001370	40B2	c.lwsp	ra,12(sp)
+80001372	0141	c.addi	sp,16
+    ret
+80001374	8082		ret
+
+END-CODE
+	
+
+CODE forth_string_to_c
+    # Args:
+    # a0 - outCStringBuf
+    # a1 - inString
+    # a2 - inStringLen
+    # SaveReturnAddress
+    mv t2, a0
+80001376	83AA	c.mv	t2,a0
+    mv t3, a1
+80001378	8E2E	c.mv	t3,a1
+    mv t4, a2
+8000137A	8EB2	c.mv	t4,a2
+    
+    li t1, 0
+8000137C	4301	li	t1,0
+1:
+    beq t1, a2, 2f
+8000137E	0A63 C3 	L???
+    lb t0, 0(a1)
+80001382	8283 0005		lb	t0,0(a1)
+    sb t0, 0(a0)
+80001386	0023 0055		sb	t0,0(a0)
+    addi a0, a0, 1
+8000138A	0505	c.addi	a0,1
+    addi a1, a1, 1
+8000138C	0585	c.addi	a1,1
+    addi t1, t1, 1
+8000138E	0305	c.addi	t1,1
+    j 1b
+80001390	B7FD	c.j	0x80000F7E
+2:
+    add t0, t2, t4
+80001392	82B3 01D3		add	t0,t2,t4
+    sb zero, 0(t0)
+80001396	8023 0002		sb	zero,0(t0)
+    # RestoreReturnAddress
+    ret
+8000139A	8082		ret
+END-CODE

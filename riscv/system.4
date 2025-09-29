@@ -1,0 +1,1141 @@
+
+HERE $7 + 7 ANDC DP M! \ align !!!!!
+
+\ first_system_word:
+
+RV_ASM_BIG
+word_header LineBuffer_, "LineBuffer_", 0, LineBufferSize_, last_vm_word
+    la t1, 3f \ LineBuffer__data
+    PushDataStack t1
+    end_word
+3: \ LineBuffer__data:
+   128 IALLOT \ .fill 128, 1, 0
+
+
+word_header LineBufferSize_, "LineBufferSize_", 0, Tokenbuffer_, LineBuffer_
+    la t1, 3f \ LineBufferSize__data
+    PushDataStack t1
+    end_word
+3: \ LineBufferSize__data:
+    .word 0
+
+
+word_header Tokenbuffer_, "Tokenbuffer_", 0, TokenBufferSize_, LineBufferSize_
+    la t1, 3f \ Tokenbuffer__data
+    PushDataStack t1
+    end_word
+3: \ Tokenbuffer__data:
+    32 IALLOT \ .fill 32, 1, 0
+
+ 
+word_header TokenBufferSize_, "TokenBufferSize_", 0, LineBufferI_, Tokenbuffer_
+    la t1, 3f \ TokenBufferSize__data
+    PushDataStack t1
+    end_word
+3: \ TokenBufferSize__data:
+    .word 0
+
+
+word_header LineBufferI_, "LineBufferI_", 0, EvalErrorFlag_, TokenBufferSize_
+    la t1, 3f \ LineBufferI__data
+    PushDataStack t1
+    end_word
+3: \ LineBufferI__data:
+    .word 0
+
+word_header EvalErrorFlag_, "EvalErrorFlag_", 0, flags, LineBufferI_
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3:  .word 0
+
+word_header flags, "flags", 0, LiteralStr_, EvalErrorFlag_
+    la t1, 3f \ flags_data
+    PushDataStack t1
+    end_word
+3: \ flags_data:
+    .word 0
+
+
+word_header LiteralStr_, "LiteralStr_", 0, ReturnStr_, flags
+    li t1, 7
+    PushDataStack t1
+    la t1, 3f \ LiteralStr__data
+    PushDataStack t1
+    end_word
+3: \ LiteralStr__data:
+    S" literal" $, $13 L, $13 L, 1 C, \ !!!!! 
+    HERE 3 + 3 ANDC DP M! \ .align 4
+
+
+word_header ReturnStr_, "ReturnStr_", 0, UnknownTokenStartStr_, LiteralStr_
+    li t1, 1
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3: \     .ascii "r"
+	'r' C,  $13 L, $13 L, 1 C,  $1300 w, \ !!!!! 
+
+word_header UnknownTokenStartStr_, "UnknownTokenStartStr_", 0, UnknownTokenEndStr_, ReturnStr_
+    li t1, 14
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3:    S" unknowntoken:'" $,   1 w, $13 l, $13 l,  $13 l,
+
+
+word_header UnknownTokenEndStr_, "UnknownTokenEndStr_", 0, branch0TokenStr_, UnknownTokenStartStr_
+    li t1, 3
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3: CHAR ' C, $A c,   $13 l, $13 l,  $1 W,
+
+
+word_header branch0TokenStr_, "branch0TokenStr_", 0, branchTokenStr_, UnknownTokenEndStr_
+    li t1, 2
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3:  S" b0" $, \ .ascii "b0"
+    $13 l, $13 l,  1 w,
+
+
+word_header branchTokenStr_, "branchTokenStr_", 0, pushReturnStr_, branch0TokenStr_
+    li t1, 1
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3:  'b' c, \ .ascii "b"
+    $13 l, $13 l, 1 w, $13 c,
+
+
+word_header pushReturnStr_, "pushReturnStr_", 0, popReturnStr_, branchTokenStr_
+    li t1, 2
+    PushDataStack t1
+    la t1, 3f \ pushReturnStr__data
+    PushDataStack t1
+    end_word
+3:  s" >R" $, \ .ascii ">R"
+    $13 l, $13 l, 1 w, 
+
+word_header popReturnStr_, "popReturnStr_", 0, addStr_, pushReturnStr_
+    li t1, 2
+    PushDataStack t1
+    la t1, 3f
+    PushDataStack t1
+    end_word
+3:
+    s" <R" $, \ .ascii "<R"
+    $13 l, $13 l, 1 w, 
+
+
+word_header addStr_, "addStr_", 0, twodupStr_, popReturnStr_
+    li t1, 1
+    PushDataStack t1
+    la t1, 3f \ addStr__data
+    PushDataStack t1
+    end_word
+3:  '+' c, \  .ascii "+"
+    $13 l, $13 l, 1 w, $13 c,
+
+word_header twodupStr_, "twodupStr_", 0, equalsStr_, addStr_
+    li t1, 4
+    PushDataStack t1
+    la t1, 3f \ twodupStr__data
+    PushDataStack t1
+    end_word
+3:
+    s" 2dup" $, \ .ascii "2dup"
+    $13 l, $13 l,
+
+word_header equalsStr_, "equalsStr_", 0, dropStr_, twodupStr_
+    li t1, 1
+    PushDataStack t1
+    la t1, 3f \ equalsStr__data
+    PushDataStack t1
+    end_word
+3:   '=' c, \ .ascii "="
+    $13 l, $13 l, 1 w, $13 c,
+
+
+word_header dropStr_, "dropStr_", 0, setCompile, equalsStr_
+    li t1, 4
+    PushDataStack t1
+    la t1, 3f \ dropStr__data
+    PushDataStack t1
+    end_word
+3:  s" drop" $, \ .ascii "drop"
+	$13 l, $13 l,
+
+word_header setCompile, "setCompile", 0, setInterpret, dropStr_
+    secondary_word setCompile
+    .word flags_impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_or_impl
+    .word flags_impl
+    .word store_impl
+    .word return_impl
+
+word_header setInterpret, "setInterpret", 0, get_compile_bit, setCompile
+    secondary_word setInterpret
+    .word flags_impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word literal_impl
+    .word -1
+    .word forth_xor_impl
+    .word forth_and_impl
+    .word flags_impl
+    .word store_impl
+    .word return_impl
+
+word_header get_compile_bit, "get_compile_bit", 0, i, setInterpret
+    secondary_word get_compile_bit
+    .word flags_impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_and_impl
+    .word literal_impl
+    .word 0
+    .word greaterThan_impl
+S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+S_THEN
+    .word literal_impl
+    .word 0
+    .word return_impl
+
+word_header i, "i", 0, j, get_compile_bit
+    secondary_word i
+    .word literal_impl
+    .word -2
+    .word return_stack_index_impl
+    .word loadCell_impl
+    .word return_impl
+
+
+word_header j, "j", 0, print, i
+    secondary_word j
+    .word literal_impl
+    .word -4
+    .word return_stack_index_impl
+    .word loadCell_impl
+    .word return_impl
+
+
+word_header print, "print", 0, logic_and, j
+    secondary_word print
+    .word literal_impl
+    .word 0
+S_AHEAD
+S_BEGIN
+    .word push_return_impl
+    .word push_return_impl
+    .word dup_impl
+    .word i_impl
+    .word forth_add_impl
+    .word loadByte_impl
+    .word emit_impl
+    .word pop_return_impl
+    .word pop_return_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+SWAP
+S_THEN
+    .word dup2_impl
+    .word equals_impl
+S_UNTIL
+    .word drop_impl
+    .word drop_impl
+    .word drop_impl
+    .word return_impl
+
+
+word_header logic_and, "&&", 0, logic_or, print
+    secondary_word logic_and
+S_IF
+	S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+	S_ELSE
+    .word literal_impl
+    .word 0
+    .word return_impl
+	S_THEN
+S_ELSE
+    .word drop_impl
+    .word literal_impl
+    .word 0
+    .word return_impl
+S_THEN
+    .word return_impl
+
+word_header logic_or, "||", 0, logic_not, logic_and
+    secondary_word logic_or
+S_IF
+    .word drop_impl
+    .word literal_impl
+    .word 1
+    .word return_impl
+S_THEN
+S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+S_THEN
+    .word literal_impl
+    .word 0
+    .word return_impl
+    .word return_impl
+
+
+word_header logic_not, "logic_not", 0, gte, logic_or
+    secondary_word logic_not
+S_IF
+    .word literal_impl
+    .word 0
+S_ELSE
+    .word literal_impl
+    .word 1
+S_THEN
+    .word return_impl
+
+
+word_header gte, ">=", 0, lte, logic_not
+    secondary_word gte
+    .word dup2_impl
+    .word equals_impl
+    .word rot_impl
+    .word rot_impl
+    .word greaterThan_impl
+    .word logic_or_impl
+    .word return_impl
+
+
+word_header lte, "<=", 0, isCharNumeric, gte
+    secondary_word lte
+    .word dup2_impl
+    .word equals_impl
+    .word rot_impl
+    .word rot_impl
+    .word lessThan_impl
+    .word logic_or_impl
+    .word return_impl
+
+
+word_header isCharNumeric, "isCharNumeric", 0, isStringValidNumber, lte
+    secondary_word isCharNumeric
+    .word dup_impl
+    .word literal_impl
+    .word 48
+    .word gte_impl
+    .word swap_impl
+    .word literal_impl
+    .word 57
+    .word lte_impl
+    .word logic_and_impl
+    .word return_impl
+
+
+word_header isStringValidNumber, "isStringValidNumber", 0, getHeaderNext, isCharNumeric
+    secondary_word isStringValidNumber
+    .word literal_impl
+    .word 0
+S_AHEAD  \ to loop enter 
+S_BEGIN SWAP
+    .word push_return_impl
+    .word push_return_impl
+    .word i_impl
+    .word literal_impl
+    .word 0
+    .word equals_impl
+S_IF
+    .word dup_impl
+    .word loadByte_impl
+    .word dup_impl
+    .word literal_impl
+    .word 45
+    .word equals_impl
+    .word swap_impl
+    .word isCharNumeric_impl
+    .word logic_or_impl
+    .word logic_not_impl
+	S_IF
+    .word drop_impl
+    .word pop_return_impl
+    .word pop_return_impl
+    .word drop_impl
+    .word drop_impl
+    .word literal_impl
+    .word 0
+    .word return_impl
+	S_THEN
+S_ELSE
+    .word dup_impl
+    .word i_impl
+    .word forth_add_impl
+    .word loadByte_impl
+    .word isCharNumeric_impl
+    .word logic_not_impl
+	S_IF
+    .word drop_impl
+    .word pop_return_impl
+    .word pop_return_impl
+    .word drop_impl
+    .word drop_impl
+    .word literal_impl
+    .word 0
+    .word return_impl
+	S_THEN
+S_THEN
+    .word pop_return_impl
+    .word pop_return_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+	S_THEN \ loop enter
+    .word dup2_impl
+    .word equals_impl
+	S_UNTIL
+    .word drop_impl
+    .word drop_impl
+    .word drop_impl
+    .word literal_impl
+    .word 1
+    .word return_impl
+
+
+word_header getHeaderNext, "getHeaderNext", 0, getHeaderPrev, isStringValidNumber
+    secondary_word getHeaderNext
+    .word literal_impl
+    .word 32
+    .word forth_add_impl
+    .word loadCell_impl
+    .word return_impl
+
+
+word_header getHeaderPrev, "getHeaderPrev", 0, setHeaderPrev, getHeaderNext
+    secondary_word getHeaderPrev
+    .word literal_impl
+    .word 36
+    .word forth_add_impl
+    .word loadCell_impl
+    .word return_impl
+
+
+word_header setHeaderPrev, "setHeaderPrev", 0, setHeaderNext, getHeaderPrev
+    secondary_word setHeaderPrev
+    .word literal_impl
+    .word 36
+    .word forth_add_impl
+    .word store_impl
+    .word return_impl
+
+
+word_header setHeaderNext, "setHeaderNext", 0, setHeaderImmediate, setHeaderPrev
+    secondary_word setHeaderNext
+    .word literal_impl
+    .word 32
+    .word forth_add_impl
+    .word store_impl
+    .word return_impl
+
+
+word_header setHeaderImmediate, "setHeaderImmediate", 0, getHeaderImmediate, setHeaderNext
+    secondary_word setHeaderImmediate
+    .word literal_impl
+    .word 40
+    .word forth_add_impl
+    .word store_impl
+    .word return_impl
+
+
+word_header getHeaderImmediate, "getHeaderImmediate", 0, getXTHeader, setHeaderImmediate
+    secondary_word getHeaderImmediate
+    .word literal_impl
+    .word 40
+    .word forth_add_impl
+    .word loadCell_impl
+    .word return_impl
+
+
+word_header getXTHeader, "getXTHeader", 0, getXTImmediate, getHeaderImmediate
+    secondary_word getXTHeader
+    .word literal_impl
+    .word 44
+    .word forth_minus_impl
+    .word return_impl
+
+
+word_header getXTImmediate, "getXTImmediate", 0, tokenBufferToHeaderCode, getXTHeader
+    secondary_word getXTImmediate
+    .word getXTHeader_impl
+    .word getHeaderImmediate_impl
+    .word return_impl
+
+word_header tokenBufferToHeaderCode, "tokenBufferToHeaderCode", 0, cw, getXTImmediate
+    secondary_word tokenBufferToHeaderCode
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word swap_impl
+    .word Tokenbuffer__impl
+    .word swap_impl
+    .word toCString_impl
+    .word return_impl
+
+
+word_header cw, ",", 0, cbyte, tokenBufferToHeaderCode
+    secondary_word cw
+    .word here_impl
+    .word store_impl
+    .word here_impl
+    .word literal_impl
+    .word 4
+    .word forth_add_impl
+    .word setHere_impl
+    .word return_impl
+
+
+word_header cbyte, "c,", 0, doToken, cw
+    secondary_word cbyte
+    .word here_impl
+    .word storeByte_impl
+    .word here_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word setHere_impl
+    .word return_impl
+
+word_header doToken, "doToken", 0, seekTokenStart, cbyte
+    secondary_word doToken
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word Tokenbuffer__impl
+    .word findXT_impl
+    .word dup_impl
+    .word literal_impl
+    .word 0
+    .word notEquals_impl
+S_IF
+    .word get_compile_bit_impl
+    .word literal_impl
+    .word 0
+    .word notEquals_impl
+	S_IF
+    .word dup_impl
+    .word getXTImmediate_impl
+		S_IF
+    .word execute_impl
+		S_ELSE
+    .word cw_impl
+		S_THEN
+	S_ELSE
+    .word execute_impl
+	S_THEN
+S_ELSE \ doToken_else_4_:
+    .word drop_impl
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word isStringValidNumber_impl
+    .word literal_impl
+    .word 0
+    .word notEquals_impl
+	S_IF
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word forth_fatoi_impl
+    .word get_compile_bit_impl
+    .word literal_impl
+    .word 0
+    .word notEquals_impl
+		S_IF
+    .word LiteralStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word cw_impl
+		S_THEN
+	S_ELSE
+    .word literal_impl
+    .word 1
+    .word EvalErrorFlag__impl
+    .word store_impl
+	S_THEN
+S_THEN \ doToken_then_8_:
+    .word return_impl
+
+ 
+word_header seekTokenStart, "seekTokenStart", 0, loadToken, doToken
+    secondary_word seekTokenStart
+S_BEGIN
+    .word LineBuffer__impl
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word forth_add_impl
+    .word loadByte_impl
+    .word dup_impl
+    .word literal_impl
+    .word 32
+    .word notEquals_impl
+    .word swap_impl
+    .word literal_impl
+    .word 10
+    .word notEquals_impl
+    .word logic_and_impl
+	S_IF
+    .word literal_impl
+    .word 0
+    .word return_impl
+	S_THEN
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word LineBufferI__impl
+    .word store_impl
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word equals_impl
+	S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+	S_THEN
+    .word literal_impl
+    .word 0
+S_UNTIL	
+    .word return_impl
+
+
+word_header loadToken, "loadToken", 0, loadNextToken, seekTokenStart
+    secondary_word loadToken
+    .word literal_impl
+    .word 0
+    .word TokenBufferSize__impl
+    .word store_impl
+S_BEGIN
+    .word LineBuffer__impl
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word forth_add_impl
+    .word loadByte_impl
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word equals_impl
+	S_IF
+    .word drop_impl
+    .word literal_impl
+    .word 0
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word forth_add_impl
+    .word storeByte_impl
+    .word return_impl
+	S_THEN
+    .word dup_impl
+    .word literal_impl
+    .word 32
+    .word equals_impl
+	S_IF
+    .word drop_impl
+    .word literal_impl
+    .word 0
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word forth_add_impl
+    .word storeByte_impl
+    .word return_impl
+	S_THEN
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word forth_add_impl
+    .word storeByte_impl
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word LineBufferI__impl
+    .word store_impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word TokenBufferSize__impl
+    .word store_impl
+    .word literal_impl
+    .word 0
+S_UNTIL
+    .word return_impl
+
+
+word_header loadNextToken, "loadNextToken", 0, eval_, loadToken
+    secondary_word loadNextToken
+    .word LineBufferI__impl
+    .word loadCell_impl
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word equals_impl
+S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+S_THEN
+    .word seekTokenStart_impl
+    .word literal_impl
+    .word 1
+    .word equals_impl
+S_IF
+    .word literal_impl
+    .word 1
+    .word return_impl
+S_THEN
+    .word loadToken_impl
+    .word literal_impl
+    .word 0
+    .word return_impl
+
+
+word_header eval_, "eval_", 0, doBackspace, loadNextToken
+    secondary_word eval_
+    .word literal_impl
+    .word 0
+    .word LineBufferI__impl
+    .word store_impl
+    .word literal_impl
+    .word 0
+    .word TokenBufferSize__impl
+    .word store_impl
+    .word literal_impl
+    .word 0
+    .word EvalErrorFlag__impl
+    .word store_impl
+S_BEGIN
+    .word EvalErrorFlag__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 0
+    .word notEquals_impl
+	S_IF
+    .word UnknownTokenStartStr__impl
+    .word swap_impl
+    .word print_impl
+    .word Tokenbuffer__impl
+    .word TokenBufferSize__impl
+    .word loadCell_impl
+    .word print_impl
+    .word UnknownTokenEndStr__impl
+    .word swap_impl
+    .word literal_impl
+    .word 1
+    .word forth_minus_impl
+    .word print_impl
+    .word return_impl
+	S_THEN \ eval__then_1_:
+    .word loadNextToken_impl
+    .word literal_impl
+    .word 1
+    .word notEquals_impl
+	S_IF
+    .word doToken_impl
+	S_ELSE
+    .word return_impl
+	S_THEN
+    .word literal_impl
+    .word 0
+S_UNTIL
+    .word return_impl
+
+word_header doBackspace, "doBackspace", 0, outerInterpreter, eval_
+
+    secondary_word doBackspace
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 0
+    .word greaterThan_impl
+S_IF
+    .word literal_impl
+    .word 8
+    .word emit_impl
+    .word literal_impl
+    .word 32
+    .word emit_impl
+    .word literal_impl
+    .word 8
+    .word emit_impl
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_minus_impl
+    .word LineBufferSize__impl
+    .word store_impl
+S_THEN
+    .word return_impl
+
+
+word_header outerInterpreter, "outerInterpreter", 0, compileHeader, doBackspace
+    secondary_word outerInterpreter
+    .word literal_impl
+    .word 0
+    .word LineBufferSize__impl
+    .word store_impl
+S_BEGIN
+    .word key_impl
+    .word dup_impl
+    .word literal_impl
+    .word 13
+    .word equals_impl
+	S_IF
+    .word drop_impl
+    .word literal_impl
+    .word 10
+    .word emit_impl
+    .word eval__impl
+    .word literal_impl
+    .word 0
+    .word LineBufferSize__impl
+    .word store_impl
+	S_ELSE
+    .word dup_impl
+    .word literal_impl
+    .word 127
+    .word equals_impl
+		S_IF
+    .word drop_impl
+    .word doBackspace_impl
+		S_ELSE
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 127
+    .word lessThan_impl
+			S_IF
+    .word dup_impl
+    .word emit_impl
+    .word LineBuffer__impl
+    .word LineBufferSize__impl
+    .word loadByte_impl
+    .word forth_add_impl
+    .word store_impl
+    .word LineBufferSize__impl
+    .word loadCell_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word LineBufferSize__impl
+    .word store_impl
+			S_THEN
+		S_THEN
+	S_THEN
+    .word literal_impl
+    .word 0
+S_UNTIL
+    .word return_impl
+
+
+word_header compileHeader, "compileHeader", 0, alignHere, outerInterpreter
+    secondary_word compileHeader
+    .word loadNextToken_impl
+    .word drop_impl
+    .word here_impl
+    .word here_impl
+    .word literal_impl
+    .word 44
+    .word forth_add_impl
+    .word setHere_impl
+    .word dup_impl
+    .word tokenBufferToHeaderCode_impl
+    .word dup_impl
+    .word getDictionaryEnd_impl
+    .word swap_impl
+    .word setHeaderPrev_impl
+    .word dup_impl
+    .word getDictionaryEnd_impl
+    .word setHeaderNext_impl
+    .word dup_impl
+    .word literal_impl
+    .word 0
+    .word swap_impl
+    .word setHeaderNext_impl
+    .word return_impl
+
+
+word_header alignHere, "alignHere", 0, bw, compileHeader
+    secondary_word alignHere
+S_BEGIN \ alignHere_begin_0_:
+    .word dup_impl
+    .word here_impl
+    .word swap_impl
+    .word modulo_impl
+    .word literal_impl
+    .word 0
+    .word equals_impl
+	S_IF
+    .word drop_impl
+    .word return_impl
+	S_THEN \  alignHere_then_1_:
+    .word here_impl
+    .word literal_impl
+    .word 1
+    .word forth_add_impl
+    .word setHere_impl
+    .word literal_impl
+    .word 0
+S_UNTIL
+    .word return_impl
+
+
+word_header bw, ":", 0, ew, alignHere
+    secondary_word bw
+    .word literal_impl
+    .word 2
+    .word alignHere_impl
+    .word setCompile_impl
+    .word compileHeader_impl
+    .word literal_impl
+    .word 0xB3
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x82
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x49
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x01
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x23
+    .word cbyte_impl
+    .word literal_impl
+    .word 0xA0
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x82
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x00
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x11
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x0A
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x17
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x04
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x00
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x00
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x13
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x04
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x04
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x01
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x83
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x22
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x04
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x00
+    .word cbyte_impl
+    .word literal_impl
+    .word 0xE7
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x80
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x02
+    .word cbyte_impl
+    .word literal_impl
+    .word 0x00
+    .word cbyte_impl
+    .word return_impl
+
+
+word_header ew, ";", 1, if, bw
+    secondary_word ew
+    .word ReturnStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word setInterpret_impl
+    .word setDictionaryEnd_impl
+    .word return_impl
+
+
+word_header if, "if", 1, else, ew
+    secondary_word if
+    .word branch0TokenStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word here_impl
+    .word literal_impl
+    .word 0
+    .word cw_impl
+    .word return_impl
+
+
+word_header else, "else", 1, then, if
+    secondary_word else
+    .word branchTokenStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word here_impl
+    .word literal_impl
+    .word 0
+    .word cw_impl
+    .word swap_impl
+    .word dup_impl
+    .word here_impl
+    .word swap_impl
+    .word forth_minus_impl
+    .word swap_impl
+    .word store_impl
+    .word return_impl
+
+
+word_header then, "then", 1, begin, else
+    secondary_word then
+    .word dup_impl
+    .word here_impl
+    .word swap_impl
+    .word forth_minus_impl
+    .word swap_impl
+    .word store_impl
+    .word return_impl
+
+
+word_header begin, "begin", 1, until, then
+    secondary_word begin
+    .word here_impl
+    .word return_impl
+
+
+word_header until, "until", 1, do, begin
+    secondary_word until
+    .word branch0TokenStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word here_impl
+    .word swap_impl
+    .word forth_minus_impl
+    .word literal_impl
+    .word -1
+    .word forth_mul_impl
+    .word cw_impl
+    .word return_impl
+
+
+word_header do, "do", 1, loop, until
+    secondary_word do
+    .word branchTokenStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word here_impl
+    .word literal_impl
+    .word 0
+    .word cw_impl
+    .word here_impl
+    .word swap_impl
+    .word pushReturnStr__impl
+    .word findXT_impl
+    .word dup_impl
+    .word cw_impl
+    .word cw_impl
+    .word return_impl
+
+
+word_header loop, "loop", 1, 0, do
+    secondary_word loop
+    .word popReturnStr__impl
+    .word findXT_impl
+    .word dup_impl
+    .word cw_impl
+    .word cw_impl
+    .word LiteralStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word literal_impl
+    .word 1
+    .word cw_impl
+    .word addStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word dup_impl
+    .word here_impl
+    .word swap_impl
+    .word forth_minus_impl
+    .word swap_impl
+    .word store_impl
+    .word twodupStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word equalsStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word branch0TokenStr__impl
+    .word findXT_impl
+    .word cw_impl
+    .word here_impl
+    .word swap_impl
+    .word forth_minus_impl
+    .word literal_impl
+    .word -1
+    .word forth_mul_impl
+    .word cw_impl
+    .word dropStr__impl
+    .word findXT_impl
+    .word dup_impl
+    .word cw_impl
+    .word cw_impl
+    .word return_impl
+
+end-code
+

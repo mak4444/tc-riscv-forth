@@ -1,0 +1,4675 @@
+
+HERE $7 + 7 ANDC DP M! \ align !!!!!
+8000139C	0000		unimp
+8000139E	0000		unimp
+
+\ first_system_word:
+
+RV_ASM_BIG
+word_header LineBuffer_, "LineBuffer_", 0, LineBufferSize_, last_vm_word
+800013A0	694C		???
+800013A2	656E		???
+800013A4	7542		???
+800013A6	6666		???
+800013A8	7265		???
+800013AA	005F 0 	L???
+800013AE	0000		unimp
+800013B0	0000		unimp
+800013B2	0000		unimp
+800013B4	0000		unimp
+800013B6	0000		unimp
+800013B8	0000		unimp
+800013BA	0000		unimp
+800013BC	0000		unimp
+800013BE	0000		unimp
+800013C0	1468		???
+800013C2	8000		???
+800013C4	0FBE	c.slli	t6,15
+800013C6	8000		???
+800013C8	0000		unimp
+800013CA	0000		unimp
+    la t1, 3f \ LineBuffer__data
+800013CC	0317 0000		auipc	t1,0
+800013D0	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800013D4	82B3 0124		add	t0,s1,s2
+800013D8	A023 0062		sw	t1,0(t0)
+800013DC	0911	c.addi	s2,4
+    end_word
+800013DE	0411	c.addi	s0,4
+800013E0	2283 0004		lw	t0,0(s0)
+800013E4	80E7 0002		jalr	ra,t0,800013E6
+3: \ LineBuffer__data:
+   128 IALLOT \ .fill 128, 1, 0
+800013E8	0000		unimp
+800013EA	0000		unimp
+800013EC	0000		unimp
+800013EE	0000		unimp
+800013F0	0000		unimp
+800013F2	0000		unimp
+800013F4	0000		unimp
+800013F6	0000		unimp
+800013F8	0000		unimp
+800013FA	0000		unimp
+800013FC	0000		unimp
+800013FE	0000		unimp
+80001400	0000		unimp
+80001402	0000		unimp
+80001404	0000		unimp
+80001406	0000		unimp
+80001408	0000		unimp
+8000140A	0000		unimp
+8000140C	0000		unimp
+8000140E	0000		unimp
+80001410	0000		unimp
+80001412	0000		unimp
+80001414	0000		unimp
+80001416	0000		unimp
+80001418	0000		unimp
+8000141A	0000		unimp
+8000141C	0000		unimp
+8000141E	0000		unimp
+80001420	0000		unimp
+80001422	0000		unimp
+80001424	0000		unimp
+80001426	0000		unimp
+80001428	0000		unimp
+8000142A	0000		unimp
+8000142C	0000		unimp
+8000142E	0000		unimp
+80001430	0000		unimp
+80001432	0000		unimp
+80001434	0000		unimp
+80001436	0000		unimp
+80001438	0000		unimp
+8000143A	0000		unimp
+8000143C	0000		unimp
+8000143E	0000		unimp
+80001440	0000		unimp
+80001442	0000		unimp
+80001444	0000		unimp
+80001446	0000		unimp
+80001448	0000		unimp
+8000144A	0000		unimp
+8000144C	0000		unimp
+8000144E	0000		unimp
+80001450	0000		unimp
+80001452	0000		unimp
+80001454	0000		unimp
+80001456	0000		unimp
+80001458	0000		unimp
+8000145A	0000		unimp
+8000145C	0000		unimp
+8000145E	0000		unimp
+80001460	0000		unimp
+80001462	0000		unimp
+80001464	0000		unimp
+80001466	0000		unimp
+
+
+word_header LineBufferSize_, "LineBufferSize_", 0, Tokenbuffer_, LineBuffer_
+80001468	694C		???
+8000146A	656E		???
+8000146C	7542		???
+8000146E	6666		???
+80001470	7265		???
+80001472	6953 657A 	L???
+80001476	005F 0 	L???
+8000147A	0000		unimp
+8000147C	0000		unimp
+8000147E	0000		unimp
+80001480	0000		unimp
+80001482	0000		unimp
+80001484	0000		unimp
+80001486	0000		unimp
+80001488	14B4		???
+8000148A	8000		???
+8000148C	13A0		???
+8000148E	8000		???
+80001490	0000		unimp
+80001492	0000		unimp
+    la t1, 3f \ LineBufferSize__data
+80001494	0317 0000		auipc	t1,0
+80001498	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+8000149C	82B3 0124		add	t0,s1,s2
+800014A0	A023 0062		sw	t1,0(t0)
+800014A4	0911	c.addi	s2,4
+    end_word
+800014A6	0411	c.addi	s0,4
+800014A8	2283 0004		lw	t0,0(s0)
+800014AC	80E7 0002		jalr	ra,t0,800014AE
+3: \ LineBufferSize__data:
+    .word 0
+800014B0	0000		unimp
+800014B2	0000		unimp
+
+
+word_header Tokenbuffer_, "Tokenbuffer_", 0, TokenBufferSize_, LineBufferSize_
+800014B4	6F54		???
+800014B6	656B 626E 	L???
+800014BA	6675		???
+800014BC	6566		???
+800014BE	5F72	c.lwsp	t1,60(sp)
+800014C0	0000		unimp
+800014C2	0000		unimp
+800014C4	0000		unimp
+800014C6	0000		unimp
+800014C8	0000		unimp
+800014CA	0000		unimp
+800014CC	0000		unimp
+800014CE	0000		unimp
+800014D0	0000		unimp
+800014D2	0000		unimp
+800014D4	151C		???
+800014D6	8000		???
+800014D8	1468		???
+800014DA	8000		???
+800014DC	0000		unimp
+800014DE	0000		unimp
+    la t1, 3f \ Tokenbuffer__data
+800014E0	0317 0000		auipc	t1,0
+800014E4	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800014E8	82B3 0124		add	t0,s1,s2
+800014EC	A023 0062		sw	t1,0(t0)
+800014F0	0911	c.addi	s2,4
+    end_word
+800014F2	0411	c.addi	s0,4
+800014F4	2283 0004		lw	t0,0(s0)
+800014F8	80E7 0002		jalr	ra,t0,800014FA
+3: \ Tokenbuffer__data:
+    32 IALLOT \ .fill 32, 1, 0
+800014FC	0000		unimp
+800014FE	0000		unimp
+80001500	0000		unimp
+80001502	0000		unimp
+80001504	0000		unimp
+80001506	0000		unimp
+80001508	0000		unimp
+8000150A	0000		unimp
+8000150C	0000		unimp
+8000150E	0000		unimp
+80001510	0000		unimp
+80001512	0000		unimp
+80001514	0000		unimp
+80001516	0000		unimp
+80001518	0000		unimp
+8000151A	0000		unimp
+
+ 
+word_header TokenBufferSize_, "TokenBufferSize_", 0, LineBufferI_, Tokenbuffer_
+8000151C	6F54		???
+8000151E	656B 426E 	L???
+80001522	6675		???
+80001524	6566		???
+80001526	5372	c.lwsp	t1,60(sp)
+80001528	7A69		???
+8000152A	5F65	li	t5,-7
+8000152C	0000		unimp
+8000152E	0000		unimp
+80001530	0000		unimp
+80001532	0000		unimp
+80001534	0000		unimp
+80001536	0000		unimp
+80001538	0000		unimp
+8000153A	0000		unimp
+8000153C	1568		???
+8000153E	8000		???
+80001540	14B4		???
+80001542	8000		???
+80001544	0000		unimp
+80001546	0000		unimp
+    la t1, 3f \ TokenBufferSize__data
+80001548	0317 0000		auipc	t1,0
+8000154C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001550	82B3 0124		add	t0,s1,s2
+80001554	A023 0062		sw	t1,0(t0)
+80001558	0911	c.addi	s2,4
+    end_word
+8000155A	0411	c.addi	s0,4
+8000155C	2283 0004		lw	t0,0(s0)
+80001560	80E7 0002		jalr	ra,t0,80001562
+3: \ TokenBufferSize__data:
+    .word 0
+80001564	0000		unimp
+80001566	0000		unimp
+
+
+word_header LineBufferI_, "LineBufferI_", 0, EvalErrorFlag_, TokenBufferSize_
+80001568	694C		???
+8000156A	656E		???
+8000156C	7542		???
+8000156E	6666		???
+80001570	7265		???
+80001572	5F49	li	t5,-14
+80001574	0000		unimp
+80001576	0000		unimp
+80001578	0000		unimp
+8000157A	0000		unimp
+8000157C	0000		unimp
+8000157E	0000		unimp
+80001580	0000		unimp
+80001582	0000		unimp
+80001584	0000		unimp
+80001586	0000		unimp
+80001588	15B4		???
+8000158A	8000		???
+8000158C	151C		???
+8000158E	8000		???
+80001590	0000		unimp
+80001592	0000		unimp
+    la t1, 3f \ LineBufferI__data
+80001594	0317 0000		auipc	t1,0
+80001598	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+8000159C	82B3 0124		add	t0,s1,s2
+800015A0	A023 0062		sw	t1,0(t0)
+800015A4	0911	c.addi	s2,4
+    end_word
+800015A6	0411	c.addi	s0,4
+800015A8	2283 0004		lw	t0,0(s0)
+800015AC	80E7 0002		jalr	ra,t0,800015AE
+3: \ LineBufferI__data:
+    .word 0
+800015B0	0000		unimp
+800015B2	0000		unimp
+
+word_header EvalErrorFlag_, "EvalErrorFlag_", 0, flags, LineBufferI_
+800015B4	7645		???
+800015B6	6C61		???
+800015B8	7245		???
+800015BA	6F72		???
+800015BC	4672	c.lwsp	tp,28(sp)
+800015BE	616C		???
+800015C0	5F67 0 	L???
+800015C4	0000		unimp
+800015C6	0000		unimp
+800015C8	0000		unimp
+800015CA	0000		unimp
+800015CC	0000		unimp
+800015CE	0000		unimp
+800015D0	0000		unimp
+800015D2	0000		unimp
+800015D4	1600		???
+800015D6	8000		???
+800015D8	1568		???
+800015DA	8000		???
+800015DC	0000		unimp
+800015DE	0000		unimp
+    la t1, 3f
+800015E0	0317 0000		auipc	t1,0
+800015E4	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800015E8	82B3 0124		add	t0,s1,s2
+800015EC	A023 0062		sw	t1,0(t0)
+800015F0	0911	c.addi	s2,4
+    end_word
+800015F2	0411	c.addi	s0,4
+800015F4	2283 0004		lw	t0,0(s0)
+800015F8	80E7 0002		jalr	ra,t0,800015FA
+3:  .word 0
+800015FC	0000		unimp
+800015FE	0000		unimp
+
+word_header flags, "flags", 0, LiteralStr_, EvalErrorFlag_
+80001600	6C66		???
+80001602	6761		???
+80001604	0073 0 	L???
+80001608	0000		unimp
+8000160A	0000		unimp
+8000160C	0000		unimp
+8000160E	0000		unimp
+80001610	0000		unimp
+80001612	0000		unimp
+80001614	0000		unimp
+80001616	0000		unimp
+80001618	0000		unimp
+8000161A	0000		unimp
+8000161C	0000		unimp
+8000161E	0000		unimp
+80001620	164C		???
+80001622	8000		???
+80001624	15B4		???
+80001626	8000		???
+80001628	0000		unimp
+8000162A	0000		unimp
+    la t1, 3f \ flags_data
+8000162C	0317 0000		auipc	t1,0
+80001630	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001634	82B3 0124		add	t0,s1,s2
+80001638	A023 0062		sw	t1,0(t0)
+8000163C	0911	c.addi	s2,4
+    end_word
+8000163E	0411	c.addi	s0,4
+80001640	2283 0004		lw	t0,0(s0)
+80001644	80E7 0002		jalr	ra,t0,80001646
+3: \ flags_data:
+    .word 0
+80001648	0000		unimp
+8000164A	0000		unimp
+
+
+word_header LiteralStr_, "LiteralStr_", 0, ReturnStr_, flags
+8000164C	694C		???
+8000164E	6574		???
+80001650	6172		???
+80001652	536C		???
+80001654	7274		???
+80001656	005F 0 	L???
+8000165A	0000		unimp
+8000165C	0000		unimp
+8000165E	0000		unimp
+80001660	0000		unimp
+80001662	0000		unimp
+80001664	0000		unimp
+80001666	0000		unimp
+80001668	0000		unimp
+8000166A	0000		unimp
+8000166C	16B0		???
+8000166E	8000		???
+80001670	1600		???
+80001672	8000		???
+80001674	0000		unimp
+80001676	0000		unimp
+    li t1, 7
+80001678	431D	li	t1,7
+    PushDataStack t1
+8000167A	82B3 0124		add	t0,s1,s2
+8000167E	A023 0062		sw	t1,0(t0)
+80001682	0911	c.addi	s2,4
+    la t1, 3f \ LiteralStr__data
+80001684	0317 0000		auipc	t1,0
+80001688	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+8000168C	82B3 0124		add	t0,s1,s2
+80001690	A023 0062		sw	t1,0(t0)
+80001694	0911	c.addi	s2,4
+    end_word
+80001696	0411	c.addi	s0,4
+80001698	2283 0004		lw	t0,0(s0)
+8000169C	80E7 0002		jalr	ra,t0,8000169E
+3: \ LiteralStr__data:
+    S" literal" $, $13 L, $13 L, 1 C, \ !!!!! 
+800016A0	696C		???
+800016A2	6574		???
+800016A4	6172		???
+800016A6	136C		???
+800016A8	0000		unimp
+800016AA	1300		???
+800016AC	0000		unimp
+800016AE	0100		???
+    HERE 3 + 3 ANDC DP M! \ .align 4
+
+
+word_header ReturnStr_, "ReturnStr_", 0, UnknownTokenStartStr_, LiteralStr_
+800016B0	6552		???
+800016B2	7574		???
+800016B4	6E72		???
+800016B6	7453 5F72 	L???
+800016BA	0000		unimp
+800016BC	0000		unimp
+800016BE	0000		unimp
+800016C0	0000		unimp
+800016C2	0000		unimp
+800016C4	0000		unimp
+800016C6	0000		unimp
+800016C8	0000		unimp
+800016CA	0000		unimp
+800016CC	0000		unimp
+800016CE	0000		unimp
+800016D0	1710		???
+800016D2	8000		???
+800016D4	164C		???
+800016D6	8000		???
+800016D8	0000		unimp
+800016DA	0000		unimp
+    li t1, 1
+800016DC	4305	li	t1,1
+    PushDataStack t1
+800016DE	82B3 0124		add	t0,s1,s2
+800016E2	A023 0062		sw	t1,0(t0)
+800016E6	0911	c.addi	s2,4
+    la t1, 3f
+800016E8	0317 0000		auipc	t1,0
+800016EC	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800016F0	82B3 0124		add	t0,s1,s2
+800016F4	A023 0062		sw	t1,0(t0)
+800016F8	0911	c.addi	s2,4
+    end_word
+800016FA	0411	c.addi	s0,4
+800016FC	2283 0004		lw	t0,0(s0)
+80001700	80E7 0002		jalr	ra,t0,80001702
+3: \     .ascii "r"
+	'r' C,  $13 L, $13 L, 1 C,  $1300 w, \ !!!!! 
+80001704	1372	c.slli	t1,-4
+80001706	0000		unimp
+80001708	1300		???
+8000170A	0000		unimp
+8000170C	0100		???
+8000170E	1300		???
+
+word_header UnknownTokenStartStr_, "UnknownTokenStartStr_", 0, UnknownTokenEndStr_, ReturnStr_
+80001710	6E55		???
+80001712	6E6B 776F 	L???
+80001716	546E	c.lwsp	zero,248(sp)
+80001718	6B6F 6E65 	L???
+8000171C	7453 7261 	L???
+80001720	5374		???
+80001722	7274		???
+80001724	005F 0 	L???
+80001728	0000		unimp
+8000172A	0000		unimp
+8000172C	0000		unimp
+8000172E	0000		unimp
+80001730	1780		???
+80001732	8000		???
+80001734	16B0		???
+80001736	8000		???
+80001738	0000		unimp
+8000173A	0000		unimp
+    li t1, 14
+8000173C	4339	li	t1,14
+    PushDataStack t1
+8000173E	82B3 0124		add	t0,s1,s2
+80001742	A023 0062		sw	t1,0(t0)
+80001746	0911	c.addi	s2,4
+    la t1, 3f
+80001748	0317 0000		auipc	t1,0
+8000174C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001750	82B3 0124		add	t0,s1,s2
+80001754	A023 0062		sw	t1,0(t0)
+80001758	0911	c.addi	s2,4
+    end_word
+8000175A	0411	c.addi	s0,4
+8000175C	2283 0004		lw	t0,0(s0)
+80001760	80E7 0002		jalr	ra,t0,80001762
+3:    S" unknowntoken:'" $,   1 w, $13 l, $13 l,  $13 l,
+80001764	6E75		???
+80001766	6E6B 776F 	L???
+8000176A	746E		???
+8000176C	6B6F 6E65 	L???
+80001770	273A		???
+80001772	0001	c.addi	zero,0
+80001774	0013 0000		addi	zero,zero,0
+80001778	0013 0000		addi	zero,zero,0
+8000177C	0013 0000		addi	zero,zero,0
+
+
+word_header UnknownTokenEndStr_, "UnknownTokenEndStr_", 0, branch0TokenStr_, UnknownTokenStartStr_
+80001780	6E55		???
+80001782	6E6B 776F 	L???
+80001786	546E	c.lwsp	zero,248(sp)
+80001788	6B6F 6E65 	L???
+8000178C	6E45		???
+8000178E	5364		???
+80001790	7274		???
+80001792	005F 0 	L???
+80001796	0000		unimp
+80001798	0000		unimp
+8000179A	0000		unimp
+8000179C	0000		unimp
+8000179E	0000		unimp
+800017A0	17E0		???
+800017A2	8000		???
+800017A4	1710		???
+800017A6	8000		???
+800017A8	0000		unimp
+800017AA	0000		unimp
+    li t1, 3
+800017AC	430D	li	t1,3
+    PushDataStack t1
+800017AE	82B3 0124		add	t0,s1,s2
+800017B2	A023 0062		sw	t1,0(t0)
+800017B6	0911	c.addi	s2,4
+    la t1, 3f
+800017B8	0317 0000		auipc	t1,0
+800017BC	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800017C0	82B3 0124		add	t0,s1,s2
+800017C4	A023 0062		sw	t1,0(t0)
+800017C8	0911	c.addi	s2,4
+    end_word
+800017CA	0411	c.addi	s0,4
+800017CC	2283 0004		lw	t0,0(s0)
+800017D0	80E7 0002		jalr	ra,t0,800017D2
+3: CHAR ' C, $A c,   $13 l, $13 l,  $1 W,
+800017D4	0A27 13 	L???
+800017D8	0000		unimp
+800017DA	0013 0000		addi	zero,zero,0
+800017DE	0001	c.addi	zero,0
+
+
+word_header branch0TokenStr_, "branch0TokenStr_", 0, branchTokenStr_, UnknownTokenEndStr_
+800017E0	7262		???
+800017E2	6E61		???
+800017E4	6863 5430 	L???
+800017E8	6B6F 6E65 	L???
+800017EC	7453 5F72 	L???
+800017F0	0000		unimp
+800017F2	0000		unimp
+800017F4	0000		unimp
+800017F6	0000		unimp
+800017F8	0000		unimp
+800017FA	0000		unimp
+800017FC	0000		unimp
+800017FE	0000		unimp
+80001800	1840		???
+80001802	8000		???
+80001804	1780		???
+80001806	8000		???
+80001808	0000		unimp
+8000180A	0000		unimp
+    li t1, 2
+8000180C	4309	li	t1,2
+    PushDataStack t1
+8000180E	82B3 0124		add	t0,s1,s2
+80001812	A023 0062		sw	t1,0(t0)
+80001816	0911	c.addi	s2,4
+    la t1, 3f
+80001818	0317 0000		auipc	t1,0
+8000181C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001820	82B3 0124		add	t0,s1,s2
+80001824	A023 0062		sw	t1,0(t0)
+80001828	0911	c.addi	s2,4
+    end_word
+8000182A	0411	c.addi	s0,4
+8000182C	2283 0004		lw	t0,0(s0)
+80001830	80E7 0002		jalr	ra,t0,80001832
+3:  S" b0" $, \ .ascii "b0"
+80001834	3062		???
+    $13 l, $13 l,  1 w,
+80001836	0013 0000		addi	zero,zero,0
+8000183A	0013 0000		addi	zero,zero,0
+8000183E	0001	c.addi	zero,0
+
+
+word_header branchTokenStr_, "branchTokenStr_", 0, pushReturnStr_, branch0TokenStr_
+80001840	7262		???
+80001842	6E61		???
+80001844	6863 6F54 	L???
+80001848	656B 536E 	L???
+8000184C	7274		???
+8000184E	005F 0 	L???
+80001852	0000		unimp
+80001854	0000		unimp
+80001856	0000		unimp
+80001858	0000		unimp
+8000185A	0000		unimp
+8000185C	0000		unimp
+8000185E	0000		unimp
+80001860	18A0		???
+80001862	8000		???
+80001864	17E0		???
+80001866	8000		???
+80001868	0000		unimp
+8000186A	0000		unimp
+    li t1, 1
+8000186C	4305	li	t1,1
+    PushDataStack t1
+8000186E	82B3 0124		add	t0,s1,s2
+80001872	A023 0062		sw	t1,0(t0)
+80001876	0911	c.addi	s2,4
+    la t1, 3f
+80001878	0317 0000		auipc	t1,0
+8000187C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001880	82B3 0124		add	t0,s1,s2
+80001884	A023 0062		sw	t1,0(t0)
+80001888	0911	c.addi	s2,4
+    end_word
+8000188A	0411	c.addi	s0,4
+8000188C	2283 0004		lw	t0,0(s0)
+80001890	80E7 0002		jalr	ra,t0,80001892
+3:  'b' c, \ .ascii "b"
+80001894	1362	c.slli	t1,-8
+    $13 l, $13 l, 1 w, $13 c,
+80001896	0000		unimp
+80001898	1300		???
+8000189A	0000		unimp
+8000189C	0100		???
+8000189E	1300		???
+
+
+word_header pushReturnStr_, "pushReturnStr_", 0, popReturnStr_, branchTokenStr_
+800018A0	7570		???
+800018A2	6873 6552 	L???
+800018A6	7574		???
+800018A8	6E72		???
+800018AA	7453 5F72 	L???
+800018AE	0000		unimp
+800018B0	0000		unimp
+800018B2	0000		unimp
+800018B4	0000		unimp
+800018B6	0000		unimp
+800018B8	0000		unimp
+800018BA	0000		unimp
+800018BC	0000		unimp
+800018BE	0000		unimp
+800018C0	1900		???
+800018C2	8000		???
+800018C4	1840		???
+800018C6	8000		???
+800018C8	0000		unimp
+800018CA	0000		unimp
+    li t1, 2
+800018CC	4309	li	t1,2
+    PushDataStack t1
+800018CE	82B3 0124		add	t0,s1,s2
+800018D2	A023 0062		sw	t1,0(t0)
+800018D6	0911	c.addi	s2,4
+    la t1, 3f \ pushReturnStr__data
+800018D8	0317 0000		auipc	t1,0
+800018DC	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800018E0	82B3 0124		add	t0,s1,s2
+800018E4	A023 0062		sw	t1,0(t0)
+800018E8	0911	c.addi	s2,4
+    end_word
+800018EA	0411	c.addi	s0,4
+800018EC	2283 0004		lw	t0,0(s0)
+800018F0	80E7 0002		jalr	ra,t0,800018F2
+3:  s" >R" $, \ .ascii ">R"
+800018F4	523E	c.lwsp	tp,236(sp)
+    $13 l, $13 l, 1 w, 
+800018F6	0013 0000		addi	zero,zero,0
+800018FA	0013 0000		addi	zero,zero,0
+800018FE	0001	c.addi	zero,0
+
+word_header popReturnStr_, "popReturnStr_", 0, addStr_, pushReturnStr_
+80001900	6F70		???
+80001902	5270		???
+80001904	7465		???
+80001906	7275		???
+80001908	536E	c.lwsp	t1,248(sp)
+8000190A	7274		???
+8000190C	005F 0 	L???
+80001910	0000		unimp
+80001912	0000		unimp
+80001914	0000		unimp
+80001916	0000		unimp
+80001918	0000		unimp
+8000191A	0000		unimp
+8000191C	0000		unimp
+8000191E	0000		unimp
+80001920	1960		???
+80001922	8000		???
+80001924	18A0		???
+80001926	8000		???
+80001928	0000		unimp
+8000192A	0000		unimp
+    li t1, 2
+8000192C	4309	li	t1,2
+    PushDataStack t1
+8000192E	82B3 0124		add	t0,s1,s2
+80001932	A023 0062		sw	t1,0(t0)
+80001936	0911	c.addi	s2,4
+    la t1, 3f
+80001938	0317 0000		auipc	t1,0
+8000193C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001940	82B3 0124		add	t0,s1,s2
+80001944	A023 0062		sw	t1,0(t0)
+80001948	0911	c.addi	s2,4
+    end_word
+8000194A	0411	c.addi	s0,4
+8000194C	2283 0004		lw	t0,0(s0)
+80001950	80E7 0002		jalr	ra,t0,80001952
+3:
+    s" <R" $, \ .ascii "<R"
+80001954	523C		???
+    $13 l, $13 l, 1 w, 
+80001956	0013 0000		addi	zero,zero,0
+8000195A	0013 0000		addi	zero,zero,0
+8000195E	0001	c.addi	zero,0
+
+
+word_header addStr_, "addStr_", 0, twodupStr_, popReturnStr_
+80001960	6461		???
+80001962	5364		???
+80001964	7274		???
+80001966	005F 0 	L???
+8000196A	0000		unimp
+8000196C	0000		unimp
+8000196E	0000		unimp
+80001970	0000		unimp
+80001972	0000		unimp
+80001974	0000		unimp
+80001976	0000		unimp
+80001978	0000		unimp
+8000197A	0000		unimp
+8000197C	0000		unimp
+8000197E	0000		unimp
+80001980	19C0		???
+80001982	8000		???
+80001984	1900		???
+80001986	8000		???
+80001988	0000		unimp
+8000198A	0000		unimp
+    li t1, 1
+8000198C	4305	li	t1,1
+    PushDataStack t1
+8000198E	82B3 0124		add	t0,s1,s2
+80001992	A023 0062		sw	t1,0(t0)
+80001996	0911	c.addi	s2,4
+    la t1, 3f \ addStr__data
+80001998	0317 0000		auipc	t1,0
+8000199C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+800019A0	82B3 0124		add	t0,s1,s2
+800019A4	A023 0062		sw	t1,0(t0)
+800019A8	0911	c.addi	s2,4
+    end_word
+800019AA	0411	c.addi	s0,4
+800019AC	2283 0004		lw	t0,0(s0)
+800019B0	80E7 0002		jalr	ra,t0,800019B2
+3:  '+' c, \  .ascii "+"
+800019B4	132B 0 	L???
+    $13 l, $13 l, 1 w, $13 c,
+800019B8	1300		???
+800019BA	0000		unimp
+800019BC	0100		???
+800019BE	1300		???
+
+word_header twodupStr_, "twodupStr_", 0, equalsStr_, addStr_
+800019C0	7774		???
+800019C2	646F 7075 	L???
+800019C6	7453 5F72 	L???
+800019CA	0000		unimp
+800019CC	0000		unimp
+800019CE	0000		unimp
+800019D0	0000		unimp
+800019D2	0000		unimp
+800019D4	0000		unimp
+800019D6	0000		unimp
+800019D8	0000		unimp
+800019DA	0000		unimp
+800019DC	0000		unimp
+800019DE	0000		unimp
+800019E0	1A20		???
+800019E2	8000		???
+800019E4	1960		???
+800019E6	8000		???
+800019E8	0000		unimp
+800019EA	0000		unimp
+    li t1, 4
+800019EC	4311	li	t1,4
+    PushDataStack t1
+800019EE	82B3 0124		add	t0,s1,s2
+800019F2	A023 0062		sw	t1,0(t0)
+800019F6	0911	c.addi	s2,4
+    la t1, 3f \ twodupStr__data
+800019F8	0317 0000		auipc	t1,0
+800019FC	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001A00	82B3 0124		add	t0,s1,s2
+80001A04	A023 0062		sw	t1,0(t0)
+80001A08	0911	c.addi	s2,4
+    end_word
+80001A0A	0411	c.addi	s0,4
+80001A0C	2283 0004		lw	t0,0(s0)
+80001A10	80E7 0002		jalr	ra,t0,80001A12
+3:
+    s" 2dup" $, \ .ascii "2dup"
+80001A14	6432		???
+80001A16	7075	c.lui	zero,0xFFFFD
+    $13 l, $13 l,
+80001A18	0013 0000		addi	zero,zero,0
+80001A1C	0013 0000		addi	zero,zero,0
+
+word_header equalsStr_, "equalsStr_", 0, dropStr_, twodupStr_
+80001A20	7165		???
+80001A22	6175		???
+80001A24	736C		???
+80001A26	7453 5F72 	L???
+80001A2A	0000		unimp
+80001A2C	0000		unimp
+80001A2E	0000		unimp
+80001A30	0000		unimp
+80001A32	0000		unimp
+80001A34	0000		unimp
+80001A36	0000		unimp
+80001A38	0000		unimp
+80001A3A	0000		unimp
+80001A3C	0000		unimp
+80001A3E	0000		unimp
+80001A40	1A80		???
+80001A42	8000		???
+80001A44	19C0		???
+80001A46	8000		???
+80001A48	0000		unimp
+80001A4A	0000		unimp
+    li t1, 1
+80001A4C	4305	li	t1,1
+    PushDataStack t1
+80001A4E	82B3 0124		add	t0,s1,s2
+80001A52	A023 0062		sw	t1,0(t0)
+80001A56	0911	c.addi	s2,4
+    la t1, 3f \ equalsStr__data
+80001A58	0317 0000		auipc	t1,0
+80001A5C	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001A60	82B3 0124		add	t0,s1,s2
+80001A64	A023 0062		sw	t1,0(t0)
+80001A68	0911	c.addi	s2,4
+    end_word
+80001A6A	0411	c.addi	s0,4
+80001A6C	2283 0004		lw	t0,0(s0)
+80001A70	80E7 0002		jalr	ra,t0,80001A72
+3:   '=' c, \ .ascii "="
+80001A74	133D	c.addi	t1,-17
+    $13 l, $13 l, 1 w, $13 c,
+80001A76	0000		unimp
+80001A78	1300		???
+80001A7A	0000		unimp
+80001A7C	0100		???
+80001A7E	1300		???
+
+
+word_header dropStr_, "dropStr_", 0, setCompile, equalsStr_
+80001A80	7264		???
+80001A82	706F 7453 	L???
+80001A86	5F72	c.lwsp	t1,60(sp)
+80001A88	0000		unimp
+80001A8A	0000		unimp
+80001A8C	0000		unimp
+80001A8E	0000		unimp
+80001A90	0000		unimp
+80001A92	0000		unimp
+80001A94	0000		unimp
+80001A96	0000		unimp
+80001A98	0000		unimp
+80001A9A	0000		unimp
+80001A9C	0000		unimp
+80001A9E	0000		unimp
+80001AA0	1AE0		???
+80001AA2	8000		???
+80001AA4	1A20		???
+80001AA6	8000		???
+80001AA8	0000		unimp
+80001AAA	0000		unimp
+    li t1, 4
+80001AAC	4311	li	t1,4
+    PushDataStack t1
+80001AAE	82B3 0124		add	t0,s1,s2
+80001AB2	A023 0062		sw	t1,0(t0)
+80001AB6	0911	c.addi	s2,4
+    la t1, 3f \ dropStr__data
+80001AB8	0317 0000		auipc	t1,0
+80001ABC	0313 01C3		addi	t1,t1,28
+    PushDataStack t1
+80001AC0	82B3 0124		add	t0,s1,s2
+80001AC4	A023 0062		sw	t1,0(t0)
+80001AC8	0911	c.addi	s2,4
+    end_word
+80001ACA	0411	c.addi	s0,4
+80001ACC	2283 0004		lw	t0,0(s0)
+80001AD0	80E7 0002		jalr	ra,t0,80001AD2
+3:  s" drop" $, \ .ascii "drop"
+80001AD4	7264		???
+80001AD6	706F 13 	L???
+	$13 l, $13 l,
+80001ADA	0000		unimp
+80001ADC	0013 0000		addi	zero,zero,0
+
+word_header setCompile, "setCompile", 0, setInterpret, dropStr_
+80001AE0	6573 4374 	L???
+80001AE4	6D6F 6970 	L???
+80001AE8	656C		???
+80001AEA	0000		unimp
+80001AEC	0000		unimp
+80001AEE	0000		unimp
+80001AF0	0000		unimp
+80001AF2	0000		unimp
+80001AF4	0000		unimp
+80001AF6	0000		unimp
+80001AF8	0000		unimp
+80001AFA	0000		unimp
+80001AFC	0000		unimp
+80001AFE	0000		unimp
+80001B00	1B46	c.slli	s6,-15
+80001B02	8000		???
+80001B04	1A80		???
+80001B06	8000		???
+80001B08	0000		unimp
+80001B0A	0000		unimp
+    secondary_word setCompile
+80001B0C	82B3 0149		add	t0,s3,s4
+80001B10	A023 0082		sw	s0,0(t0)
+80001B14	0A11	c.addi	s4,4
+80001B16	0417 0000		auipc	s0,0
+80001B1A	0413 0104		addi	s0,s0,16
+80001B1E	2283 0004		lw	t0,0(s0)
+80001B22	80E7 0002		jalr	ra,t0,80001B24
+    .word flags_impl
+80001B26	162C		???
+80001B28	8000		???
+    .word loadCell_impl
+80001B2A	01EE	c.slli	gp,27
+80001B2C	8000		???
+    .word literal_impl
+80001B2E	040E	c.slli	s0,3
+80001B30	8000		???
+    .word 1
+80001B32	0001	c.addi	zero,0
+80001B34	0000		unimp
+    .word forth_or_impl
+80001B36	0752	c.slli	a4,20
+80001B38	8000		???
+    .word flags_impl
+80001B3A	162C		???
+80001B3C	8000		???
+    .word store_impl
+80001B3E	023C		???
+80001B40	8000		???
+    .word return_impl
+80001B42	04A8		???
+80001B44	8000		???
+
+word_header setInterpret, "setInterpret", 0, get_compile_bit, setCompile
+80001B46	6573 4974 	L???
+80001B4A	746E		???
+80001B4C	7265		???
+80001B4E	7270		???
+80001B50	7465		???
+80001B52	0000		unimp
+80001B54	0000		unimp
+80001B56	0000		unimp
+80001B58	0000		unimp
+80001B5A	0000		unimp
+80001B5C	0000		unimp
+80001B5E	0000		unimp
+80001B60	0000		unimp
+80001B62	0000		unimp
+80001B64	0000		unimp
+80001B66	1BB8		???
+80001B68	8000		???
+80001B6A	1AE0		???
+80001B6C	8000		???
+80001B6E	0000		unimp
+80001B70	0000		unimp
+    secondary_word setInterpret
+80001B72	82B3 0149		add	t0,s3,s4
+80001B76	A023 0082		sw	s0,0(t0)
+80001B7A	0A11	c.addi	s4,4
+80001B7C	0417 0000		auipc	s0,0
+80001B80	0413 0104		addi	s0,s0,16
+80001B84	2283 0004		lw	t0,0(s0)
+80001B88	80E7 0002		jalr	ra,t0,80001B8A
+    .word flags_impl
+80001B8C	162C		???
+80001B8E	8000		???
+    .word loadCell_impl
+80001B90	01EE	c.slli	gp,27
+80001B92	8000		???
+    .word literal_impl
+80001B94	040E	c.slli	s0,3
+80001B96	8000		???
+    .word 1
+80001B98	0001	c.addi	zero,0
+80001B9A	0000		unimp
+    .word literal_impl
+80001B9C	040E	c.slli	s0,3
+80001B9E	8000		???
+    .word -1
+80001BA0	FFFF FFFF 	L???
+    .word forth_xor_impl
+80001BA4	07AA	c.slli	a5,10
+80001BA6	8000		???
+    .word forth_and_impl
+80001BA8	06FA	c.slli	a3,30
+80001BAA	8000		???
+    .word flags_impl
+80001BAC	162C		???
+80001BAE	8000		???
+    .word store_impl
+80001BB0	023C		???
+80001BB2	8000		???
+    .word return_impl
+80001BB4	04A8		???
+80001BB6	8000		???
+
+word_header get_compile_bit, "get_compile_bit", 0, i, setInterpret
+80001BB8	6567 5F74 	L???
+80001BBC	6F63 706D 	L???
+80001BC0	6C69		???
+80001BC2	5F65	li	t5,-7
+80001BC4	6962		???
+80001BC6	0074		???
+80001BC8	0000		unimp
+80001BCA	0000		unimp
+80001BCC	0000		unimp
+80001BCE	0000		unimp
+80001BD0	0000		unimp
+80001BD2	0000		unimp
+80001BD4	0000		unimp
+80001BD6	0000		unimp
+80001BD8	1C3E	c.slli	s8,-17
+80001BDA	8000		???
+80001BDC	1B46	c.slli	s6,-15
+80001BDE	8000		???
+80001BE0	0000		unimp
+80001BE2	0000		unimp
+    secondary_word get_compile_bit
+80001BE4	82B3 0149		add	t0,s3,s4
+80001BE8	A023 0082		sw	s0,0(t0)
+80001BEC	0A11	c.addi	s4,4
+80001BEE	0417 0000		auipc	s0,0
+80001BF2	0413 0104		addi	s0,s0,16
+80001BF6	2283 0004		lw	t0,0(s0)
+80001BFA	80E7 0002		jalr	ra,t0,80001BFC
+    .word flags_impl
+80001BFE	162C		???
+80001C00	8000		???
+    .word loadCell_impl
+80001C02	01EE	c.slli	gp,27
+80001C04	8000		???
+    .word literal_impl
+80001C06	040E	c.slli	s0,3
+80001C08	8000		???
+    .word 1
+80001C0A	0001	c.addi	zero,0
+80001C0C	0000		unimp
+    .word forth_and_impl
+80001C0E	06FA	c.slli	a3,30
+80001C10	8000		???
+    .word literal_impl
+80001C12	040E	c.slli	s0,3
+80001C14	8000		???
+    .word 0
+80001C16	0000		unimp
+80001C18	0000		unimp
+    .word greaterThan_impl
+80001C1A	0F2C		???
+80001C1C	8000		???
+S_IF
+80001C1E	0326	c.slli	t1,9
+80001C20	8000		???
+80001C22	0010		???
+80001C24	0000		unimp
+    .word literal_impl
+80001C26	040E	c.slli	s0,3
+80001C28	8000		???
+    .word 1
+80001C2A	0001	c.addi	zero,0
+80001C2C	0000		unimp
+    .word return_impl
+80001C2E	04A8		???
+80001C30	8000		???
+S_THEN
+    .word literal_impl
+80001C32	040E	c.slli	s0,3
+80001C34	8000		???
+    .word 0
+80001C36	0000		unimp
+80001C38	0000		unimp
+    .word return_impl
+80001C3A	04A8		???
+80001C3C	8000		???
+
+word_header i, "i", 0, j, get_compile_bit
+80001C3E	0069	c.addi	zero,26
+80001C40	0000		unimp
+80001C42	0000		unimp
+80001C44	0000		unimp
+80001C46	0000		unimp
+80001C48	0000		unimp
+80001C4A	0000		unimp
+80001C4C	0000		unimp
+80001C4E	0000		unimp
+80001C50	0000		unimp
+80001C52	0000		unimp
+80001C54	0000		unimp
+80001C56	0000		unimp
+80001C58	0000		unimp
+80001C5A	0000		unimp
+80001C5C	0000		unimp
+80001C5E	1C98		???
+80001C60	8000		???
+80001C62	1BB8		???
+80001C64	8000		???
+80001C66	0000		unimp
+80001C68	0000		unimp
+    secondary_word i
+80001C6A	82B3 0149		add	t0,s3,s4
+80001C6E	A023 0082		sw	s0,0(t0)
+80001C72	0A11	c.addi	s4,4
+80001C74	0417 0000		auipc	s0,0
+80001C78	0413 0104		addi	s0,s0,16
+80001C7C	2283 0004		lw	t0,0(s0)
+80001C80	80E7 0002		jalr	ra,t0,80001C82
+    .word literal_impl
+80001C84	040E	c.slli	s0,3
+80001C86	8000		???
+    .word -2
+80001C88	FFFE		???
+80001C8A	FFFF BF6 	L???
+    .word return_stack_index_impl
+80001C8E	8000		???
+    .word loadCell_impl
+80001C90	01EE	c.slli	gp,27
+80001C92	8000		???
+    .word return_impl
+80001C94	04A8		???
+80001C96	8000		???
+
+
+word_header j, "j", 0, print, i
+80001C98	006A	c.slli	zero,26
+80001C9A	0000		unimp
+80001C9C	0000		unimp
+80001C9E	0000		unimp
+80001CA0	0000		unimp
+80001CA2	0000		unimp
+80001CA4	0000		unimp
+80001CA6	0000		unimp
+80001CA8	0000		unimp
+80001CAA	0000		unimp
+80001CAC	0000		unimp
+80001CAE	0000		unimp
+80001CB0	0000		unimp
+80001CB2	0000		unimp
+80001CB4	0000		unimp
+80001CB6	0000		unimp
+80001CB8	1CF2	c.slli	è8,-4
+80001CBA	8000		???
+80001CBC	1C3E	c.slli	s8,-17
+80001CBE	8000		???
+80001CC0	0000		unimp
+80001CC2	0000		unimp
+    secondary_word j
+80001CC4	82B3 0149		add	t0,s3,s4
+80001CC8	A023 0082		sw	s0,0(t0)
+80001CCC	0A11	c.addi	s4,4
+80001CCE	0417 0000		auipc	s0,0
+80001CD2	0413 0104		addi	s0,s0,16
+80001CD6	2283 0004		lw	t0,0(s0)
+80001CDA	80E7 0002		jalr	ra,t0,80001CDC
+    .word literal_impl
+80001CDE	040E	c.slli	s0,3
+80001CE0	8000		???
+    .word -4
+80001CE2	FFFC		???
+80001CE4	FFFF BF6 	L???
+    .word return_stack_index_impl
+80001CE8	8000		???
+    .word loadCell_impl
+80001CEA	01EE	c.slli	gp,27
+80001CEC	8000		???
+    .word return_impl
+80001CEE	04A8		???
+80001CF0	8000		???
+
+
+word_header print, "print", 0, logic_and, j
+80001CF2	7270		???
+80001CF4	6E69		???
+80001CF6	0074		???
+80001CF8	0000		unimp
+80001CFA	0000		unimp
+80001CFC	0000		unimp
+80001CFE	0000		unimp
+80001D00	0000		unimp
+80001D02	0000		unimp
+80001D04	0000		unimp
+80001D06	0000		unimp
+80001D08	0000		unimp
+80001D0A	0000		unimp
+80001D0C	0000		unimp
+80001D0E	0000		unimp
+80001D10	0000		unimp
+80001D12	1D98		???
+80001D14	8000		???
+80001D16	1C98		???
+80001D18	8000		???
+80001D1A	0000		unimp
+80001D1C	0000		unimp
+    secondary_word print
+80001D1E	82B3 0149		add	t0,s3,s4
+80001D22	A023 0082		sw	s0,0(t0)
+80001D26	0A11	c.addi	s4,4
+80001D28	0417 0000		auipc	s0,0
+80001D2C	0413 0104		addi	s0,s0,16
+80001D30	2283 0004		lw	t0,0(s0)
+80001D34	80E7 0002		jalr	ra,t0,80001D36
+    .word literal_impl
+80001D38	040E	c.slli	s0,3
+80001D3A	8000		???
+    .word 0
+80001D3C	0000		unimp
+80001D3E	0000		unimp
+S_AHEAD
+80001D40	0378		???
+80001D42	8000		???
+80001D44	0034		???
+80001D46	0000		unimp
+S_BEGIN
+    .word push_return_impl
+80001D48	08B4		???
+80001D4A	8000		???
+    .word push_return_impl
+80001D4C	08B4		???
+80001D4E	8000		???
+    .word dup_impl
+80001D50	0454		???
+80001D52	8000		???
+    .word i_impl
+80001D54	1C6A	c.slli	s8,-6
+80001D56	8000		???
+    .word forth_add_impl
+80001D58	03B8		???
+80001D5A	8000		???
+    .word loadByte_impl
+80001D5C	028A	c.slli	t0,2
+80001D5E	8000		???
+    .word emit_impl
+80001D60	0162	c.slli	sp,24
+80001D62	8000		???
+    .word pop_return_impl
+80001D64	08FE	c.slli	a7,31
+80001D66	8000		???
+    .word pop_return_impl
+80001D68	08FE	c.slli	a7,31
+80001D6A	8000		???
+    .word literal_impl
+80001D6C	040E	c.slli	s0,3
+80001D6E	8000		???
+    .word 1
+80001D70	0001	c.addi	zero,0
+80001D72	0000		unimp
+    .word forth_add_impl
+80001D74	03B8		???
+80001D76	8000		???
+SWAP
+S_THEN
+    .word dup2_impl
+80001D78	05DE	c.slli	a1,23
+80001D7A	8000		???
+    .word equals_impl
+80001D7C	0DFA	c.slli	s11,30
+80001D7E	8000		???
+S_UNTIL
+80001D80	0326	c.slli	t1,9
+80001D82	8000		???
+80001D84	FFC4		???
+80001D86	FFFF 59E 	L???
+    .word drop_impl
+80001D8A	8000		???
+    .word drop_impl
+80001D8C	059E	c.slli	a1,7
+80001D8E	8000		???
+    .word drop_impl
+80001D90	059E	c.slli	a1,7
+80001D92	8000		???
+    .word return_impl
+80001D94	04A8		???
+80001D96	8000		???
+
+
+word_header logic_and, "&&", 0, logic_or, print
+80001D98	2626		???
+80001D9A	0000		unimp
+80001D9C	0000		unimp
+80001D9E	0000		unimp
+80001DA0	0000		unimp
+80001DA2	0000		unimp
+80001DA4	0000		unimp
+80001DA6	0000		unimp
+80001DA8	0000		unimp
+80001DAA	0000		unimp
+80001DAC	0000		unimp
+80001DAE	0000		unimp
+80001DB0	0000		unimp
+80001DB2	0000		unimp
+80001DB4	0000		unimp
+80001DB6	0000		unimp
+80001DB8	1E2A	c.slli	t3,-22
+80001DBA	8000		???
+80001DBC	1CF2	c.slli	è8,-4
+80001DBE	8000		???
+80001DC0	0000		unimp
+80001DC2	0000		unimp
+    secondary_word logic_and
+80001DC4	82B3 0149		add	t0,s3,s4
+80001DC8	A023 0082		sw	s0,0(t0)
+80001DCC	0A11	c.addi	s4,4
+80001DCE	0417 0000		auipc	s0,0
+80001DD2	0413 0104		addi	s0,s0,16
+80001DD6	2283 0004		lw	t0,0(s0)
+80001DDA	80E7 0002		jalr	ra,t0,80001DDC
+S_IF
+80001DDE	0326	c.slli	t1,9
+80001DE0	8000		???
+80001DE2	0034		???
+80001DE4	0000		unimp
+	S_IF
+80001DE6	0326	c.slli	t1,9
+80001DE8	8000		???
+80001DEA	0018		???
+80001DEC	0000		unimp
+    .word literal_impl
+80001DEE	040E	c.slli	s0,3
+80001DF0	8000		???
+    .word 1
+80001DF2	0001	c.addi	zero,0
+80001DF4	0000		unimp
+    .word return_impl
+80001DF6	04A8		???
+80001DF8	8000		???
+	S_ELSE
+80001DFA	0378		???
+80001DFC	8000		???
+80001DFE	0010		???
+80001E00	0000		unimp
+    .word literal_impl
+80001E02	040E	c.slli	s0,3
+80001E04	8000		???
+    .word 0
+80001E06	0000		unimp
+80001E08	0000		unimp
+    .word return_impl
+80001E0A	04A8		???
+80001E0C	8000		???
+	S_THEN
+S_ELSE
+80001E0E	0378		???
+80001E10	8000		???
+80001E12	0014		???
+80001E14	0000		unimp
+    .word drop_impl
+80001E16	059E	c.slli	a1,7
+80001E18	8000		???
+    .word literal_impl
+80001E1A	040E	c.slli	s0,3
+80001E1C	8000		???
+    .word 0
+80001E1E	0000		unimp
+80001E20	0000		unimp
+    .word return_impl
+80001E22	04A8		???
+80001E24	8000		???
+S_THEN
+    .word return_impl
+80001E26	04A8		???
+80001E28	8000		???
+
+word_header logic_or, "||", 0, logic_not, logic_and
+80001E2A	7C7C		???
+80001E2C	0000		unimp
+80001E2E	0000		unimp
+80001E30	0000		unimp
+80001E32	0000		unimp
+80001E34	0000		unimp
+80001E36	0000		unimp
+80001E38	0000		unimp
+80001E3A	0000		unimp
+80001E3C	0000		unimp
+80001E3E	0000		unimp
+80001E40	0000		unimp
+80001E42	0000		unimp
+80001E44	0000		unimp
+80001E46	0000		unimp
+80001E48	0000		unimp
+80001E4A	1EAC		???
+80001E4C	8000		???
+80001E4E	1D98		???
+80001E50	8000		???
+80001E52	0000		unimp
+80001E54	0000		unimp
+    secondary_word logic_or
+80001E56	82B3 0149		add	t0,s3,s4
+80001E5A	A023 0082		sw	s0,0(t0)
+80001E5E	0A11	c.addi	s4,4
+80001E60	0417 0000		auipc	s0,0
+80001E64	0413 0104		addi	s0,s0,16
+80001E68	2283 0004		lw	t0,0(s0)
+80001E6C	80E7 0002		jalr	ra,t0,80001E6E
+S_IF
+80001E70	0326	c.slli	t1,9
+80001E72	8000		???
+80001E74	0014		???
+80001E76	0000		unimp
+    .word drop_impl
+80001E78	059E	c.slli	a1,7
+80001E7A	8000		???
+    .word literal_impl
+80001E7C	040E	c.slli	s0,3
+80001E7E	8000		???
+    .word 1
+80001E80	0001	c.addi	zero,0
+80001E82	0000		unimp
+    .word return_impl
+80001E84	04A8		???
+80001E86	8000		???
+S_THEN
+S_IF
+80001E88	0326	c.slli	t1,9
+80001E8A	8000		???
+80001E8C	0010		???
+80001E8E	0000		unimp
+    .word literal_impl
+80001E90	040E	c.slli	s0,3
+80001E92	8000		???
+    .word 1
+80001E94	0001	c.addi	zero,0
+80001E96	0000		unimp
+    .word return_impl
+80001E98	04A8		???
+80001E9A	8000		???
+S_THEN
+    .word literal_impl
+80001E9C	040E	c.slli	s0,3
+80001E9E	8000		???
+    .word 0
+80001EA0	0000		unimp
+80001EA2	0000		unimp
+    .word return_impl
+80001EA4	04A8		???
+80001EA6	8000		???
+    .word return_impl
+80001EA8	04A8		???
+80001EAA	8000		???
+
+
+word_header logic_not, "logic_not", 0, gte, logic_or
+80001EAC	6F6C		???
+80001EAE	6967 5F63 	L???
+80001EB2	6F6E		???
+80001EB4	0074		???
+80001EB6	0000		unimp
+80001EB8	0000		unimp
+80001EBA	0000		unimp
+80001EBC	0000		unimp
+80001EBE	0000		unimp
+80001EC0	0000		unimp
+80001EC2	0000		unimp
+80001EC4	0000		unimp
+80001EC6	0000		unimp
+80001EC8	0000		unimp
+80001ECA	0000		unimp
+80001ECC	1F16	c.slli	t5,-27
+80001ECE	8000		???
+80001ED0	1E2A	c.slli	t3,-22
+80001ED2	8000		???
+80001ED4	0000		unimp
+80001ED6	0000		unimp
+    secondary_word logic_not
+80001ED8	82B3 0149		add	t0,s3,s4
+80001EDC	A023 0082		sw	s0,0(t0)
+80001EE0	0A11	c.addi	s4,4
+80001EE2	0417 0000		auipc	s0,0
+80001EE6	0413 0104		addi	s0,s0,16
+80001EEA	2283 0004		lw	t0,0(s0)
+80001EEE	80E7 0002		jalr	ra,t0,80001EF0
+S_IF
+80001EF2	0326	c.slli	t1,9
+80001EF4	8000		???
+80001EF6	0014		???
+80001EF8	0000		unimp
+    .word literal_impl
+80001EFA	040E	c.slli	s0,3
+80001EFC	8000		???
+    .word 0
+80001EFE	0000		unimp
+80001F00	0000		unimp
+S_ELSE
+80001F02	0378		???
+80001F04	8000		???
+80001F06	000C		???
+80001F08	0000		unimp
+    .word literal_impl
+80001F0A	040E	c.slli	s0,3
+80001F0C	8000		???
+    .word 1
+80001F0E	0001	c.addi	zero,0
+80001F10	0000		unimp
+S_THEN
+    .word return_impl
+80001F12	04A8		???
+80001F14	8000		???
+
+
+word_header gte, ">=", 0, lte, logic_not
+80001F16	3D3E		???
+80001F18	0000		unimp
+80001F1A	0000		unimp
+80001F1C	0000		unimp
+80001F1E	0000		unimp
+80001F20	0000		unimp
+80001F22	0000		unimp
+80001F24	0000		unimp
+80001F26	0000		unimp
+80001F28	0000		unimp
+80001F2A	0000		unimp
+80001F2C	0000		unimp
+80001F2E	0000		unimp
+80001F30	0000		unimp
+80001F32	0000		unimp
+80001F34	0000		unimp
+80001F36	1F78		???
+80001F38	8000		???
+80001F3A	1EAC		???
+80001F3C	8000		???
+80001F3E	0000		unimp
+80001F40	0000		unimp
+    secondary_word gte
+80001F42	82B3 0149		add	t0,s3,s4
+80001F46	A023 0082		sw	s0,0(t0)
+80001F4A	0A11	c.addi	s4,4
+80001F4C	0417 0000		auipc	s0,0
+80001F50	0413 0104		addi	s0,s0,16
+80001F54	2283 0004		lw	t0,0(s0)
+80001F58	80E7 0002		jalr	ra,t0,80001F5A
+    .word dup2_impl
+80001F5C	05DE	c.slli	a1,23
+80001F5E	8000		???
+    .word equals_impl
+80001F60	0DFA	c.slli	s11,30
+80001F62	8000		???
+    .word rot_impl
+80001F64	0842	c.slli	a6,16
+80001F66	8000		???
+    .word rot_impl
+80001F68	0842	c.slli	a6,16
+80001F6A	8000		???
+    .word greaterThan_impl
+80001F6C	0F2C		???
+80001F6E	8000		???
+    .word logic_or_impl
+80001F70	1E56	c.slli	t3,-11
+80001F72	8000		???
+    .word return_impl
+80001F74	04A8		???
+80001F76	8000		???
+
+
+word_header lte, "<=", 0, isCharNumeric, gte
+80001F78	3D3C		???
+80001F7A	0000		unimp
+80001F7C	0000		unimp
+80001F7E	0000		unimp
+80001F80	0000		unimp
+80001F82	0000		unimp
+80001F84	0000		unimp
+80001F86	0000		unimp
+80001F88	0000		unimp
+80001F8A	0000		unimp
+80001F8C	0000		unimp
+80001F8E	0000		unimp
+80001F90	0000		unimp
+80001F92	0000		unimp
+80001F94	0000		unimp
+80001F96	0000		unimp
+80001F98	1FDA	c.slli	t6,-10
+80001F9A	8000		???
+80001F9C	1F16	c.slli	t5,-27
+80001F9E	8000		???
+80001FA0	0000		unimp
+80001FA2	0000		unimp
+    secondary_word lte
+80001FA4	82B3 0149		add	t0,s3,s4
+80001FA8	A023 0082		sw	s0,0(t0)
+80001FAC	0A11	c.addi	s4,4
+80001FAE	0417 0000		auipc	s0,0
+80001FB2	0413 0104		addi	s0,s0,16
+80001FB6	2283 0004		lw	t0,0(s0)
+80001FBA	80E7 0002		jalr	ra,t0,80001FBC
+    .word dup2_impl
+80001FBE	05DE	c.slli	a1,23
+80001FC0	8000		???
+    .word equals_impl
+80001FC2	0DFA	c.slli	s11,30
+80001FC4	8000		???
+    .word rot_impl
+80001FC6	0842	c.slli	a6,16
+80001FC8	8000		???
+    .word rot_impl
+80001FCA	0842	c.slli	a6,16
+80001FCC	8000		???
+    .word lessThan_impl
+80001FCE	0EC6	c.slli	t4,17
+80001FD0	8000		???
+    .word logic_or_impl
+80001FD2	1E56	c.slli	t3,-11
+80001FD4	8000		???
+    .word return_impl
+80001FD6	04A8		???
+80001FD8	8000		???
+
+
+word_header isCharNumeric, "isCharNumeric", 0, isStringValidNumber, lte
+80001FDA	7369		???
+80001FDC	6843 7261 	L???
+80001FE0	754E		???
+80001FE2	656D		???
+80001FE4	6972		???
+80001FE6	0063 0 	L???
+80001FEA	0000		unimp
+80001FEC	0000		unimp
+80001FEE	0000		unimp
+80001FF0	0000		unimp
+80001FF2	0000		unimp
+80001FF4	0000		unimp
+80001FF6	0000		unimp
+80001FF8	0000		unimp
+80001FFA	2048		???
+80001FFC	8000		???
+80001FFE	1F78		???
+80002000	8000		???
+80002002	0000		unimp
+80002004	0000		unimp
+    secondary_word isCharNumeric
+80002006	82B3 0149		add	t0,s3,s4
+8000200A	A023 0082		sw	s0,0(t0)
+8000200E	0A11	c.addi	s4,4
+80002010	0417 0000		auipc	s0,0
+80002014	0413 0104		addi	s0,s0,16
+80002018	2283 0004		lw	t0,0(s0)
+8000201C	80E7 0002		jalr	ra,t0,8000201E
+    .word dup_impl
+80002020	0454		???
+80002022	8000		???
+    .word literal_impl
+80002024	040E	c.slli	s0,3
+80002026	8000		???
+    .word 48
+80002028	0030		???
+8000202A	0000		unimp
+    .word gte_impl
+8000202C	1F42	c.slli	t5,-16
+8000202E	8000		???
+    .word swap_impl
+80002030	0540		???
+80002032	8000		???
+    .word literal_impl
+80002034	040E	c.slli	s0,3
+80002036	8000		???
+    .word 57
+80002038	0039	c.addi	zero,14
+8000203A	0000		unimp
+    .word lte_impl
+8000203C	1FA4		???
+8000203E	8000		???
+    .word logic_and_impl
+80002040	1DC4		???
+80002042	8000		???
+    .word return_impl
+80002044	04A8		???
+80002046	8000		???
+
+
+word_header isStringValidNumber, "isStringValidNumber", 0, getHeaderNext, isCharNumeric
+80002048	7369		???
+8000204A	7453 6972 	L???
+8000204E	676E		???
+80002050	6156		???
+80002052	696C		???
+80002054	4E64		???
+80002056	6D75		???
+80002058	6562		???
+8000205A	0072	c.slli	zero,28
+8000205C	0000		unimp
+8000205E	0000		unimp
+80002060	0000		unimp
+80002062	0000		unimp
+80002064	0000		unimp
+80002066	0000		unimp
+80002068	2192		???
+8000206A	8000		???
+8000206C	1FDA	c.slli	t6,-10
+8000206E	8000		???
+80002070	0000		unimp
+80002072	0000		unimp
+    secondary_word isStringValidNumber
+80002074	82B3 0149		add	t0,s3,s4
+80002078	A023 0082		sw	s0,0(t0)
+8000207C	0A11	c.addi	s4,4
+8000207E	0417 0000		auipc	s0,0
+80002082	0413 0104		addi	s0,s0,16
+80002086	2283 0004		lw	t0,0(s0)
+8000208A	80E7 0002		jalr	ra,t0,8000208C
+    .word literal_impl
+8000208E	040E	c.slli	s0,3
+80002090	8000		???
+    .word 0
+80002092	0000		unimp
+80002094	0000		unimp
+S_AHEAD  \ to loop enter 
+80002096	0378		???
+80002098	8000		???
+8000209A	00D0		???
+8000209C	0000		unimp
+S_BEGIN SWAP
+    .word push_return_impl
+8000209E	08B4		???
+800020A0	8000		???
+    .word push_return_impl
+800020A2	08B4		???
+800020A4	8000		???
+    .word i_impl
+800020A6	1C6A	c.slli	s8,-6
+800020A8	8000		???
+    .word literal_impl
+800020AA	040E	c.slli	s0,3
+800020AC	8000		???
+    .word 0
+800020AE	0000		unimp
+800020B0	0000		unimp
+    .word equals_impl
+800020B2	0DFA	c.slli	s11,30
+800020B4	8000		???
+S_IF
+800020B6	0326	c.slli	t1,9
+800020B8	8000		???
+800020BA	005C		???
+800020BC	0000		unimp
+    .word dup_impl
+800020BE	0454		???
+800020C0	8000		???
+    .word loadByte_impl
+800020C2	028A	c.slli	t0,2
+800020C4	8000		???
+    .word dup_impl
+800020C6	0454		???
+800020C8	8000		???
+    .word literal_impl
+800020CA	040E	c.slli	s0,3
+800020CC	8000		???
+    .word 45
+800020CE	002D	c.addi	zero,11
+800020D0	0000		unimp
+    .word equals_impl
+800020D2	0DFA	c.slli	s11,30
+800020D4	8000		???
+    .word swap_impl
+800020D6	0540		???
+800020D8	8000		???
+    .word isCharNumeric_impl
+800020DA	2006		???
+800020DC	8000		???
+    .word logic_or_impl
+800020DE	1E56	c.slli	t3,-11
+800020E0	8000		???
+    .word logic_not_impl
+800020E2	1ED8		???
+800020E4	8000		???
+	S_IF
+800020E6	0326	c.slli	t1,9
+800020E8	8000		???
+800020EA	0024		???
+800020EC	0000		unimp
+    .word drop_impl
+800020EE	059E	c.slli	a1,7
+800020F0	8000		???
+    .word pop_return_impl
+800020F2	08FE	c.slli	a7,31
+800020F4	8000		???
+    .word pop_return_impl
+800020F6	08FE	c.slli	a7,31
+800020F8	8000		???
+    .word drop_impl
+800020FA	059E	c.slli	a1,7
+800020FC	8000		???
+    .word drop_impl
+800020FE	059E	c.slli	a1,7
+80002100	8000		???
+    .word literal_impl
+80002102	040E	c.slli	s0,3
+80002104	8000		???
+    .word 0
+80002106	0000		unimp
+80002108	0000		unimp
+    .word return_impl
+8000210A	04A8		???
+8000210C	8000		???
+	S_THEN
+S_ELSE
+8000210E	0378		???
+80002110	8000		???
+80002112	0044		???
+80002114	0000		unimp
+    .word dup_impl
+80002116	0454		???
+80002118	8000		???
+    .word i_impl
+8000211A	1C6A	c.slli	s8,-6
+8000211C	8000		???
+    .word forth_add_impl
+8000211E	03B8		???
+80002120	8000		???
+    .word loadByte_impl
+80002122	028A	c.slli	t0,2
+80002124	8000		???
+    .word isCharNumeric_impl
+80002126	2006		???
+80002128	8000		???
+    .word logic_not_impl
+8000212A	1ED8		???
+8000212C	8000		???
+	S_IF
+8000212E	0326	c.slli	t1,9
+80002130	8000		???
+80002132	0024		???
+80002134	0000		unimp
+    .word drop_impl
+80002136	059E	c.slli	a1,7
+80002138	8000		???
+    .word pop_return_impl
+8000213A	08FE	c.slli	a7,31
+8000213C	8000		???
+    .word pop_return_impl
+8000213E	08FE	c.slli	a7,31
+80002140	8000		???
+    .word drop_impl
+80002142	059E	c.slli	a1,7
+80002144	8000		???
+    .word drop_impl
+80002146	059E	c.slli	a1,7
+80002148	8000		???
+    .word literal_impl
+8000214A	040E	c.slli	s0,3
+8000214C	8000		???
+    .word 0
+8000214E	0000		unimp
+80002150	0000		unimp
+    .word return_impl
+80002152	04A8		???
+80002154	8000		???
+	S_THEN
+S_THEN
+    .word pop_return_impl
+80002156	08FE	c.slli	a7,31
+80002158	8000		???
+    .word pop_return_impl
+8000215A	08FE	c.slli	a7,31
+8000215C	8000		???
+    .word literal_impl
+8000215E	040E	c.slli	s0,3
+80002160	8000		???
+    .word 1
+80002162	0001	c.addi	zero,0
+80002164	0000		unimp
+    .word forth_add_impl
+80002166	03B8		???
+80002168	8000		???
+	S_THEN \ loop enter
+    .word dup2_impl
+8000216A	05DE	c.slli	a1,23
+8000216C	8000		???
+    .word equals_impl
+8000216E	0DFA	c.slli	s11,30
+80002170	8000		???
+	S_UNTIL
+80002172	0326	c.slli	t1,9
+80002174	8000		???
+80002176	FF28		???
+80002178	FFFF 59E 	L???
+    .word drop_impl
+8000217C	8000		???
+    .word drop_impl
+8000217E	059E	c.slli	a1,7
+80002180	8000		???
+    .word drop_impl
+80002182	059E	c.slli	a1,7
+80002184	8000		???
+    .word literal_impl
+80002186	040E	c.slli	s0,3
+80002188	8000		???
+    .word 1
+8000218A	0001	c.addi	zero,0
+8000218C	0000		unimp
+    .word return_impl
+8000218E	04A8		???
+80002190	8000		???
+
+
+word_header getHeaderNext, "getHeaderNext", 0, getHeaderPrev, isStringValidNumber
+80002192	6567 4874 	L???
+80002196	6165		???
+80002198	6564		???
+8000219A	4E72	c.lwsp	tp,28(sp)
+8000219C	7865		???
+8000219E	0074		???
+800021A0	0000		unimp
+800021A2	0000		unimp
+800021A4	0000		unimp
+800021A6	0000		unimp
+800021A8	0000		unimp
+800021AA	0000		unimp
+800021AC	0000		unimp
+800021AE	0000		unimp
+800021B0	0000		unimp
+800021B2	21EC		???
+800021B4	8000		???
+800021B6	2048		???
+800021B8	8000		???
+800021BA	0000		unimp
+800021BC	0000		unimp
+    secondary_word getHeaderNext
+800021BE	82B3 0149		add	t0,s3,s4
+800021C2	A023 0082		sw	s0,0(t0)
+800021C6	0A11	c.addi	s4,4
+800021C8	0417 0000		auipc	s0,0
+800021CC	0413 0104		addi	s0,s0,16
+800021D0	2283 0004		lw	t0,0(s0)
+800021D4	80E7 0002		jalr	ra,t0,800021D6
+    .word literal_impl
+800021D8	040E	c.slli	s0,3
+800021DA	8000		???
+    .word 32
+800021DC	0020		???
+800021DE	0000		unimp
+    .word forth_add_impl
+800021E0	03B8		???
+800021E2	8000		???
+    .word loadCell_impl
+800021E4	01EE	c.slli	gp,27
+800021E6	8000		???
+    .word return_impl
+800021E8	04A8		???
+800021EA	8000		???
+
+
+word_header getHeaderPrev, "getHeaderPrev", 0, setHeaderPrev, getHeaderNext
+800021EC	6567 4874 	L???
+800021F0	6165		???
+800021F2	6564		???
+800021F4	5072	c.lwsp	zero,60(sp)
+800021F6	6572		???
+800021F8	0076	c.slli	zero,29
+800021FA	0000		unimp
+800021FC	0000		unimp
+800021FE	0000		unimp
+80002200	0000		unimp
+80002202	0000		unimp
+80002204	0000		unimp
+80002206	0000		unimp
+80002208	0000		unimp
+8000220A	0000		unimp
+8000220C	2246		???
+8000220E	8000		???
+80002210	2192		???
+80002212	8000		???
+80002214	0000		unimp
+80002216	0000		unimp
+    secondary_word getHeaderPrev
+80002218	82B3 0149		add	t0,s3,s4
+8000221C	A023 0082		sw	s0,0(t0)
+80002220	0A11	c.addi	s4,4
+80002222	0417 0000		auipc	s0,0
+80002226	0413 0104		addi	s0,s0,16
+8000222A	2283 0004		lw	t0,0(s0)
+8000222E	80E7 0002		jalr	ra,t0,80002230
+    .word literal_impl
+80002232	040E	c.slli	s0,3
+80002234	8000		???
+    .word 36
+80002236	0024		???
+80002238	0000		unimp
+    .word forth_add_impl
+8000223A	03B8		???
+8000223C	8000		???
+    .word loadCell_impl
+8000223E	01EE	c.slli	gp,27
+80002240	8000		???
+    .word return_impl
+80002242	04A8		???
+80002244	8000		???
+
+
+word_header setHeaderPrev, "setHeaderPrev", 0, setHeaderNext, getHeaderPrev
+80002246	6573 4874 	L???
+8000224A	6165		???
+8000224C	6564		???
+8000224E	5072	c.lwsp	zero,60(sp)
+80002250	6572		???
+80002252	0076	c.slli	zero,29
+80002254	0000		unimp
+80002256	0000		unimp
+80002258	0000		unimp
+8000225A	0000		unimp
+8000225C	0000		unimp
+8000225E	0000		unimp
+80002260	0000		unimp
+80002262	0000		unimp
+80002264	0000		unimp
+80002266	22A0		???
+80002268	8000		???
+8000226A	21EC		???
+8000226C	8000		???
+8000226E	0000		unimp
+80002270	0000		unimp
+    secondary_word setHeaderPrev
+80002272	82B3 0149		add	t0,s3,s4
+80002276	A023 0082		sw	s0,0(t0)
+8000227A	0A11	c.addi	s4,4
+8000227C	0417 0000		auipc	s0,0
+80002280	0413 0104		addi	s0,s0,16
+80002284	2283 0004		lw	t0,0(s0)
+80002288	80E7 0002		jalr	ra,t0,8000228A
+    .word literal_impl
+8000228C	040E	c.slli	s0,3
+8000228E	8000		???
+    .word 36
+80002290	0024		???
+80002292	0000		unimp
+    .word forth_add_impl
+80002294	03B8		???
+80002296	8000		???
+    .word store_impl
+80002298	023C		???
+8000229A	8000		???
+    .word return_impl
+8000229C	04A8		???
+8000229E	8000		???
+
+
+word_header setHeaderNext, "setHeaderNext", 0, setHeaderImmediate, setHeaderPrev
+800022A0	6573 4874 	L???
+800022A4	6165		???
+800022A6	6564		???
+800022A8	4E72	c.lwsp	tp,28(sp)
+800022AA	7865		???
+800022AC	0074		???
+800022AE	0000		unimp
+800022B0	0000		unimp
+800022B2	0000		unimp
+800022B4	0000		unimp
+800022B6	0000		unimp
+800022B8	0000		unimp
+800022BA	0000		unimp
+800022BC	0000		unimp
+800022BE	0000		unimp
+800022C0	22FA		???
+800022C2	8000		???
+800022C4	2246		???
+800022C6	8000		???
+800022C8	0000		unimp
+800022CA	0000		unimp
+    secondary_word setHeaderNext
+800022CC	82B3 0149		add	t0,s3,s4
+800022D0	A023 0082		sw	s0,0(t0)
+800022D4	0A11	c.addi	s4,4
+800022D6	0417 0000		auipc	s0,0
+800022DA	0413 0104		addi	s0,s0,16
+800022DE	2283 0004		lw	t0,0(s0)
+800022E2	80E7 0002		jalr	ra,t0,800022E4
+    .word literal_impl
+800022E6	040E	c.slli	s0,3
+800022E8	8000		???
+    .word 32
+800022EA	0020		???
+800022EC	0000		unimp
+    .word forth_add_impl
+800022EE	03B8		???
+800022F0	8000		???
+    .word store_impl
+800022F2	023C		???
+800022F4	8000		???
+    .word return_impl
+800022F6	04A8		???
+800022F8	8000		???
+
+
+word_header setHeaderImmediate, "setHeaderImmediate", 0, getHeaderImmediate, setHeaderNext
+800022FA	6573 4874 	L???
+800022FE	6165		???
+80002300	6564		???
+80002302	4972	c.lwsp	sp,28(sp)
+80002304	6D6D		???
+80002306	6465		???
+80002308	6169		???
+8000230A	6574		???
+8000230C	0000		unimp
+8000230E	0000		unimp
+80002310	0000		unimp
+80002312	0000		unimp
+80002314	0000		unimp
+80002316	0000		unimp
+80002318	0000		unimp
+8000231A	2354		???
+8000231C	8000		???
+8000231E	22A0		???
+80002320	8000		???
+80002322	0000		unimp
+80002324	0000		unimp
+    secondary_word setHeaderImmediate
+80002326	82B3 0149		add	t0,s3,s4
+8000232A	A023 0082		sw	s0,0(t0)
+8000232E	0A11	c.addi	s4,4
+80002330	0417 0000		auipc	s0,0
+80002334	0413 0104		addi	s0,s0,16
+80002338	2283 0004		lw	t0,0(s0)
+8000233C	80E7 0002		jalr	ra,t0,8000233E
+    .word literal_impl
+80002340	040E	c.slli	s0,3
+80002342	8000		???
+    .word 40
+80002344	0028		???
+80002346	0000		unimp
+    .word forth_add_impl
+80002348	03B8		???
+8000234A	8000		???
+    .word store_impl
+8000234C	023C		???
+8000234E	8000		???
+    .word return_impl
+80002350	04A8		???
+80002352	8000		???
+
+
+word_header getHeaderImmediate, "getHeaderImmediate", 0, getXTHeader, setHeaderImmediate
+80002354	6567 4874 	L???
+80002358	6165		???
+8000235A	6564		???
+8000235C	4972	c.lwsp	sp,28(sp)
+8000235E	6D6D		???
+80002360	6465		???
+80002362	6169		???
+80002364	6574		???
+80002366	0000		unimp
+80002368	0000		unimp
+8000236A	0000		unimp
+8000236C	0000		unimp
+8000236E	0000		unimp
+80002370	0000		unimp
+80002372	0000		unimp
+80002374	23AE		???
+80002376	8000		???
+80002378	22FA		???
+8000237A	8000		???
+8000237C	0000		unimp
+8000237E	0000		unimp
+    secondary_word getHeaderImmediate
+80002380	82B3 0149		add	t0,s3,s4
+80002384	A023 0082		sw	s0,0(t0)
+80002388	0A11	c.addi	s4,4
+8000238A	0417 0000		auipc	s0,0
+8000238E	0413 0104		addi	s0,s0,16
+80002392	2283 0004		lw	t0,0(s0)
+80002396	80E7 0002		jalr	ra,t0,80002398
+    .word literal_impl
+8000239A	040E	c.slli	s0,3
+8000239C	8000		???
+    .word 40
+8000239E	0028		???
+800023A0	0000		unimp
+    .word forth_add_impl
+800023A2	03B8		???
+800023A4	8000		???
+    .word loadCell_impl
+800023A6	01EE	c.slli	gp,27
+800023A8	8000		???
+    .word return_impl
+800023AA	04A8		???
+800023AC	8000		???
+
+
+word_header getXTHeader, "getXTHeader", 0, getXTImmediate, getHeaderImmediate
+800023AE	6567 5874 	L???
+800023B2	4854		???
+800023B4	6165		???
+800023B6	6564		???
+800023B8	0072	c.slli	zero,28
+800023BA	0000		unimp
+800023BC	0000		unimp
+800023BE	0000		unimp
+800023C0	0000		unimp
+800023C2	0000		unimp
+800023C4	0000		unimp
+800023C6	0000		unimp
+800023C8	0000		unimp
+800023CA	0000		unimp
+800023CC	0000		unimp
+800023CE	2404		???
+800023D0	8000		???
+800023D2	2354		???
+800023D4	8000		???
+800023D6	0000		unimp
+800023D8	0000		unimp
+    secondary_word getXTHeader
+800023DA	82B3 0149		add	t0,s3,s4
+800023DE	A023 0082		sw	s0,0(t0)
+800023E2	0A11	c.addi	s4,4
+800023E4	0417 0000		auipc	s0,0
+800023E8	0413 0104		addi	s0,s0,16
+800023EC	2283 0004		lw	t0,0(s0)
+800023F0	80E7 0002		jalr	ra,t0,800023F2
+    .word literal_impl
+800023F4	040E	c.slli	s0,3
+800023F6	8000		???
+    .word 44
+800023F8	002C		???
+800023FA	0000		unimp
+    .word forth_minus_impl
+800023FC	04E8		???
+800023FE	8000		???
+    .word return_impl
+80002400	04A8		???
+80002402	8000		???
+
+
+word_header getXTImmediate, "getXTImmediate", 0, tokenBufferToHeaderCode, getXTHeader
+80002404	6567 5874 	L???
+80002408	4954		???
+8000240A	6D6D		???
+8000240C	6465		???
+8000240E	6169		???
+80002410	6574		???
+80002412	0000		unimp
+80002414	0000		unimp
+80002416	0000		unimp
+80002418	0000		unimp
+8000241A	0000		unimp
+8000241C	0000		unimp
+8000241E	0000		unimp
+80002420	0000		unimp
+80002422	0000		unimp
+80002424	2456		???
+80002426	8000		???
+80002428	23AE		???
+8000242A	8000		???
+8000242C	0000		unimp
+8000242E	0000		unimp
+    secondary_word getXTImmediate
+80002430	82B3 0149		add	t0,s3,s4
+80002434	A023 0082		sw	s0,0(t0)
+80002438	0A11	c.addi	s4,4
+8000243A	0417 0000		auipc	s0,0
+8000243E	0413 0104		addi	s0,s0,16
+80002442	2283 0004		lw	t0,0(s0)
+80002446	80E7 0002		jalr	ra,t0,80002448
+    .word getXTHeader_impl
+8000244A	23DA		???
+8000244C	8000		???
+    .word getHeaderImmediate_impl
+8000244E	2380		???
+80002450	8000		???
+    .word return_impl
+80002452	04A8		???
+80002454	8000		???
+
+word_header tokenBufferToHeaderCode, "tokenBufferToHeaderCode", 0, cw, getXTImmediate
+80002456	6F74		???
+80002458	656B 426E 	L???
+8000245C	6675		???
+8000245E	6566		???
+80002460	5472	c.lwsp	zero,60(sp)
+80002462	486F 6165 	L???
+80002466	6564		???
+80002468	4372	c.lwsp	t1,28(sp)
+8000246A	646F 65 	L???
+8000246E	0000		unimp
+80002470	0000		unimp
+80002472	0000		unimp
+80002474	0000		unimp
+80002476	24B8		???
+80002478	8000		???
+8000247A	2404		???
+8000247C	8000		???
+8000247E	0000		unimp
+80002480	0000		unimp
+    secondary_word tokenBufferToHeaderCode
+80002482	82B3 0149		add	t0,s3,s4
+80002486	A023 0082		sw	s0,0(t0)
+8000248A	0A11	c.addi	s4,4
+8000248C	0417 0000		auipc	s0,0
+80002490	0413 0104		addi	s0,s0,16
+80002494	2283 0004		lw	t0,0(s0)
+80002498	80E7 0002		jalr	ra,t0,8000249A
+    .word TokenBufferSize__impl
+8000249C	1548		???
+8000249E	8000		???
+    .word loadCell_impl
+800024A0	01EE	c.slli	gp,27
+800024A2	8000		???
+    .word swap_impl
+800024A4	0540		???
+800024A6	8000		???
+    .word Tokenbuffer__impl
+800024A8	14E0		???
+800024AA	8000		???
+    .word swap_impl
+800024AC	0540		???
+800024AE	8000		???
+    .word toCString_impl
+800024B0	0D0A	c.slli	s10,2
+800024B2	8000		???
+    .word return_impl
+800024B4	04A8		???
+800024B6	8000		???
+
+
+word_header cw, ",", 0, cbyte, tokenBufferToHeaderCode
+800024B8	002C		???
+800024BA	0000		unimp
+800024BC	0000		unimp
+800024BE	0000		unimp
+800024C0	0000		unimp
+800024C2	0000		unimp
+800024C4	0000		unimp
+800024C6	0000		unimp
+800024C8	0000		unimp
+800024CA	0000		unimp
+800024CC	0000		unimp
+800024CE	0000		unimp
+800024D0	0000		unimp
+800024D2	0000		unimp
+800024D4	0000		unimp
+800024D6	0000		unimp
+800024D8	251E		???
+800024DA	8000		???
+800024DC	2456		???
+800024DE	8000		???
+800024E0	0000		unimp
+800024E2	0000		unimp
+    secondary_word cw
+800024E4	82B3 0149		add	t0,s3,s4
+800024E8	A023 0082		sw	s0,0(t0)
+800024EC	0A11	c.addi	s4,4
+800024EE	0417 0000		auipc	s0,0
+800024F2	0413 0104		addi	s0,s0,16
+800024F6	2283 0004		lw	t0,0(s0)
+800024FA	80E7 0002		jalr	ra,t0,800024FC
+    .word here_impl
+800024FE	0802	c.slli64	a6
+80002500	8000		???
+    .word store_impl
+80002502	023C		???
+80002504	8000		???
+    .word here_impl
+80002506	0802	c.slli64	a6
+80002508	8000		???
+    .word literal_impl
+8000250A	040E	c.slli	s0,3
+8000250C	8000		???
+    .word 4
+8000250E	0004		???
+80002510	0000		unimp
+    .word forth_add_impl
+80002512	03B8		???
+80002514	8000		???
+    .word setHere_impl
+80002516	0BB6	c.slli	s7,13
+80002518	8000		???
+    .word return_impl
+8000251A	04A8		???
+8000251C	8000		???
+
+
+word_header cbyte, "c,", 0, doToken, cw
+8000251E	2C63 0 	L???
+80002522	0000		unimp
+80002524	0000		unimp
+80002526	0000		unimp
+80002528	0000		unimp
+8000252A	0000		unimp
+8000252C	0000		unimp
+8000252E	0000		unimp
+80002530	0000		unimp
+80002532	0000		unimp
+80002534	0000		unimp
+80002536	0000		unimp
+80002538	0000		unimp
+8000253A	0000		unimp
+8000253C	0000		unimp
+8000253E	2584		???
+80002540	8000		???
+80002542	24B8		???
+80002544	8000		???
+80002546	0000		unimp
+80002548	0000		unimp
+    secondary_word cbyte
+8000254A	82B3 0149		add	t0,s3,s4
+8000254E	A023 0082		sw	s0,0(t0)
+80002552	0A11	c.addi	s4,4
+80002554	0417 0000		auipc	s0,0
+80002558	0413 0104		addi	s0,s0,16
+8000255C	2283 0004		lw	t0,0(s0)
+80002560	80E7 0002		jalr	ra,t0,80002562
+    .word here_impl
+80002564	0802	c.slli64	a6
+80002566	8000		???
+    .word storeByte_impl
+80002568	02D8		???
+8000256A	8000		???
+    .word here_impl
+8000256C	0802	c.slli64	a6
+8000256E	8000		???
+    .word literal_impl
+80002570	040E	c.slli	s0,3
+80002572	8000		???
+    .word 1
+80002574	0001	c.addi	zero,0
+80002576	0000		unimp
+    .word forth_add_impl
+80002578	03B8		???
+8000257A	8000		???
+    .word setHere_impl
+8000257C	0BB6	c.slli	s7,13
+8000257E	8000		???
+    .word return_impl
+80002580	04A8		???
+80002582	8000		???
+
+word_header doToken, "doToken", 0, seekTokenStart, cbyte
+80002584	6F64		???
+80002586	6F54		???
+80002588	656B 6E 	L???
+8000258C	0000		unimp
+8000258E	0000		unimp
+80002590	0000		unimp
+80002592	0000		unimp
+80002594	0000		unimp
+80002596	0000		unimp
+80002598	0000		unimp
+8000259A	0000		unimp
+8000259C	0000		unimp
+8000259E	0000		unimp
+800025A0	0000		unimp
+800025A2	0000		unimp
+800025A4	26BA		???
+800025A6	8000		???
+800025A8	251E		???
+800025AA	8000		???
+800025AC	0000		unimp
+800025AE	0000		unimp
+    secondary_word doToken
+800025B0	82B3 0149		add	t0,s3,s4
+800025B4	A023 0082		sw	s0,0(t0)
+800025B8	0A11	c.addi	s4,4
+800025BA	0417 0000		auipc	s0,0
+800025BE	0413 0104		addi	s0,s0,16
+800025C2	2283 0004		lw	t0,0(s0)
+800025C6	80E7 0002		jalr	ra,t0,800025C8
+    .word TokenBufferSize__impl
+800025CA	1548		???
+800025CC	8000		???
+    .word loadCell_impl
+800025CE	01EE	c.slli	gp,27
+800025D0	8000		???
+    .word Tokenbuffer__impl
+800025D2	14E0		???
+800025D4	8000		???
+    .word findXT_impl
+800025D6	0650		???
+800025D8	8000		???
+    .word dup_impl
+800025DA	0454		???
+800025DC	8000		???
+    .word literal_impl
+800025DE	040E	c.slli	s0,3
+800025E0	8000		???
+    .word 0
+800025E2	0000		unimp
+800025E4	0000		unimp
+    .word notEquals_impl
+800025E6	0E60		???
+800025E8	8000		???
+S_IF
+800025EA	0326	c.slli	t1,9
+800025EC	8000		???
+800025EE	0050		???
+800025F0	0000		unimp
+    .word get_compile_bit_impl
+800025F2	1BE4		???
+800025F4	8000		???
+    .word literal_impl
+800025F6	040E	c.slli	s0,3
+800025F8	8000		???
+    .word 0
+800025FA	0000		unimp
+800025FC	0000		unimp
+    .word notEquals_impl
+800025FE	0E60		???
+80002600	8000		???
+	S_IF
+80002602	0326	c.slli	t1,9
+80002604	8000		???
+80002606	002C		???
+80002608	0000		unimp
+    .word dup_impl
+8000260A	0454		???
+8000260C	8000		???
+    .word getXTImmediate_impl
+8000260E	2430		???
+80002610	8000		???
+		S_IF
+80002612	0326	c.slli	t1,9
+80002614	8000		???
+80002616	0010		???
+80002618	0000		unimp
+    .word execute_impl
+8000261A	0A8A	c.slli	s5,2
+8000261C	8000		???
+		S_ELSE
+8000261E	0378		???
+80002620	8000		???
+80002622	0008		???
+80002624	0000		unimp
+    .word cw_impl
+80002626	24E4		???
+80002628	8000		???
+		S_THEN
+	S_ELSE
+8000262A	0378		???
+8000262C	8000		???
+8000262E	0008		???
+80002630	0000		unimp
+    .word execute_impl
+80002632	0A8A	c.slli	s5,2
+80002634	8000		???
+	S_THEN
+S_ELSE \ doToken_else_4_:
+80002636	0378		???
+80002638	8000		???
+8000263A	007C		???
+8000263C	0000		unimp
+    .word drop_impl
+8000263E	059E	c.slli	a1,7
+80002640	8000		???
+    .word Tokenbuffer__impl
+80002642	14E0		???
+80002644	8000		???
+    .word TokenBufferSize__impl
+80002646	1548		???
+80002648	8000		???
+    .word loadCell_impl
+8000264A	01EE	c.slli	gp,27
+8000264C	8000		???
+    .word isStringValidNumber_impl
+8000264E	2074		???
+80002650	8000		???
+    .word literal_impl
+80002652	040E	c.slli	s0,3
+80002654	8000		???
+    .word 0
+80002656	0000		unimp
+80002658	0000		unimp
+    .word notEquals_impl
+8000265A	0E60		???
+8000265C	8000		???
+	S_IF
+8000265E	0326	c.slli	t1,9
+80002660	8000		???
+80002662	0044		???
+80002664	0000		unimp
+    .word Tokenbuffer__impl
+80002666	14E0		???
+80002668	8000		???
+    .word TokenBufferSize__impl
+8000266A	1548		???
+8000266C	8000		???
+    .word loadCell_impl
+8000266E	01EE	c.slli	gp,27
+80002670	8000		???
+    .word forth_fatoi_impl
+80002672	0948		???
+80002674	8000		???
+    .word get_compile_bit_impl
+80002676	1BE4		???
+80002678	8000		???
+    .word literal_impl
+8000267A	040E	c.slli	s0,3
+8000267C	8000		???
+    .word 0
+8000267E	0000		unimp
+80002680	0000		unimp
+    .word notEquals_impl
+80002682	0E60		???
+80002684	8000		???
+		S_IF
+80002686	0326	c.slli	t1,9
+80002688	8000		???
+8000268A	0014		???
+8000268C	0000		unimp
+    .word LiteralStr__impl
+8000268E	1678		???
+80002690	8000		???
+    .word findXT_impl
+80002692	0650		???
+80002694	8000		???
+    .word cw_impl
+80002696	24E4		???
+80002698	8000		???
+    .word cw_impl
+8000269A	24E4		???
+8000269C	8000		???
+		S_THEN
+	S_ELSE
+8000269E	0378		???
+800026A0	8000		???
+800026A2	0014		???
+800026A4	0000		unimp
+    .word literal_impl
+800026A6	040E	c.slli	s0,3
+800026A8	8000		???
+    .word 1
+800026AA	0001	c.addi	zero,0
+800026AC	0000		unimp
+    .word EvalErrorFlag__impl
+800026AE	15E0		???
+800026B0	8000		???
+    .word store_impl
+800026B2	023C		???
+800026B4	8000		???
+	S_THEN
+S_THEN \ doToken_then_8_:
+    .word return_impl
+800026B6	04A8		???
+800026B8	8000		???
+
+ 
+word_header seekTokenStart, "seekTokenStart", 0, loadToken, doToken
+800026BA	6573 6B65 	L???
+800026BE	6F54		???
+800026C0	656B 536E 	L???
+800026C4	6174		???
+800026C6	7472		???
+800026C8	0000		unimp
+800026CA	0000		unimp
+800026CC	0000		unimp
+800026CE	0000		unimp
+800026D0	0000		unimp
+800026D2	0000		unimp
+800026D4	0000		unimp
+800026D6	0000		unimp
+800026D8	0000		unimp
+800026DA	27A4		???
+800026DC	8000		???
+800026DE	2584		???
+800026E0	8000		???
+800026E2	0000		unimp
+800026E4	0000		unimp
+    secondary_word seekTokenStart
+800026E6	82B3 0149		add	t0,s3,s4
+800026EA	A023 0082		sw	s0,0(t0)
+800026EE	0A11	c.addi	s4,4
+800026F0	0417 0000		auipc	s0,0
+800026F4	0413 0104		addi	s0,s0,16
+800026F8	2283 0004		lw	t0,0(s0)
+800026FC	80E7 0002		jalr	ra,t0,800026FE
+S_BEGIN
+    .word LineBuffer__impl
+80002700	13CC		???
+80002702	8000		???
+    .word LineBufferI__impl
+80002704	1594		???
+80002706	8000		???
+    .word loadCell_impl
+80002708	01EE	c.slli	gp,27
+8000270A	8000		???
+    .word forth_add_impl
+8000270C	03B8		???
+8000270E	8000		???
+    .word loadByte_impl
+80002710	028A	c.slli	t0,2
+80002712	8000		???
+    .word dup_impl
+80002714	0454		???
+80002716	8000		???
+    .word literal_impl
+80002718	040E	c.slli	s0,3
+8000271A	8000		???
+    .word 32
+8000271C	0020		???
+8000271E	0000		unimp
+    .word notEquals_impl
+80002720	0E60		???
+80002722	8000		???
+    .word swap_impl
+80002724	0540		???
+80002726	8000		???
+    .word literal_impl
+80002728	040E	c.slli	s0,3
+8000272A	8000		???
+    .word 10
+8000272C	000A	c.slli	zero,2
+8000272E	0000		unimp
+    .word notEquals_impl
+80002730	0E60		???
+80002732	8000		???
+    .word logic_and_impl
+80002734	1DC4		???
+80002736	8000		???
+	S_IF
+80002738	0326	c.slli	t1,9
+8000273A	8000		???
+8000273C	0010		???
+8000273E	0000		unimp
+    .word literal_impl
+80002740	040E	c.slli	s0,3
+80002742	8000		???
+    .word 0
+80002744	0000		unimp
+80002746	0000		unimp
+    .word return_impl
+80002748	04A8		???
+8000274A	8000		???
+	S_THEN
+    .word LineBufferI__impl
+8000274C	1594		???
+8000274E	8000		???
+    .word loadCell_impl
+80002750	01EE	c.slli	gp,27
+80002752	8000		???
+    .word literal_impl
+80002754	040E	c.slli	s0,3
+80002756	8000		???
+    .word 1
+80002758	0001	c.addi	zero,0
+8000275A	0000		unimp
+    .word forth_add_impl
+8000275C	03B8		???
+8000275E	8000		???
+    .word LineBufferI__impl
+80002760	1594		???
+80002762	8000		???
+    .word store_impl
+80002764	023C		???
+80002766	8000		???
+    .word LineBufferI__impl
+80002768	1594		???
+8000276A	8000		???
+    .word loadCell_impl
+8000276C	01EE	c.slli	gp,27
+8000276E	8000		???
+    .word LineBufferSize__impl
+80002770	1494		???
+80002772	8000		???
+    .word loadCell_impl
+80002774	01EE	c.slli	gp,27
+80002776	8000		???
+    .word equals_impl
+80002778	0DFA	c.slli	s11,30
+8000277A	8000		???
+	S_IF
+8000277C	0326	c.slli	t1,9
+8000277E	8000		???
+80002780	0010		???
+80002782	0000		unimp
+    .word literal_impl
+80002784	040E	c.slli	s0,3
+80002786	8000		???
+    .word 1
+80002788	0001	c.addi	zero,0
+8000278A	0000		unimp
+    .word return_impl
+8000278C	04A8		???
+8000278E	8000		???
+	S_THEN
+    .word literal_impl
+80002790	040E	c.slli	s0,3
+80002792	8000		???
+    .word 0
+80002794	0000		unimp
+80002796	0000		unimp
+S_UNTIL	
+80002798	0326	c.slli	t1,9
+8000279A	8000		???
+8000279C	FF64		???
+8000279E	FFFF 4A8 	L???
+    .word return_impl
+800027A2	8000		???
+
+
+word_header loadToken, "loadToken", 0, loadNextToken, seekTokenStart
+800027A4	6F6C		???
+800027A6	6461		???
+800027A8	6F54		???
+800027AA	656B 6E 	L???
+800027AE	0000		unimp
+800027B0	0000		unimp
+800027B2	0000		unimp
+800027B4	0000		unimp
+800027B6	0000		unimp
+800027B8	0000		unimp
+800027BA	0000		unimp
+800027BC	0000		unimp
+800027BE	0000		unimp
+800027C0	0000		unimp
+800027C2	0000		unimp
+800027C4	28EA		???
+800027C6	8000		???
+800027C8	26BA		???
+800027CA	8000		???
+800027CC	0000		unimp
+800027CE	0000		unimp
+    secondary_word loadToken
+800027D0	82B3 0149		add	t0,s3,s4
+800027D4	A023 0082		sw	s0,0(t0)
+800027D8	0A11	c.addi	s4,4
+800027DA	0417 0000		auipc	s0,0
+800027DE	0413 0104		addi	s0,s0,16
+800027E2	2283 0004		lw	t0,0(s0)
+800027E6	80E7 0002		jalr	ra,t0,800027E8
+    .word literal_impl
+800027EA	040E	c.slli	s0,3
+800027EC	8000		???
+    .word 0
+800027EE	0000		unimp
+800027F0	0000		unimp
+    .word TokenBufferSize__impl
+800027F2	1548		???
+800027F4	8000		???
+    .word store_impl
+800027F6	023C		???
+800027F8	8000		???
+S_BEGIN
+    .word LineBuffer__impl
+800027FA	13CC		???
+800027FC	8000		???
+    .word LineBufferI__impl
+800027FE	1594		???
+80002800	8000		???
+    .word loadCell_impl
+80002802	01EE	c.slli	gp,27
+80002804	8000		???
+    .word forth_add_impl
+80002806	03B8		???
+80002808	8000		???
+    .word loadByte_impl
+8000280A	028A	c.slli	t0,2
+8000280C	8000		???
+    .word LineBufferI__impl
+8000280E	1594		???
+80002810	8000		???
+    .word loadCell_impl
+80002812	01EE	c.slli	gp,27
+80002814	8000		???
+    .word LineBufferSize__impl
+80002816	1494		???
+80002818	8000		???
+    .word loadCell_impl
+8000281A	01EE	c.slli	gp,27
+8000281C	8000		???
+    .word equals_impl
+8000281E	0DFA	c.slli	s11,30
+80002820	8000		???
+	S_IF
+80002822	0326	c.slli	t1,9
+80002824	8000		???
+80002826	0028		???
+80002828	0000		unimp
+    .word drop_impl
+8000282A	059E	c.slli	a1,7
+8000282C	8000		???
+    .word literal_impl
+8000282E	040E	c.slli	s0,3
+80002830	8000		???
+    .word 0
+80002832	0000		unimp
+80002834	0000		unimp
+    .word Tokenbuffer__impl
+80002836	14E0		???
+80002838	8000		???
+    .word TokenBufferSize__impl
+8000283A	1548		???
+8000283C	8000		???
+    .word loadCell_impl
+8000283E	01EE	c.slli	gp,27
+80002840	8000		???
+    .word forth_add_impl
+80002842	03B8		???
+80002844	8000		???
+    .word storeByte_impl
+80002846	02D8		???
+80002848	8000		???
+    .word return_impl
+8000284A	04A8		???
+8000284C	8000		???
+	S_THEN
+    .word dup_impl
+8000284E	0454		???
+80002850	8000		???
+    .word literal_impl
+80002852	040E	c.slli	s0,3
+80002854	8000		???
+    .word 32
+80002856	0020		???
+80002858	0000		unimp
+    .word equals_impl
+8000285A	0DFA	c.slli	s11,30
+8000285C	8000		???
+	S_IF
+8000285E	0326	c.slli	t1,9
+80002860	8000		???
+80002862	0028		???
+80002864	0000		unimp
+    .word drop_impl
+80002866	059E	c.slli	a1,7
+80002868	8000		???
+    .word literal_impl
+8000286A	040E	c.slli	s0,3
+8000286C	8000		???
+    .word 0
+8000286E	0000		unimp
+80002870	0000		unimp
+    .word Tokenbuffer__impl
+80002872	14E0		???
+80002874	8000		???
+    .word TokenBufferSize__impl
+80002876	1548		???
+80002878	8000		???
+    .word loadCell_impl
+8000287A	01EE	c.slli	gp,27
+8000287C	8000		???
+    .word forth_add_impl
+8000287E	03B8		???
+80002880	8000		???
+    .word storeByte_impl
+80002882	02D8		???
+80002884	8000		???
+    .word return_impl
+80002886	04A8		???
+80002888	8000		???
+	S_THEN
+    .word Tokenbuffer__impl
+8000288A	14E0		???
+8000288C	8000		???
+    .word TokenBufferSize__impl
+8000288E	1548		???
+80002890	8000		???
+    .word loadCell_impl
+80002892	01EE	c.slli	gp,27
+80002894	8000		???
+    .word forth_add_impl
+80002896	03B8		???
+80002898	8000		???
+    .word storeByte_impl
+8000289A	02D8		???
+8000289C	8000		???
+    .word LineBufferI__impl
+8000289E	1594		???
+800028A0	8000		???
+    .word loadCell_impl
+800028A2	01EE	c.slli	gp,27
+800028A4	8000		???
+    .word literal_impl
+800028A6	040E	c.slli	s0,3
+800028A8	8000		???
+    .word 1
+800028AA	0001	c.addi	zero,0
+800028AC	0000		unimp
+    .word forth_add_impl
+800028AE	03B8		???
+800028B0	8000		???
+    .word LineBufferI__impl
+800028B2	1594		???
+800028B4	8000		???
+    .word store_impl
+800028B6	023C		???
+800028B8	8000		???
+    .word TokenBufferSize__impl
+800028BA	1548		???
+800028BC	8000		???
+    .word loadCell_impl
+800028BE	01EE	c.slli	gp,27
+800028C0	8000		???
+    .word literal_impl
+800028C2	040E	c.slli	s0,3
+800028C4	8000		???
+    .word 1
+800028C6	0001	c.addi	zero,0
+800028C8	0000		unimp
+    .word forth_add_impl
+800028CA	03B8		???
+800028CC	8000		???
+    .word TokenBufferSize__impl
+800028CE	1548		???
+800028D0	8000		???
+    .word store_impl
+800028D2	023C		???
+800028D4	8000		???
+    .word literal_impl
+800028D6	040E	c.slli	s0,3
+800028D8	8000		???
+    .word 0
+800028DA	0000		unimp
+800028DC	0000		unimp
+S_UNTIL
+800028DE	0326	c.slli	t1,9
+800028E0	8000		???
+800028E2	FF18		???
+800028E4	FFFF 4A8 	L???
+    .word return_impl
+800028E8	8000		???
+
+
+word_header loadNextToken, "loadNextToken", 0, eval_, loadToken
+800028EA	6F6C		???
+800028EC	6461		???
+800028EE	654E		???
+800028F0	7478		???
+800028F2	6F54		???
+800028F4	656B 6E 	L???
+800028F8	0000		unimp
+800028FA	0000		unimp
+800028FC	0000		unimp
+800028FE	0000		unimp
+80002900	0000		unimp
+80002902	0000		unimp
+80002904	0000		unimp
+80002906	0000		unimp
+80002908	0000		unimp
+8000290A	298C		???
+8000290C	8000		???
+8000290E	27A4		???
+80002910	8000		???
+80002912	0000		unimp
+80002914	0000		unimp
+    secondary_word loadNextToken
+80002916	82B3 0149		add	t0,s3,s4
+8000291A	A023 0082		sw	s0,0(t0)
+8000291E	0A11	c.addi	s4,4
+80002920	0417 0000		auipc	s0,0
+80002924	0413 0104		addi	s0,s0,16
+80002928	2283 0004		lw	t0,0(s0)
+8000292C	80E7 0002		jalr	ra,t0,8000292E
+    .word LineBufferI__impl
+80002930	1594		???
+80002932	8000		???
+    .word loadCell_impl
+80002934	01EE	c.slli	gp,27
+80002936	8000		???
+    .word LineBufferSize__impl
+80002938	1494		???
+8000293A	8000		???
+    .word loadCell_impl
+8000293C	01EE	c.slli	gp,27
+8000293E	8000		???
+    .word equals_impl
+80002940	0DFA	c.slli	s11,30
+80002942	8000		???
+S_IF
+80002944	0326	c.slli	t1,9
+80002946	8000		???
+80002948	0010		???
+8000294A	0000		unimp
+    .word literal_impl
+8000294C	040E	c.slli	s0,3
+8000294E	8000		???
+    .word 1
+80002950	0001	c.addi	zero,0
+80002952	0000		unimp
+    .word return_impl
+80002954	04A8		???
+80002956	8000		???
+S_THEN
+    .word seekTokenStart_impl
+80002958	26E6		???
+8000295A	8000		???
+    .word literal_impl
+8000295C	040E	c.slli	s0,3
+8000295E	8000		???
+    .word 1
+80002960	0001	c.addi	zero,0
+80002962	0000		unimp
+    .word equals_impl
+80002964	0DFA	c.slli	s11,30
+80002966	8000		???
+S_IF
+80002968	0326	c.slli	t1,9
+8000296A	8000		???
+8000296C	0010		???
+8000296E	0000		unimp
+    .word literal_impl
+80002970	040E	c.slli	s0,3
+80002972	8000		???
+    .word 1
+80002974	0001	c.addi	zero,0
+80002976	0000		unimp
+    .word return_impl
+80002978	04A8		???
+8000297A	8000		???
+S_THEN
+    .word loadToken_impl
+8000297C	27D0		???
+8000297E	8000		???
+    .word literal_impl
+80002980	040E	c.slli	s0,3
+80002982	8000		???
+    .word 0
+80002984	0000		unimp
+80002986	0000		unimp
+    .word return_impl
+80002988	04A8		???
+8000298A	8000		???
+
+
+word_header eval_, "eval_", 0, doBackspace, loadNextToken
+8000298C	7665		???
+8000298E	6C61		???
+80002990	005F 0 	L???
+80002994	0000		unimp
+80002996	0000		unimp
+80002998	0000		unimp
+8000299A	0000		unimp
+8000299C	0000		unimp
+8000299E	0000		unimp
+800029A0	0000		unimp
+800029A2	0000		unimp
+800029A4	0000		unimp
+800029A6	0000		unimp
+800029A8	0000		unimp
+800029AA	0000		unimp
+800029AC	2A92		???
+800029AE	8000		???
+800029B0	28EA		???
+800029B2	8000		???
+800029B4	0000		unimp
+800029B6	0000		unimp
+    secondary_word eval_
+800029B8	82B3 0149		add	t0,s3,s4
+800029BC	A023 0082		sw	s0,0(t0)
+800029C0	0A11	c.addi	s4,4
+800029C2	0417 0000		auipc	s0,0
+800029C6	0413 0104		addi	s0,s0,16
+800029CA	2283 0004		lw	t0,0(s0)
+800029CE	80E7 0002		jalr	ra,t0,800029D0
+    .word literal_impl
+800029D2	040E	c.slli	s0,3
+800029D4	8000		???
+    .word 0
+800029D6	0000		unimp
+800029D8	0000		unimp
+    .word LineBufferI__impl
+800029DA	1594		???
+800029DC	8000		???
+    .word store_impl
+800029DE	023C		???
+800029E0	8000		???
+    .word literal_impl
+800029E2	040E	c.slli	s0,3
+800029E4	8000		???
+    .word 0
+800029E6	0000		unimp
+800029E8	0000		unimp
+    .word TokenBufferSize__impl
+800029EA	1548		???
+800029EC	8000		???
+    .word store_impl
+800029EE	023C		???
+800029F0	8000		???
+    .word literal_impl
+800029F2	040E	c.slli	s0,3
+800029F4	8000		???
+    .word 0
+800029F6	0000		unimp
+800029F8	0000		unimp
+    .word EvalErrorFlag__impl
+800029FA	15E0		???
+800029FC	8000		???
+    .word store_impl
+800029FE	023C		???
+80002A00	8000		???
+S_BEGIN
+    .word EvalErrorFlag__impl
+80002A02	15E0		???
+80002A04	8000		???
+    .word loadCell_impl
+80002A06	01EE	c.slli	gp,27
+80002A08	8000		???
+    .word literal_impl
+80002A0A	040E	c.slli	s0,3
+80002A0C	8000		???
+    .word 0
+80002A0E	0000		unimp
+80002A10	0000		unimp
+    .word notEquals_impl
+80002A12	0E60		???
+80002A14	8000		???
+	S_IF
+80002A16	0326	c.slli	t1,9
+80002A18	8000		???
+80002A1A	003C		???
+80002A1C	0000		unimp
+    .word UnknownTokenStartStr__impl
+80002A1E	173C		???
+80002A20	8000		???
+    .word swap_impl
+80002A22	0540		???
+80002A24	8000		???
+    .word print_impl
+80002A26	1D1E	c.slli	s10,-25
+80002A28	8000		???
+    .word Tokenbuffer__impl
+80002A2A	14E0		???
+80002A2C	8000		???
+    .word TokenBufferSize__impl
+80002A2E	1548		???
+80002A30	8000		???
+    .word loadCell_impl
+80002A32	01EE	c.slli	gp,27
+80002A34	8000		???
+    .word print_impl
+80002A36	1D1E	c.slli	s10,-25
+80002A38	8000		???
+    .word UnknownTokenEndStr__impl
+80002A3A	17AC		???
+80002A3C	8000		???
+    .word swap_impl
+80002A3E	0540		???
+80002A40	8000		???
+    .word literal_impl
+80002A42	040E	c.slli	s0,3
+80002A44	8000		???
+    .word 1
+80002A46	0001	c.addi	zero,0
+80002A48	0000		unimp
+    .word forth_minus_impl
+80002A4A	04E8		???
+80002A4C	8000		???
+    .word print_impl
+80002A4E	1D1E	c.slli	s10,-25
+80002A50	8000		???
+    .word return_impl
+80002A52	04A8		???
+80002A54	8000		???
+	S_THEN \ eval__then_1_:
+    .word loadNextToken_impl
+80002A56	2916		???
+80002A58	8000		???
+    .word literal_impl
+80002A5A	040E	c.slli	s0,3
+80002A5C	8000		???
+    .word 1
+80002A5E	0001	c.addi	zero,0
+80002A60	0000		unimp
+    .word notEquals_impl
+80002A62	0E60		???
+80002A64	8000		???
+	S_IF
+80002A66	0326	c.slli	t1,9
+80002A68	8000		???
+80002A6A	0010		???
+80002A6C	0000		unimp
+    .word doToken_impl
+80002A6E	25B0		???
+80002A70	8000		???
+	S_ELSE
+80002A72	0378		???
+80002A74	8000		???
+80002A76	0008		???
+80002A78	0000		unimp
+    .word return_impl
+80002A7A	04A8		???
+80002A7C	8000		???
+	S_THEN
+    .word literal_impl
+80002A7E	040E	c.slli	s0,3
+80002A80	8000		???
+    .word 0
+80002A82	0000		unimp
+80002A84	0000		unimp
+S_UNTIL
+80002A86	0326	c.slli	t1,9
+80002A88	8000		???
+80002A8A	FF78		???
+80002A8C	FFFF 4A8 	L???
+    .word return_impl
+80002A90	8000		???
+
+word_header doBackspace, "doBackspace", 0, outerInterpreter, eval_
+80002A92	6F64		???
+80002A94	6142		???
+80002A96	6B63 7073 	L???
+80002A9A	6361		???
+80002A9C	0065	c.addi	zero,25
+80002A9E	0000		unimp
+80002AA0	0000		unimp
+80002AA2	0000		unimp
+80002AA4	0000		unimp
+80002AA6	0000		unimp
+80002AA8	0000		unimp
+80002AAA	0000		unimp
+80002AAC	0000		unimp
+80002AAE	0000		unimp
+80002AB0	0000		unimp
+80002AB2	2B38		???
+80002AB4	8000		???
+80002AB6	298C		???
+80002AB8	8000		???
+80002ABA	0000		unimp
+80002ABC	0000		unimp
+
+    secondary_word doBackspace
+80002ABE	82B3 0149		add	t0,s3,s4
+80002AC2	A023 0082		sw	s0,0(t0)
+80002AC6	0A11	c.addi	s4,4
+80002AC8	0417 0000		auipc	s0,0
+80002ACC	0413 0104		addi	s0,s0,16
+80002AD0	2283 0004		lw	t0,0(s0)
+80002AD4	80E7 0002		jalr	ra,t0,80002AD6
+    .word LineBufferSize__impl
+80002AD8	1494		???
+80002ADA	8000		???
+    .word loadCell_impl
+80002ADC	01EE	c.slli	gp,27
+80002ADE	8000		???
+    .word literal_impl
+80002AE0	040E	c.slli	s0,3
+80002AE2	8000		???
+    .word 0
+80002AE4	0000		unimp
+80002AE6	0000		unimp
+    .word greaterThan_impl
+80002AE8	0F2C		???
+80002AEA	8000		???
+S_IF
+80002AEC	0326	c.slli	t1,9
+80002AEE	8000		???
+80002AF0	0044		???
+80002AF2	0000		unimp
+    .word literal_impl
+80002AF4	040E	c.slli	s0,3
+80002AF6	8000		???
+    .word 8
+80002AF8	0008		???
+80002AFA	0000		unimp
+    .word emit_impl
+80002AFC	0162	c.slli	sp,24
+80002AFE	8000		???
+    .word literal_impl
+80002B00	040E	c.slli	s0,3
+80002B02	8000		???
+    .word 32
+80002B04	0020		???
+80002B06	0000		unimp
+    .word emit_impl
+80002B08	0162	c.slli	sp,24
+80002B0A	8000		???
+    .word literal_impl
+80002B0C	040E	c.slli	s0,3
+80002B0E	8000		???
+    .word 8
+80002B10	0008		???
+80002B12	0000		unimp
+    .word emit_impl
+80002B14	0162	c.slli	sp,24
+80002B16	8000		???
+    .word LineBufferSize__impl
+80002B18	1494		???
+80002B1A	8000		???
+    .word loadCell_impl
+80002B1C	01EE	c.slli	gp,27
+80002B1E	8000		???
+    .word literal_impl
+80002B20	040E	c.slli	s0,3
+80002B22	8000		???
+    .word 1
+80002B24	0001	c.addi	zero,0
+80002B26	0000		unimp
+    .word forth_minus_impl
+80002B28	04E8		???
+80002B2A	8000		???
+    .word LineBufferSize__impl
+80002B2C	1494		???
+80002B2E	8000		???
+    .word store_impl
+80002B30	023C		???
+80002B32	8000		???
+S_THEN
+    .word return_impl
+80002B34	04A8		???
+80002B36	8000		???
+
+
+word_header outerInterpreter, "outerInterpreter", 0, compileHeader, doBackspace
+80002B38	756F 6574 	L???
+80002B3C	4972	c.lwsp	sp,28(sp)
+80002B3E	746E		???
+80002B40	7265		???
+80002B42	7270		???
+80002B44	7465		???
+80002B46	7265		???
+80002B48	0000		unimp
+80002B4A	0000		unimp
+80002B4C	0000		unimp
+80002B4E	0000		unimp
+80002B50	0000		unimp
+80002B52	0000		unimp
+80002B54	0000		unimp
+80002B56	0000		unimp
+80002B58	2C66		???
+80002B5A	8000		???
+80002B5C	2A92		???
+80002B5E	8000		???
+80002B60	0000		unimp
+80002B62	0000		unimp
+    secondary_word outerInterpreter
+80002B64	82B3 0149		add	t0,s3,s4
+80002B68	A023 0082		sw	s0,0(t0)
+80002B6C	0A11	c.addi	s4,4
+80002B6E	0417 0000		auipc	s0,0
+80002B72	0413 0104		addi	s0,s0,16
+80002B76	2283 0004		lw	t0,0(s0)
+80002B7A	80E7 0002		jalr	ra,t0,80002B7C
+    .word literal_impl
+80002B7E	040E	c.slli	s0,3
+80002B80	8000		???
+    .word 0
+80002B82	0000		unimp
+80002B84	0000		unimp
+    .word LineBufferSize__impl
+80002B86	1494		???
+80002B88	8000		???
+    .word store_impl
+80002B8A	023C		???
+80002B8C	8000		???
+S_BEGIN
+    .word key_impl
+80002B8E	01A8		???
+80002B90	8000		???
+    .word dup_impl
+80002B92	0454		???
+80002B94	8000		???
+    .word literal_impl
+80002B96	040E	c.slli	s0,3
+80002B98	8000		???
+    .word 13
+80002B9A	000D	c.addi	zero,3
+80002B9C	0000		unimp
+    .word equals_impl
+80002B9E	0DFA	c.slli	s11,30
+80002BA0	8000		???
+	S_IF
+80002BA2	0326	c.slli	t1,9
+80002BA4	8000		???
+80002BA6	0030		???
+80002BA8	0000		unimp
+    .word drop_impl
+80002BAA	059E	c.slli	a1,7
+80002BAC	8000		???
+    .word literal_impl
+80002BAE	040E	c.slli	s0,3
+80002BB0	8000		???
+    .word 10
+80002BB2	000A	c.slli	zero,2
+80002BB4	0000		unimp
+    .word emit_impl
+80002BB6	0162	c.slli	sp,24
+80002BB8	8000		???
+    .word eval__impl
+80002BBA	29B8		???
+80002BBC	8000		???
+    .word literal_impl
+80002BBE	040E	c.slli	s0,3
+80002BC0	8000		???
+    .word 0
+80002BC2	0000		unimp
+80002BC4	0000		unimp
+    .word LineBufferSize__impl
+80002BC6	1494		???
+80002BC8	8000		???
+    .word store_impl
+80002BCA	023C		???
+80002BCC	8000		???
+	S_ELSE
+80002BCE	0378		???
+80002BD0	8000		???
+80002BD2	0080		???
+80002BD4	0000		unimp
+    .word dup_impl
+80002BD6	0454		???
+80002BD8	8000		???
+    .word literal_impl
+80002BDA	040E	c.slli	s0,3
+80002BDC	8000		???
+    .word 127
+80002BDE	007F 0 	L???
+    .word equals_impl
+80002BE2	0DFA	c.slli	s11,30
+80002BE4	8000		???
+		S_IF
+80002BE6	0326	c.slli	t1,9
+80002BE8	8000		???
+80002BEA	0014		???
+80002BEC	0000		unimp
+    .word drop_impl
+80002BEE	059E	c.slli	a1,7
+80002BF0	8000		???
+    .word doBackspace_impl
+80002BF2	2ABE		???
+80002BF4	8000		???
+		S_ELSE
+80002BF6	0378		???
+80002BF8	8000		???
+80002BFA	0058		???
+80002BFC	0000		unimp
+    .word LineBufferSize__impl
+80002BFE	1494		???
+80002C00	8000		???
+    .word loadCell_impl
+80002C02	01EE	c.slli	gp,27
+80002C04	8000		???
+    .word literal_impl
+80002C06	040E	c.slli	s0,3
+80002C08	8000		???
+    .word 127
+80002C0A	007F 0 	L???
+    .word lessThan_impl
+80002C0E	0EC6	c.slli	t4,17
+80002C10	8000		???
+			S_IF
+80002C12	0326	c.slli	t1,9
+80002C14	8000		???
+80002C16	003C		???
+80002C18	0000		unimp
+    .word dup_impl
+80002C1A	0454		???
+80002C1C	8000		???
+    .word emit_impl
+80002C1E	0162	c.slli	sp,24
+80002C20	8000		???
+    .word LineBuffer__impl
+80002C22	13CC		???
+80002C24	8000		???
+    .word LineBufferSize__impl
+80002C26	1494		???
+80002C28	8000		???
+    .word loadByte_impl
+80002C2A	028A	c.slli	t0,2
+80002C2C	8000		???
+    .word forth_add_impl
+80002C2E	03B8		???
+80002C30	8000		???
+    .word store_impl
+80002C32	023C		???
+80002C34	8000		???
+    .word LineBufferSize__impl
+80002C36	1494		???
+80002C38	8000		???
+    .word loadCell_impl
+80002C3A	01EE	c.slli	gp,27
+80002C3C	8000		???
+    .word literal_impl
+80002C3E	040E	c.slli	s0,3
+80002C40	8000		???
+    .word 1
+80002C42	0001	c.addi	zero,0
+80002C44	0000		unimp
+    .word forth_add_impl
+80002C46	03B8		???
+80002C48	8000		???
+    .word LineBufferSize__impl
+80002C4A	1494		???
+80002C4C	8000		???
+    .word store_impl
+80002C4E	023C		???
+80002C50	8000		???
+			S_THEN
+		S_THEN
+	S_THEN
+    .word literal_impl
+80002C52	040E	c.slli	s0,3
+80002C54	8000		???
+    .word 0
+80002C56	0000		unimp
+80002C58	0000		unimp
+S_UNTIL
+80002C5A	0326	c.slli	t1,9
+80002C5C	8000		???
+80002C5E	FF30		???
+80002C60	FFFF 4A8 	L???
+    .word return_impl
+80002C64	8000		???
+
+
+word_header compileHeader, "compileHeader", 0, alignHere, outerInterpreter
+80002C66	6F63 706D 	L???
+80002C6A	6C69		???
+80002C6C	4865	li	a6,25
+80002C6E	6165		???
+80002C70	6564		???
+80002C72	0072	c.slli	zero,28
+80002C74	0000		unimp
+80002C76	0000		unimp
+80002C78	0000		unimp
+80002C7A	0000		unimp
+80002C7C	0000		unimp
+80002C7E	0000		unimp
+80002C80	0000		unimp
+80002C82	0000		unimp
+80002C84	0000		unimp
+80002C86	2D08		???
+80002C88	8000		???
+80002C8A	2B38		???
+80002C8C	8000		???
+80002C8E	0000		unimp
+80002C90	0000		unimp
+    secondary_word compileHeader
+80002C92	82B3 0149		add	t0,s3,s4
+80002C96	A023 0082		sw	s0,0(t0)
+80002C9A	0A11	c.addi	s4,4
+80002C9C	0417 0000		auipc	s0,0
+80002CA0	0413 0104		addi	s0,s0,16
+80002CA4	2283 0004		lw	t0,0(s0)
+80002CA8	80E7 0002		jalr	ra,t0,80002CAA
+    .word loadNextToken_impl
+80002CAC	2916		???
+80002CAE	8000		???
+    .word drop_impl
+80002CB0	059E	c.slli	a1,7
+80002CB2	8000		???
+    .word here_impl
+80002CB4	0802	c.slli64	a6
+80002CB6	8000		???
+    .word here_impl
+80002CB8	0802	c.slli64	a6
+80002CBA	8000		???
+    .word literal_impl
+80002CBC	040E	c.slli	s0,3
+80002CBE	8000		???
+    .word 44
+80002CC0	002C		???
+80002CC2	0000		unimp
+    .word forth_add_impl
+80002CC4	03B8		???
+80002CC6	8000		???
+    .word setHere_impl
+80002CC8	0BB6	c.slli	s7,13
+80002CCA	8000		???
+    .word dup_impl
+80002CCC	0454		???
+80002CCE	8000		???
+    .word tokenBufferToHeaderCode_impl
+80002CD0	2482		???
+80002CD2	8000		???
+    .word dup_impl
+80002CD4	0454		???
+80002CD6	8000		???
+    .word getDictionaryEnd_impl
+80002CD8	0C72	c.slli	s8,28
+80002CDA	8000		???
+    .word swap_impl
+80002CDC	0540		???
+80002CDE	8000		???
+    .word setHeaderPrev_impl
+80002CE0	2272		???
+80002CE2	8000		???
+    .word dup_impl
+80002CE4	0454		???
+80002CE6	8000		???
+    .word getDictionaryEnd_impl
+80002CE8	0C72	c.slli	s8,28
+80002CEA	8000		???
+    .word setHeaderNext_impl
+80002CEC	22CC		???
+80002CEE	8000		???
+    .word dup_impl
+80002CF0	0454		???
+80002CF2	8000		???
+    .word literal_impl
+80002CF4	040E	c.slli	s0,3
+80002CF6	8000		???
+    .word 0
+80002CF8	0000		unimp
+80002CFA	0000		unimp
+    .word swap_impl
+80002CFC	0540		???
+80002CFE	8000		???
+    .word setHeaderNext_impl
+80002D00	22CC		???
+80002D02	8000		???
+    .word return_impl
+80002D04	04A8		???
+80002D06	8000		???
+
+
+word_header alignHere, "alignHere", 0, bw, compileHeader
+80002D08	6C61		???
+80002D0A	6769		???
+80002D0C	486E	c.lwsp	zero,216(sp)
+80002D0E	7265		???
+80002D10	0065	c.addi	zero,25
+80002D12	0000		unimp
+80002D14	0000		unimp
+80002D16	0000		unimp
+80002D18	0000		unimp
+80002D1A	0000		unimp
+80002D1C	0000		unimp
+80002D1E	0000		unimp
+80002D20	0000		unimp
+80002D22	0000		unimp
+80002D24	0000		unimp
+80002D26	0000		unimp
+80002D28	2DA2		???
+80002D2A	8000		???
+80002D2C	2C66		???
+80002D2E	8000		???
+80002D30	0000		unimp
+80002D32	0000		unimp
+    secondary_word alignHere
+80002D34	82B3 0149		add	t0,s3,s4
+80002D38	A023 0082		sw	s0,0(t0)
+80002D3C	0A11	c.addi	s4,4
+80002D3E	0417 0000		auipc	s0,0
+80002D42	0413 0104		addi	s0,s0,16
+80002D46	2283 0004		lw	t0,0(s0)
+80002D4A	80E7 0002		jalr	ra,t0,80002D4C
+S_BEGIN \ alignHere_begin_0_:
+    .word dup_impl
+80002D4E	0454		???
+80002D50	8000		???
+    .word here_impl
+80002D52	0802	c.slli64	a6
+80002D54	8000		???
+    .word swap_impl
+80002D56	0540		???
+80002D58	8000		???
+    .word modulo_impl
+80002D5A	0F92	c.slli	t6,4
+80002D5C	8000		???
+    .word literal_impl
+80002D5E	040E	c.slli	s0,3
+80002D60	8000		???
+    .word 0
+80002D62	0000		unimp
+80002D64	0000		unimp
+    .word equals_impl
+80002D66	0DFA	c.slli	s11,30
+80002D68	8000		???
+	S_IF
+80002D6A	0326	c.slli	t1,9
+80002D6C	8000		???
+80002D6E	000C		???
+80002D70	0000		unimp
+    .word drop_impl
+80002D72	059E	c.slli	a1,7
+80002D74	8000		???
+    .word return_impl
+80002D76	04A8		???
+80002D78	8000		???
+	S_THEN \  alignHere_then_1_:
+    .word here_impl
+80002D7A	0802	c.slli64	a6
+80002D7C	8000		???
+    .word literal_impl
+80002D7E	040E	c.slli	s0,3
+80002D80	8000		???
+    .word 1
+80002D82	0001	c.addi	zero,0
+80002D84	0000		unimp
+    .word forth_add_impl
+80002D86	03B8		???
+80002D88	8000		???
+    .word setHere_impl
+80002D8A	0BB6	c.slli	s7,13
+80002D8C	8000		???
+    .word literal_impl
+80002D8E	040E	c.slli	s0,3
+80002D90	8000		???
+    .word 0
+80002D92	0000		unimp
+80002D94	0000		unimp
+S_UNTIL
+80002D96	0326	c.slli	t1,9
+80002D98	8000		???
+80002D9A	FFB4		???
+80002D9C	FFFF 4A8 	L???
+    .word return_impl
+80002DA0	8000		???
+
+
+word_header bw, ":", 0, ew, alignHere
+80002DA2	003A	c.slli	zero,14
+80002DA4	0000		unimp
+80002DA6	0000		unimp
+80002DA8	0000		unimp
+80002DAA	0000		unimp
+80002DAC	0000		unimp
+80002DAE	0000		unimp
+80002DB0	0000		unimp
+80002DB2	0000		unimp
+80002DB4	0000		unimp
+80002DB6	0000		unimp
+80002DB8	0000		unimp
+80002DBA	0000		unimp
+80002DBC	0000		unimp
+80002DBE	0000		unimp
+80002DC0	0000		unimp
+80002DC2	2F38		???
+80002DC4	8000		???
+80002DC6	2D08		???
+80002DC8	8000		???
+80002DCA	0000		unimp
+80002DCC	0000		unimp
+    secondary_word bw
+80002DCE	82B3 0149		add	t0,s3,s4
+80002DD2	A023 0082		sw	s0,0(t0)
+80002DD6	0A11	c.addi	s4,4
+80002DD8	0417 0000		auipc	s0,0
+80002DDC	0413 0104		addi	s0,s0,16
+80002DE0	2283 0004		lw	t0,0(s0)
+80002DE4	80E7 0002		jalr	ra,t0,80002DE6
+    .word literal_impl
+80002DE8	040E	c.slli	s0,3
+80002DEA	8000		???
+    .word 2
+80002DEC	0002	c.slli64	zero
+80002DEE	0000		unimp
+    .word alignHere_impl
+80002DF0	2D34		???
+80002DF2	8000		???
+    .word setCompile_impl
+80002DF4	1B0C		???
+80002DF6	8000		???
+    .word compileHeader_impl
+80002DF8	2C92		???
+80002DFA	8000		???
+    .word literal_impl
+80002DFC	040E	c.slli	s0,3
+80002DFE	8000		???
+    .word 0xB3
+80002E00	00B3 0000		add	ra,zero,zero
+    .word cbyte_impl
+80002E04	254A		???
+80002E06	8000		???
+    .word literal_impl
+80002E08	040E	c.slli	s0,3
+80002E0A	8000		???
+    .word 0x82
+80002E0C	0082	c.slli64	ra
+80002E0E	0000		unimp
+    .word cbyte_impl
+80002E10	254A		???
+80002E12	8000		???
+    .word literal_impl
+80002E14	040E	c.slli	s0,3
+80002E16	8000		???
+    .word 0x49
+80002E18	0049	c.addi	zero,18
+80002E1A	0000		unimp
+    .word cbyte_impl
+80002E1C	254A		???
+80002E1E	8000		???
+    .word literal_impl
+80002E20	040E	c.slli	s0,3
+80002E22	8000		???
+    .word 0x01
+80002E24	0001	c.addi	zero,0
+80002E26	0000		unimp
+    .word cbyte_impl
+80002E28	254A		???
+80002E2A	8000		???
+    .word literal_impl
+80002E2C	040E	c.slli	s0,3
+80002E2E	8000		???
+    .word 0x23
+80002E30	0023 0000		sb	zero,0(zero)
+    .word cbyte_impl
+80002E34	254A		???
+80002E36	8000		???
+    .word literal_impl
+80002E38	040E	c.slli	s0,3
+80002E3A	8000		???
+    .word 0xA0
+80002E3C	00A0		???
+80002E3E	0000		unimp
+    .word cbyte_impl
+80002E40	254A		???
+80002E42	8000		???
+    .word literal_impl
+80002E44	040E	c.slli	s0,3
+80002E46	8000		???
+    .word 0x82
+80002E48	0082	c.slli64	ra
+80002E4A	0000		unimp
+    .word cbyte_impl
+80002E4C	254A		???
+80002E4E	8000		???
+    .word literal_impl
+80002E50	040E	c.slli	s0,3
+80002E52	8000		???
+    .word 0x00
+80002E54	0000		unimp
+80002E56	0000		unimp
+    .word cbyte_impl
+80002E58	254A		???
+80002E5A	8000		???
+    .word literal_impl
+80002E5C	040E	c.slli	s0,3
+80002E5E	8000		???
+    .word 0x11
+80002E60	0011	c.addi	zero,4
+80002E62	0000		unimp
+    .word cbyte_impl
+80002E64	254A		???
+80002E66	8000		???
+    .word literal_impl
+80002E68	040E	c.slli	s0,3
+80002E6A	8000		???
+    .word 0x0A
+80002E6C	000A	c.slli	zero,2
+80002E6E	0000		unimp
+    .word cbyte_impl
+80002E70	254A		???
+80002E72	8000		???
+    .word literal_impl
+80002E74	040E	c.slli	s0,3
+80002E76	8000		???
+    .word 0x17
+80002E78	0017 0000		auipc	zero,0
+    .word cbyte_impl
+80002E7C	254A		???
+80002E7E	8000		???
+    .word literal_impl
+80002E80	040E	c.slli	s0,3
+80002E82	8000		???
+    .word 0x04
+80002E84	0004		???
+80002E86	0000		unimp
+    .word cbyte_impl
+80002E88	254A		???
+80002E8A	8000		???
+    .word literal_impl
+80002E8C	040E	c.slli	s0,3
+80002E8E	8000		???
+    .word 0x00
+80002E90	0000		unimp
+80002E92	0000		unimp
+    .word cbyte_impl
+80002E94	254A		???
+80002E96	8000		???
+    .word literal_impl
+80002E98	040E	c.slli	s0,3
+80002E9A	8000		???
+    .word 0x00
+80002E9C	0000		unimp
+80002E9E	0000		unimp
+    .word cbyte_impl
+80002EA0	254A		???
+80002EA2	8000		???
+    .word literal_impl
+80002EA4	040E	c.slli	s0,3
+80002EA6	8000		???
+    .word 0x13
+80002EA8	0013 0000		addi	zero,zero,0
+    .word cbyte_impl
+80002EAC	254A		???
+80002EAE	8000		???
+    .word literal_impl
+80002EB0	040E	c.slli	s0,3
+80002EB2	8000		???
+    .word 0x04
+80002EB4	0004		???
+80002EB6	0000		unimp
+    .word cbyte_impl
+80002EB8	254A		???
+80002EBA	8000		???
+    .word literal_impl
+80002EBC	040E	c.slli	s0,3
+80002EBE	8000		???
+    .word 0x04
+80002EC0	0004		???
+80002EC2	0000		unimp
+    .word cbyte_impl
+80002EC4	254A		???
+80002EC6	8000		???
+    .word literal_impl
+80002EC8	040E	c.slli	s0,3
+80002ECA	8000		???
+    .word 0x01
+80002ECC	0001	c.addi	zero,0
+80002ECE	0000		unimp
+    .word cbyte_impl
+80002ED0	254A		???
+80002ED2	8000		???
+    .word literal_impl
+80002ED4	040E	c.slli	s0,3
+80002ED6	8000		???
+    .word 0x83
+80002ED8	0083 0000		lb	ra,0(zero)
+    .word cbyte_impl
+80002EDC	254A		???
+80002EDE	8000		???
+    .word literal_impl
+80002EE0	040E	c.slli	s0,3
+80002EE2	8000		???
+    .word 0x22
+80002EE4	0022	c.slli	zero,8
+80002EE6	0000		unimp
+    .word cbyte_impl
+80002EE8	254A		???
+80002EEA	8000		???
+    .word literal_impl
+80002EEC	040E	c.slli	s0,3
+80002EEE	8000		???
+    .word 0x04
+80002EF0	0004		???
+80002EF2	0000		unimp
+    .word cbyte_impl
+80002EF4	254A		???
+80002EF6	8000		???
+    .word literal_impl
+80002EF8	040E	c.slli	s0,3
+80002EFA	8000		???
+    .word 0x00
+80002EFC	0000		unimp
+80002EFE	0000		unimp
+    .word cbyte_impl
+80002F00	254A		???
+80002F02	8000		???
+    .word literal_impl
+80002F04	040E	c.slli	s0,3
+80002F06	8000		???
+    .word 0xE7
+80002F08	00E7 0000		jalr	ra,zero,80002F0A
+    .word cbyte_impl
+80002F0C	254A		???
+80002F0E	8000		???
+    .word literal_impl
+80002F10	040E	c.slli	s0,3
+80002F12	8000		???
+    .word 0x80
+80002F14	0080		???
+80002F16	0000		unimp
+    .word cbyte_impl
+80002F18	254A		???
+80002F1A	8000		???
+    .word literal_impl
+80002F1C	040E	c.slli	s0,3
+80002F1E	8000		???
+    .word 0x02
+80002F20	0002	c.slli64	zero
+80002F22	0000		unimp
+    .word cbyte_impl
+80002F24	254A		???
+80002F26	8000		???
+    .word literal_impl
+80002F28	040E	c.slli	s0,3
+80002F2A	8000		???
+    .word 0x00
+80002F2C	0000		unimp
+80002F2E	0000		unimp
+    .word cbyte_impl
+80002F30	254A		???
+80002F32	8000		???
+    .word return_impl
+80002F34	04A8		???
+80002F36	8000		???
+
+
+word_header ew, ";", 1, if, bw
+80002F38	003B 0 	L???
+80002F3C	0000		unimp
+80002F3E	0000		unimp
+80002F40	0000		unimp
+80002F42	0000		unimp
+80002F44	0000		unimp
+80002F46	0000		unimp
+80002F48	0000		unimp
+80002F4A	0000		unimp
+80002F4C	0000		unimp
+80002F4E	0000		unimp
+80002F50	0000		unimp
+80002F52	0000		unimp
+80002F54	0000		unimp
+80002F56	0000		unimp
+80002F58	2F96		???
+80002F5A	8000		???
+80002F5C	2DA2		???
+80002F5E	8000		???
+80002F60	0001	c.addi	zero,0
+80002F62	0000		unimp
+    secondary_word ew
+80002F64	82B3 0149		add	t0,s3,s4
+80002F68	A023 0082		sw	s0,0(t0)
+80002F6C	0A11	c.addi	s4,4
+80002F6E	0417 0000		auipc	s0,0
+80002F72	0413 0104		addi	s0,s0,16
+80002F76	2283 0004		lw	t0,0(s0)
+80002F7A	80E7 0002		jalr	ra,t0,80002F7C
+    .word ReturnStr__impl
+80002F7E	16DC		???
+80002F80	8000		???
+    .word findXT_impl
+80002F82	0650		???
+80002F84	8000		???
+    .word cw_impl
+80002F86	24E4		???
+80002F88	8000		???
+    .word setInterpret_impl
+80002F8A	1B72	c.slli	s6,-4
+80002F8C	8000		???
+    .word setDictionaryEnd_impl
+80002F8E	0CBE	c.slli	è8,15
+80002F90	8000		???
+    .word return_impl
+80002F92	04A8		???
+80002F94	8000		???
+
+
+word_header if, "if", 1, else, ew
+80002F96	6669		???
+80002F98	0000		unimp
+80002F9A	0000		unimp
+80002F9C	0000		unimp
+80002F9E	0000		unimp
+80002FA0	0000		unimp
+80002FA2	0000		unimp
+80002FA4	0000		unimp
+80002FA6	0000		unimp
+80002FA8	0000		unimp
+80002FAA	0000		unimp
+80002FAC	0000		unimp
+80002FAE	0000		unimp
+80002FB0	0000		unimp
+80002FB2	0000		unimp
+80002FB4	0000		unimp
+80002FB6	2FFC		???
+80002FB8	8000		???
+80002FBA	2F38		???
+80002FBC	8000		???
+80002FBE	0001	c.addi	zero,0
+80002FC0	0000		unimp
+    secondary_word if
+80002FC2	82B3 0149		add	t0,s3,s4
+80002FC6	A023 0082		sw	s0,0(t0)
+80002FCA	0A11	c.addi	s4,4
+80002FCC	0417 0000		auipc	s0,0
+80002FD0	0413 0104		addi	s0,s0,16
+80002FD4	2283 0004		lw	t0,0(s0)
+80002FD8	80E7 0002		jalr	ra,t0,80002FDA
+    .word branch0TokenStr__impl
+80002FDC	180C		???
+80002FDE	8000		???
+    .word findXT_impl
+80002FE0	0650		???
+80002FE2	8000		???
+    .word cw_impl
+80002FE4	24E4		???
+80002FE6	8000		???
+    .word here_impl
+80002FE8	0802	c.slli64	a6
+80002FEA	8000		???
+    .word literal_impl
+80002FEC	040E	c.slli	s0,3
+80002FEE	8000		???
+    .word 0
+80002FF0	0000		unimp
+80002FF2	0000		unimp
+    .word cw_impl
+80002FF4	24E4		???
+80002FF6	8000		???
+    .word return_impl
+80002FF8	04A8		???
+80002FFA	8000		???
+
+
+word_header else, "else", 1, then, if
+80002FFC	6C65		???
+80002FFE	6573 0 	L???
+80003002	0000		unimp
+80003004	0000		unimp
+80003006	0000		unimp
+80003008	0000		unimp
+8000300A	0000		unimp
+8000300C	0000		unimp
+8000300E	0000		unimp
+80003010	0000		unimp
+80003012	0000		unimp
+80003014	0000		unimp
+80003016	0000		unimp
+80003018	0000		unimp
+8000301A	0000		unimp
+8000301C	307E		???
+8000301E	8000		???
+80003020	2F96		???
+80003022	8000		???
+80003024	0001	c.addi	zero,0
+80003026	0000		unimp
+    secondary_word else
+80003028	82B3 0149		add	t0,s3,s4
+8000302C	A023 0082		sw	s0,0(t0)
+80003030	0A11	c.addi	s4,4
+80003032	0417 0000		auipc	s0,0
+80003036	0413 0104		addi	s0,s0,16
+8000303A	2283 0004		lw	t0,0(s0)
+8000303E	80E7 0002		jalr	ra,t0,80003040
+    .word branchTokenStr__impl
+80003042	186C		???
+80003044	8000		???
+    .word findXT_impl
+80003046	0650		???
+80003048	8000		???
+    .word cw_impl
+8000304A	24E4		???
+8000304C	8000		???
+    .word here_impl
+8000304E	0802	c.slli64	a6
+80003050	8000		???
+    .word literal_impl
+80003052	040E	c.slli	s0,3
+80003054	8000		???
+    .word 0
+80003056	0000		unimp
+80003058	0000		unimp
+    .word cw_impl
+8000305A	24E4		???
+8000305C	8000		???
+    .word swap_impl
+8000305E	0540		???
+80003060	8000		???
+    .word dup_impl
+80003062	0454		???
+80003064	8000		???
+    .word here_impl
+80003066	0802	c.slli64	a6
+80003068	8000		???
+    .word swap_impl
+8000306A	0540		???
+8000306C	8000		???
+    .word forth_minus_impl
+8000306E	04E8		???
+80003070	8000		???
+    .word swap_impl
+80003072	0540		???
+80003074	8000		???
+    .word store_impl
+80003076	023C		???
+80003078	8000		???
+    .word return_impl
+8000307A	04A8		???
+8000307C	8000		???
+
+
+word_header then, "then", 1, begin, else
+8000307E	6874		???
+80003080	6E65		???
+80003082	0000		unimp
+80003084	0000		unimp
+80003086	0000		unimp
+80003088	0000		unimp
+8000308A	0000		unimp
+8000308C	0000		unimp
+8000308E	0000		unimp
+80003090	0000		unimp
+80003092	0000		unimp
+80003094	0000		unimp
+80003096	0000		unimp
+80003098	0000		unimp
+8000309A	0000		unimp
+8000309C	0000		unimp
+8000309E	30E0		???
+800030A0	8000		???
+800030A2	2FFC		???
+800030A4	8000		???
+800030A6	0001	c.addi	zero,0
+800030A8	0000		unimp
+    secondary_word then
+800030AA	82B3 0149		add	t0,s3,s4
+800030AE	A023 0082		sw	s0,0(t0)
+800030B2	0A11	c.addi	s4,4
+800030B4	0417 0000		auipc	s0,0
+800030B8	0413 0104		addi	s0,s0,16
+800030BC	2283 0004		lw	t0,0(s0)
+800030C0	80E7 0002		jalr	ra,t0,800030C2
+    .word dup_impl
+800030C4	0454		???
+800030C6	8000		???
+    .word here_impl
+800030C8	0802	c.slli64	a6
+800030CA	8000		???
+    .word swap_impl
+800030CC	0540		???
+800030CE	8000		???
+    .word forth_minus_impl
+800030D0	04E8		???
+800030D2	8000		???
+    .word swap_impl
+800030D4	0540		???
+800030D6	8000		???
+    .word store_impl
+800030D8	023C		???
+800030DA	8000		???
+    .word return_impl
+800030DC	04A8		???
+800030DE	8000		???
+
+
+word_header begin, "begin", 1, until, then
+800030E0	6562		???
+800030E2	6967 6E 	L???
+800030E6	0000		unimp
+800030E8	0000		unimp
+800030EA	0000		unimp
+800030EC	0000		unimp
+800030EE	0000		unimp
+800030F0	0000		unimp
+800030F2	0000		unimp
+800030F4	0000		unimp
+800030F6	0000		unimp
+800030F8	0000		unimp
+800030FA	0000		unimp
+800030FC	0000		unimp
+800030FE	0000		unimp
+80003100	312E		???
+80003102	8000		???
+80003104	307E		???
+80003106	8000		???
+80003108	0001	c.addi	zero,0
+8000310A	0000		unimp
+    secondary_word begin
+8000310C	82B3 0149		add	t0,s3,s4
+80003110	A023 0082		sw	s0,0(t0)
+80003114	0A11	c.addi	s4,4
+80003116	0417 0000		auipc	s0,0
+8000311A	0413 0104		addi	s0,s0,16
+8000311E	2283 0004		lw	t0,0(s0)
+80003122	80E7 0002		jalr	ra,t0,80003124
+    .word here_impl
+80003126	0802	c.slli64	a6
+80003128	8000		???
+    .word return_impl
+8000312A	04A8		???
+8000312C	8000		???
+
+
+word_header until, "until", 1, do, begin
+8000312E	6E75		???
+80003130	6974		???
+80003132	006C		???
+80003134	0000		unimp
+80003136	0000		unimp
+80003138	0000		unimp
+8000313A	0000		unimp
+8000313C	0000		unimp
+8000313E	0000		unimp
+80003140	0000		unimp
+80003142	0000		unimp
+80003144	0000		unimp
+80003146	0000		unimp
+80003148	0000		unimp
+8000314A	0000		unimp
+8000314C	0000		unimp
+8000314E	31A0		???
+80003150	8000		???
+80003152	30E0		???
+80003154	8000		???
+80003156	0001	c.addi	zero,0
+80003158	0000		unimp
+    secondary_word until
+8000315A	82B3 0149		add	t0,s3,s4
+8000315E	A023 0082		sw	s0,0(t0)
+80003162	0A11	c.addi	s4,4
+80003164	0417 0000		auipc	s0,0
+80003168	0413 0104		addi	s0,s0,16
+8000316C	2283 0004		lw	t0,0(s0)
+80003170	80E7 0002		jalr	ra,t0,80003172
+    .word branch0TokenStr__impl
+80003174	180C		???
+80003176	8000		???
+    .word findXT_impl
+80003178	0650		???
+8000317A	8000		???
+    .word cw_impl
+8000317C	24E4		???
+8000317E	8000		???
+    .word here_impl
+80003180	0802	c.slli64	a6
+80003182	8000		???
+    .word swap_impl
+80003184	0540		???
+80003186	8000		???
+    .word forth_minus_impl
+80003188	04E8		???
+8000318A	8000		???
+    .word literal_impl
+8000318C	040E	c.slli	s0,3
+8000318E	8000		???
+    .word -1
+80003190	FFFF FFFF 	L???
+    .word forth_mul_impl
+80003194	0FEA	c.slli	t6,26
+80003196	8000		???
+    .word cw_impl
+80003198	24E4		???
+8000319A	8000		???
+    .word return_impl
+8000319C	04A8		???
+8000319E	8000		???
+
+
+word_header do, "do", 1, loop, until
+800031A0	6F64		???
+800031A2	0000		unimp
+800031A4	0000		unimp
+800031A6	0000		unimp
+800031A8	0000		unimp
+800031AA	0000		unimp
+800031AC	0000		unimp
+800031AE	0000		unimp
+800031B0	0000		unimp
+800031B2	0000		unimp
+800031B4	0000		unimp
+800031B6	0000		unimp
+800031B8	0000		unimp
+800031BA	0000		unimp
+800031BC	0000		unimp
+800031BE	0000		unimp
+800031C0	3222		???
+800031C2	8000		???
+800031C4	312E		???
+800031C6	8000		???
+800031C8	0001	c.addi	zero,0
+800031CA	0000		unimp
+    secondary_word do
+800031CC	82B3 0149		add	t0,s3,s4
+800031D0	A023 0082		sw	s0,0(t0)
+800031D4	0A11	c.addi	s4,4
+800031D6	0417 0000		auipc	s0,0
+800031DA	0413 0104		addi	s0,s0,16
+800031DE	2283 0004		lw	t0,0(s0)
+800031E2	80E7 0002		jalr	ra,t0,800031E4
+    .word branchTokenStr__impl
+800031E6	186C		???
+800031E8	8000		???
+    .word findXT_impl
+800031EA	0650		???
+800031EC	8000		???
+    .word cw_impl
+800031EE	24E4		???
+800031F0	8000		???
+    .word here_impl
+800031F2	0802	c.slli64	a6
+800031F4	8000		???
+    .word literal_impl
+800031F6	040E	c.slli	s0,3
+800031F8	8000		???
+    .word 0
+800031FA	0000		unimp
+800031FC	0000		unimp
+    .word cw_impl
+800031FE	24E4		???
+80003200	8000		???
+    .word here_impl
+80003202	0802	c.slli64	a6
+80003204	8000		???
+    .word swap_impl
+80003206	0540		???
+80003208	8000		???
+    .word pushReturnStr__impl
+8000320A	18CC		???
+8000320C	8000		???
+    .word findXT_impl
+8000320E	0650		???
+80003210	8000		???
+    .word dup_impl
+80003212	0454		???
+80003214	8000		???
+    .word cw_impl
+80003216	24E4		???
+80003218	8000		???
+    .word cw_impl
+8000321A	24E4		???
+8000321C	8000		???
+    .word return_impl
+8000321E	04A8		???
+80003220	8000		???
+
+
+word_header loop, "loop", 1, 0, do
+80003222	6F6C		???
+80003224	706F 0 	L???
+80003228	0000		unimp
+8000322A	0000		unimp
+8000322C	0000		unimp
+8000322E	0000		unimp
+80003230	0000		unimp
+80003232	0000		unimp
+80003234	0000		unimp
+80003236	0000		unimp
+80003238	0000		unimp
+8000323A	0000		unimp
+8000323C	0000		unimp
+8000323E	0000		unimp
+80003240	0000		unimp
+80003242	0000		unimp
+80003244	0000		unimp
+80003246	31A0		???
+80003248	8000		???
+8000324A	0001	c.addi	zero,0
+8000324C	0000		unimp
+    secondary_word loop
+8000324E	82B3 0149		add	t0,s3,s4
+80003252	A023 0082		sw	s0,0(t0)
+80003256	0A11	c.addi	s4,4
+80003258	0417 0000		auipc	s0,0
+8000325C	0413 0104		addi	s0,s0,16
+80003260	2283 0004		lw	t0,0(s0)
+80003264	80E7 0002		jalr	ra,t0,80003266
+    .word popReturnStr__impl
+80003268	192C		???
+8000326A	8000		???
+    .word findXT_impl
+8000326C	0650		???
+8000326E	8000		???
+    .word dup_impl
+80003270	0454		???
+80003272	8000		???
+    .word cw_impl
+80003274	24E4		???
+80003276	8000		???
+    .word cw_impl
+80003278	24E4		???
+8000327A	8000		???
+    .word LiteralStr__impl
+8000327C	1678		???
+8000327E	8000		???
+    .word findXT_impl
+80003280	0650		???
+80003282	8000		???
+    .word cw_impl
+80003284	24E4		???
+80003286	8000		???
+    .word literal_impl
+80003288	040E	c.slli	s0,3
+8000328A	8000		???
+    .word 1
+8000328C	0001	c.addi	zero,0
+8000328E	0000		unimp
+    .word cw_impl
+80003290	24E4		???
+80003292	8000		???
+    .word addStr__impl
+80003294	198C		???
+80003296	8000		???
+    .word findXT_impl
+80003298	0650		???
+8000329A	8000		???
+    .word cw_impl
+8000329C	24E4		???
+8000329E	8000		???
+    .word dup_impl
+800032A0	0454		???
+800032A2	8000		???
+    .word here_impl
+800032A4	0802	c.slli64	a6
+800032A6	8000		???
+    .word swap_impl
+800032A8	0540		???
+800032AA	8000		???
+    .word forth_minus_impl
+800032AC	04E8		???
+800032AE	8000		???
+    .word swap_impl
+800032B0	0540		???
+800032B2	8000		???
+    .word store_impl
+800032B4	023C		???
+800032B6	8000		???
+    .word twodupStr__impl
+800032B8	19EC		???
+800032BA	8000		???
+    .word findXT_impl
+800032BC	0650		???
+800032BE	8000		???
+    .word cw_impl
+800032C0	24E4		???
+800032C2	8000		???
+    .word equalsStr__impl
+800032C4	1A4C		???
+800032C6	8000		???
+    .word findXT_impl
+800032C8	0650		???
+800032CA	8000		???
+    .word cw_impl
+800032CC	24E4		???
+800032CE	8000		???
+    .word branch0TokenStr__impl
+800032D0	180C		???
+800032D2	8000		???
+    .word findXT_impl
+800032D4	0650		???
+800032D6	8000		???
+    .word cw_impl
+800032D8	24E4		???
+800032DA	8000		???
+    .word here_impl
+800032DC	0802	c.slli64	a6
+800032DE	8000		???
+    .word swap_impl
+800032E0	0540		???
+800032E2	8000		???
+    .word forth_minus_impl
+800032E4	04E8		???
+800032E6	8000		???
+    .word literal_impl
+800032E8	040E	c.slli	s0,3
+800032EA	8000		???
+    .word -1
+800032EC	FFFF FFFF 	L???
+    .word forth_mul_impl
+800032F0	0FEA	c.slli	t6,26
+800032F2	8000		???
+    .word cw_impl
+800032F4	24E4		???
+800032F6	8000		???
+    .word dropStr__impl
+800032F8	1AAC		???
+800032FA	8000		???
+    .word findXT_impl
+800032FC	0650		???
+800032FE	8000		???
+    .word dup_impl
+80003300	0454		???
+80003302	8000		???
+    .word cw_impl
+80003304	24E4		???
+80003306	8000		???
+    .word cw_impl
+80003308	24E4		???
+8000330A	8000		???
+    .word return_impl
+8000330C	04A8		???
+8000330E	8000		???
+
+end-code
+

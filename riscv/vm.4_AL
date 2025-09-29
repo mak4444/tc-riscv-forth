@@ -1,0 +1,2101 @@
+
+\
+\   Prefix any character with ! to use it literally in a macro.
+\   We will use "" to denote strings in macro arguments.
+\   https://sourceware.org/binutils/docs/as/Altmacro.html
+\ 
+
+
+    \ IMPORTANT! REGISTERS USED BY THE INTERPRETER:
+
+    \ Until I can get C Style defines to work you'll just have to read this, assembler.
+    \ The following registers must not be touched:
+
+    \ s0 - instruction pointer
+    \ s1 - data stack base pointer
+    \ s2 - data stack size
+    \ s3 - return stack base pointer
+    \ s4 - return stack size
+    \ s5 - memory top
+
+.DATA_SEG SEG_SET
+
+IVARIABLE	vm_flags
+ICREATE		vm_data_stack DATA_STACK_MAX_SIZE ICELLS IALLOT
+ICREATE		vm_return_stack RETURN_STACK_MAX_SIZE ICELLS IALLOT
+ICREATE		vm_scratch_pad 64 IALLOT
+IVARIABLE	vm_p_dictionary_start
+IVARIABLE	vm_p_dictionary_end
+IVARIABLE	vm_str_error_message
+
+ICREATE starting_interpreter_string S" starting outer interpreter..." $, $A C, 0 C,
+ICREATE waiting_for_key_str  S" waiting for key string..." $, $A C, 0 C,
+
+ICREATE error_msg_stack_overflow S" data stack overflow" $, $A C, 0 C,
+ICREATE error_msg_stack_underflow S" data stack underflow" $, $A C, 0 C,
+ICREATE error_msg_return_stack_overflow S" return stack overflow" $, $A C, 0 C,
+ICREATE error_msg_stack_underflow S" return stack underflow" $, $A C, 0 C,
+
+ICREATE show_data_stack_begin_str S" data   [ " $, 0 C,
+ICREATE show_return_stack_begin_str S" return [ " $, 0 C,
+ICREATE show_comma_sep_str S" , " $, 0 C,
+ICREATE show_stack_end_str S"  ]" $,  $A C, 0 C,
+
+ICREATE title_string S" Risc V Forth" $,  $A C, \ 0 C,
+
+.TEXT_SEG SEG_SET
+
+CODE vm_error_handler
+    li a1, UART_BASE
+800000B2	05B7 1000		lui	a1,10000
+    la a0, vm_str_error_message
+800000B6	8517 0000		auipc	a0,8
+800000BA	0513 1165		addi	a0,a0,278
+    lw a0, 0(a0)
+800000BE	4108		???
+    call ' puts
+800000C0	3F41	c.jal	0x7FFFFC50
+1:
+    j 1b
+800000C2	A001	c.j	0x800000C2
+    ret
+800000C4	8082		ret
+END-CODE
+
+
+CODE find_dict_end
+    # Args:
+    # a0 - ptr to first dict header
+    # Returns:
+    # a1 - ptr to last dict header
+    SaveReturnAddress
+800000C6	1141	c.addi	sp,-16
+800000C8	C606	c.swsp	ra,12(sp)
+1:
+    word_next a0, t0
+800000CA	0293 0205		addi	t0,a0,32
+    lw t0, 0(t0)
+800000CE	A283 0002		lw	t0,0(t0)
+    mv a1, a0
+800000D2	85AA	c.mv	a1,a0
+    mv a0, t0
+800000D4	8516	c.mv	a0,t0
+    bnez t0, 1b
+800000D6	9AE3 FE02 	L???
+    RestoreReturnAddress
+800000DA	40B2	c.lwsp	ra,12(sp)
+800000DC	0141	c.addi	sp,16
+    ret
+800000DE	8082		ret
+
+END-CODE
+
+CODE vm_run
+    SaveReturnAddress
+800000E0	1141	c.addi	sp,-16
+800000E2	C606	c.swsp	ra,12(sp)
+
+    # init dictionary
+    la t0, vm_p_dictionary_start
+800000E4	8297 0000		auipc	t0,8
+800000E8	8293 0E02		addi	t0,t0,224
+    la t1, ' temit
+800000EC	0317 0000		auipc	t1,0
+800000F0	0313 04A3		addi	t1,t1,74
+    sw t1, 0(t0)
+800000F4	A023 0062		sw	t1,0(t0)
+
+    mv a0, t1
+800000F8	851A	c.mv	a0,t1
+    call ' find_dict_end
+800000FA	37F1	c.jal	0x7FFFFCC6
+
+    la t0, vm_p_dictionary_end
+800000FC	8297 0000		auipc	t0,8
+80000100	8293 0CC2		addi	t0,t0,204
+    sw a1, 0(t0)
+80000104	A023 00B2		sw	a1,0(t0)
+
+    # init stacks
+    la s1, vm_data_stack
+80000108	8497 0000		auipc	s1,8
+8000010C	8493 EFC4		addi	s1,s1,1788
+    li s2, 0
+80000110	4901	li	s2,0
+    la s3, vm_return_stack
+80000112	8997 0000		auipc	s3,8
+80000116	8993 F729		addi	s3,s3,1906
+    li s4, 0
+8000011A	4A01	li	s4,0
+
+    la s5, _dataEnd
+8000011C	8A97 0000		auipc	s5,8
+80000120	8A93 184A		addi	s5,s5,388
+
+    la s0, outerInterpreter_impl
+80000124	3417 0000		auipc	s0,3
+80000128	0413 A404		addi	s0,s0,2624
+    call outerInterpreter_impl
+8000012C	20EF 2390 	L???
+
+    RestoreReturnAddress
+80000130	40B2	c.lwsp	ra,12(sp)
+80000132	0141	c.addi	sp,16
+    ret
+80000134	8082		ret
+END-CODE
+
+
+word_header_first emit,   "emit",     0, key
+80000136	6D65		???
+80000138	7469		???
+8000013A	0000		unimp
+8000013C	0000		unimp
+8000013E	0000		unimp
+80000140	0000		unimp
+80000142	0000		unimp
+80000144	0000		unimp
+80000146	0000		unimp
+80000148	0000		unimp
+8000014A	0000		unimp
+8000014C	0000		unimp
+8000014E	0000		unimp
+80000150	0000		unimp
+80000152	0000		unimp
+80000154	0000		unimp
+80000156	017C		???
+80000158	8000		???
+8000015A	0000		unimp
+8000015C	0000		unimp
+8000015E	0000		unimp
+80000160	0000		unimp
+
+    PopDataStack a0
+80000162	1971	c.addi	s2,-4
+80000164	82B3 0124		add	t0,s1,s2
+80000168	A503 0002		lw	a0,0(t0)
+    li a1, UART_BASE
+8000016C	05B7 1000		lui	a1,10000
+    call ' putc
+80000170	35D1	c.jal	0x7FFFFC34
+    end_word
+80000172	0411	c.addi	s0,4
+80000174	2283 0004		lw	t0,0(s0)
+80000178	80E7 0002		jalr	ra,t0,8000017A
+
+word_header       key,    "key",      0, loadCell, emit
+8000017C	656B 79 	L???
+80000180	0000		unimp
+80000182	0000		unimp
+80000184	0000		unimp
+80000186	0000		unimp
+80000188	0000		unimp
+8000018A	0000		unimp
+8000018C	0000		unimp
+8000018E	0000		unimp
+80000190	0000		unimp
+80000192	0000		unimp
+80000194	0000		unimp
+80000196	0000		unimp
+80000198	0000		unimp
+8000019A	0000		unimp
+8000019C	01C2	c.slli	gp,16
+8000019E	8000		???
+800001A0	0136	c.slli	sp,13
+800001A2	8000		???
+800001A4	0000		unimp
+800001A6	0000		unimp
+    li a0, UART_BASE
+800001A8	0537 1000		lui	a0,10000
+    call ' getc_block         # char in a0
+800001AC	35C1	c.jal	0x7FFFFC6C
+    PushDataStack a0
+800001AE	82B3 0124		add	t0,s1,s2
+800001B2	A023 00A2		sw	a0,0(t0)
+800001B6	0911	c.addi	s2,4
+    end_word
+800001B8	0411	c.addi	s0,4
+800001BA	2283 0004		lw	t0,0(s0)
+800001BE	80E7 0002		jalr	ra,t0,800001C0
+                                           
+word_header loadCell, "@", 0, store, key
+800001C2	0040		???
+800001C4	0000		unimp
+800001C6	0000		unimp
+800001C8	0000		unimp
+800001CA	0000		unimp
+800001CC	0000		unimp
+800001CE	0000		unimp
+800001D0	0000		unimp
+800001D2	0000		unimp
+800001D4	0000		unimp
+800001D6	0000		unimp
+800001D8	0000		unimp
+800001DA	0000		unimp
+800001DC	0000		unimp
+800001DE	0000		unimp
+800001E0	0000		unimp
+800001E2	0210		???
+800001E4	8000		???
+800001E6	017C		???
+800001E8	8000		???
+800001EA	0000		unimp
+800001EC	0000		unimp
+    PopDataStack t2
+800001EE	1971	c.addi	s2,-4
+800001F0	82B3 0124		add	t0,s1,s2
+800001F4	A383 0002		lw	t2,0(t0)
+    lw t3, 0(t2)
+800001F8	AE03 0003		lw	t3,0(t2)
+    PushDataStack t3
+800001FC	82B3 0124		add	t0,s1,s2
+80000200	A023 01C2		sw	t3,0(t0)
+80000204	0911	c.addi	s2,4
+    end_word
+80000206	0411	c.addi	s0,4
+80000208	2283 0004		lw	t0,0(s0)
+8000020C	80E7 0002		jalr	ra,t0,8000020E
+
+
+word_header store, "!", 0, loadByte, loadCell
+80000210	0021	c.addi	zero,8
+80000212	0000		unimp
+80000214	0000		unimp
+80000216	0000		unimp
+80000218	0000		unimp
+8000021A	0000		unimp
+8000021C	0000		unimp
+8000021E	0000		unimp
+80000220	0000		unimp
+80000222	0000		unimp
+80000224	0000		unimp
+80000226	0000		unimp
+80000228	0000		unimp
+8000022A	0000		unimp
+8000022C	0000		unimp
+8000022E	0000		unimp
+80000230	025E	c.slli	tp,23
+80000232	8000		???
+80000234	01C2	c.slli	gp,16
+80000236	8000		???
+80000238	0000		unimp
+8000023A	0000		unimp
+    PopDataStack t2
+8000023C	1971	c.addi	s2,-4
+8000023E	82B3 0124		add	t0,s1,s2
+80000242	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+80000246	1971	c.addi	s2,-4
+80000248	82B3 0124		add	t0,s1,s2
+8000024C	AE03 0002		lw	t3,0(t0)
+    sw t3, 0(t2)
+80000250	A023 01C3		sw	t3,0(t2)
+    end_word
+80000254	0411	c.addi	s0,4
+80000256	2283 0004		lw	t0,0(s0)
+8000025A	80E7 0002		jalr	ra,t0,8000025C
+    
+word_header loadByte, "c@", 0, storeByte, store
+8000025E	4063 0 	L???
+80000262	0000		unimp
+80000264	0000		unimp
+80000266	0000		unimp
+80000268	0000		unimp
+8000026A	0000		unimp
+8000026C	0000		unimp
+8000026E	0000		unimp
+80000270	0000		unimp
+80000272	0000		unimp
+80000274	0000		unimp
+80000276	0000		unimp
+80000278	0000		unimp
+8000027A	0000		unimp
+8000027C	0000		unimp
+8000027E	02AC		???
+80000280	8000		???
+80000282	0210		???
+80000284	8000		???
+80000286	0000		unimp
+80000288	0000		unimp
+    PopDataStack t2
+8000028A	1971	c.addi	s2,-4
+8000028C	82B3 0124		add	t0,s1,s2
+80000290	A383 0002		lw	t2,0(t0)
+    lb t3, 0(t2)
+80000294	8E03 0003		lb	t3,0(t2)
+    PushDataStack t3
+80000298	82B3 0124		add	t0,s1,s2
+8000029C	A023 01C2		sw	t3,0(t0)
+800002A0	0911	c.addi	s2,4
+    end_word
+800002A2	0411	c.addi	s0,4
+800002A4	2283 0004		lw	t0,0(s0)
+800002A8	80E7 0002		jalr	ra,t0,800002AA
+
+
+word_header storeByte, "c!", 0, branchIfZero, loadByte
+800002AC	2163 0 	L???
+800002B0	0000		unimp
+800002B2	0000		unimp
+800002B4	0000		unimp
+800002B6	0000		unimp
+800002B8	0000		unimp
+800002BA	0000		unimp
+800002BC	0000		unimp
+800002BE	0000		unimp
+800002C0	0000		unimp
+800002C2	0000		unimp
+800002C4	0000		unimp
+800002C6	0000		unimp
+800002C8	0000		unimp
+800002CA	0000		unimp
+800002CC	02FA	c.slli	t0,30
+800002CE	8000		???
+800002D0	025E	c.slli	tp,23
+800002D2	8000		???
+800002D4	0000		unimp
+800002D6	0000		unimp
+    PopDataStack t2
+800002D8	1971	c.addi	s2,-4
+800002DA	82B3 0124		add	t0,s1,s2
+800002DE	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+800002E2	1971	c.addi	s2,-4
+800002E4	82B3 0124		add	t0,s1,s2
+800002E8	AE03 0002		lw	t3,0(t0)
+    sb t3, 0(t2)
+800002EC	8023 01C3		sb	t3,0(t2)
+    end_word
+800002F0	0411	c.addi	s0,4
+800002F2	2283 0004		lw	t0,0(s0)
+800002F6	80E7 0002		jalr	ra,t0,800002F8
+
+word_header branchIfZero, "b0", 0, branch, storeByte
+800002FA	3062		???
+800002FC	0000		unimp
+800002FE	0000		unimp
+80000300	0000		unimp
+80000302	0000		unimp
+80000304	0000		unimp
+80000306	0000		unimp
+80000308	0000		unimp
+8000030A	0000		unimp
+8000030C	0000		unimp
+8000030E	0000		unimp
+80000310	0000		unimp
+80000312	0000		unimp
+80000314	0000		unimp
+80000316	0000		unimp
+80000318	0000		unimp
+8000031A	034C		???
+8000031C	8000		???
+8000031E	02AC		???
+80000320	8000		???
+80000322	0000		unimp
+80000324	0000		unimp
+    PopDataStack t2
+80000326	1971	c.addi	s2,-4
+80000328	82B3 0124		add	t0,s1,s2
+8000032C	A383 0002		lw	t2,0(t0)
+    mv t1, s0 # s0 == PC
+80000330	8322	c.mv	t1,s0
+    beqz t2, 1f
+80000332	8463 3 	L???
+    # no branch
+    addi s0, s0, CELL_SIZE # skip over literal
+80000336	0411	c.addi	s0,4
+    j 2f
+80000338	A029	c.j	0x80000342
+1:
+    addi t1, t1, CELL_SIZE # get literal
+8000033A	0311	c.addi	t1,4
+    lw t1, 0(t1)
+8000033C	2303 0003		lw	t1,0(t1)
+    add s0, s0, t1         # add literal to PC
+80000340	941A	c.add	s0,t1
+2:
+    end_word
+80000342	0411	c.addi	s0,4
+80000344	2283 0004		lw	t0,0(s0)
+80000348	80E7 0002		jalr	ra,t0,8000034A
+
+branchIfZero_impl TO 'branchIfZero
+	
+\ .( bb=)  here h. key drop
+word_header branch, "b", 0, forth_add, branchIfZero
+8000034C	0062	c.slli	zero,24
+8000034E	0000		unimp
+80000350	0000		unimp
+80000352	0000		unimp
+80000354	0000		unimp
+80000356	0000		unimp
+80000358	0000		unimp
+8000035A	0000		unimp
+8000035C	0000		unimp
+8000035E	0000		unimp
+80000360	0000		unimp
+80000362	0000		unimp
+80000364	0000		unimp
+80000366	0000		unimp
+80000368	0000		unimp
+8000036A	0000		unimp
+8000036C	038C		???
+8000036E	8000		???
+80000370	02FA	c.slli	t0,30
+80000372	8000		???
+80000374	0000		unimp
+80000376	0000		unimp
+    mv t1, s0
+80000378	8322	c.mv	t1,s0
+    addi t1, t1, CELL_SIZE # get literal
+8000037A	0311	c.addi	t1,4
+    lw t1, 0(t1)
+8000037C	2303 0003		lw	t1,0(t1)
+    add s0, s0, t1         # add literal to PC
+80000380	941A	c.add	s0,t1
+    end_word
+80000382	0411	c.addi	s0,4
+80000384	2283 0004		lw	t0,0(s0)
+80000388	80E7 0002		jalr	ra,t0,8000038A
+
+branch_impl TO 'branch
+
+word_header forth_add, "+", 0, literal, branch
+8000038C	002B 0 	L???
+80000390	0000		unimp
+80000392	0000		unimp
+80000394	0000		unimp
+80000396	0000		unimp
+80000398	0000		unimp
+8000039A	0000		unimp
+8000039C	0000		unimp
+8000039E	0000		unimp
+800003A0	0000		unimp
+800003A2	0000		unimp
+800003A4	0000		unimp
+800003A6	0000		unimp
+800003A8	0000		unimp
+800003AA	0000		unimp
+800003AC	03E2	c.slli	t2,24
+800003AE	8000		???
+800003B0	034C		???
+800003B2	8000		???
+800003B4	0000		unimp
+800003B6	0000		unimp
+    PopDataStack t2
+800003B8	1971	c.addi	s2,-4
+800003BA	82B3 0124		add	t0,s1,s2
+800003BE	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+800003C2	1971	c.addi	s2,-4
+800003C4	82B3 0124		add	t0,s1,s2
+800003C8	AE03 0002		lw	t3,0(t0)
+    add t2, t2, t3
+800003CC	93F2	c.add	t2,t3
+    PushDataStack t2
+800003CE	82B3 0124		add	t0,s1,s2
+800003D2	A023 0072		sw	t2,0(t0)
+800003D6	0911	c.addi	s2,4
+    end_word
+800003D8	0411	c.addi	s0,4
+800003DA	2283 0004		lw	t0,0(s0)
+800003DE	80E7 0002		jalr	ra,t0,800003E0
+    
+word_header literal, "literal", 0, dup, forth_add
+800003E2	696C		???
+800003E4	6574		???
+800003E6	6172		???
+800003E8	006C		???
+800003EA	0000		unimp
+800003EC	0000		unimp
+800003EE	0000		unimp
+800003F0	0000		unimp
+800003F2	0000		unimp
+800003F4	0000		unimp
+800003F6	0000		unimp
+800003F8	0000		unimp
+800003FA	0000		unimp
+800003FC	0000		unimp
+800003FE	0000		unimp
+80000400	0000		unimp
+80000402	0428		???
+80000404	8000		???
+80000406	038C		???
+80000408	8000		???
+8000040A	0000		unimp
+8000040C	0000		unimp
+    addi s0, s0, CELL_SIZE
+8000040E	0411	c.addi	s0,4
+    lw t3, 0(s0)
+80000410	2E03 0004		lw	t3,0(s0)
+    PushDataStack t3
+80000414	82B3 0124		add	t0,s1,s2
+80000418	A023 01C2		sw	t3,0(t0)
+8000041C	0911	c.addi	s2,4
+    end_word
+8000041E	0411	c.addi	s0,4
+80000420	2283 0004		lw	t0,0(s0)
+80000424	80E7 0002		jalr	ra,t0,80000426
+
+word_header dup, "dup", 0, return, literal
+80000428	7564		???
+8000042A	0070		???
+8000042C	0000		unimp
+8000042E	0000		unimp
+80000430	0000		unimp
+80000432	0000		unimp
+80000434	0000		unimp
+80000436	0000		unimp
+80000438	0000		unimp
+8000043A	0000		unimp
+8000043C	0000		unimp
+8000043E	0000		unimp
+80000440	0000		unimp
+80000442	0000		unimp
+80000444	0000		unimp
+80000446	0000		unimp
+80000448	047C		???
+8000044A	8000		???
+8000044C	03E2	c.slli	t2,24
+8000044E	8000		???
+80000450	0000		unimp
+80000452	0000		unimp
+    PopDataStack t2
+80000454	1971	c.addi	s2,-4
+80000456	82B3 0124		add	t0,s1,s2
+8000045A	A383 0002		lw	t2,0(t0)
+    PushDataStack t2
+8000045E	82B3 0124		add	t0,s1,s2
+80000462	A023 0072		sw	t2,0(t0)
+80000466	0911	c.addi	s2,4
+    PushDataStack t2
+80000468	82B3 0124		add	t0,s1,s2
+8000046C	A023 0072		sw	t2,0(t0)
+80000470	0911	c.addi	s2,4
+    end_word
+80000472	0411	c.addi	s0,4
+80000474	2283 0004		lw	t0,0(s0)
+80000478	80E7 0002		jalr	ra,t0,8000047A
+    
+word_header return, "r", 0, forth_minus, dup
+8000047C	0072	c.slli	zero,28
+8000047E	0000		unimp
+80000480	0000		unimp
+80000482	0000		unimp
+80000484	0000		unimp
+80000486	0000		unimp
+80000488	0000		unimp
+8000048A	0000		unimp
+8000048C	0000		unimp
+8000048E	0000		unimp
+80000490	0000		unimp
+80000492	0000		unimp
+80000494	0000		unimp
+80000496	0000		unimp
+80000498	0000		unimp
+8000049A	0000		unimp
+8000049C	04BC		???
+8000049E	8000		???
+800004A0	0428		???
+800004A2	8000		???
+800004A4	0000		unimp
+800004A6	0000		unimp
+    PopReturnStack s0
+800004A8	1A71	c.addi	s4,-4
+800004AA	82B3 0149		add	t0,s3,s4
+800004AE	A403 0002		lw	s0,0(t0)
+    end_word
+800004B2	0411	c.addi	s0,4
+800004B4	2283 0004		lw	t0,0(s0)
+800004B8	80E7 0002		jalr	ra,t0,800004BA
+
+word_header forth_minus, "-", 0, swap, return
+800004BC	002D	c.addi	zero,11
+800004BE	0000		unimp
+800004C0	0000		unimp
+800004C2	0000		unimp
+800004C4	0000		unimp
+800004C6	0000		unimp
+800004C8	0000		unimp
+800004CA	0000		unimp
+800004CC	0000		unimp
+800004CE	0000		unimp
+800004D0	0000		unimp
+800004D2	0000		unimp
+800004D4	0000		unimp
+800004D6	0000		unimp
+800004D8	0000		unimp
+800004DA	0000		unimp
+800004DC	0514		???
+800004DE	8000		???
+800004E0	047C		???
+800004E2	8000		???
+800004E4	0000		unimp
+800004E6	0000		unimp
+    PopDataStack t2
+800004E8	1971	c.addi	s2,-4
+800004EA	82B3 0124		add	t0,s1,s2
+800004EE	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+800004F2	1971	c.addi	s2,-4
+800004F4	82B3 0124		add	t0,s1,s2
+800004F8	AE03 0002		lw	t3,0(t0)
+    sub t3, t3, t2
+800004FC	0E33 407E		sub	t3,t3,t2
+    PushDataStack t3
+80000500	82B3 0124		add	t0,s1,s2
+80000504	A023 01C2		sw	t3,0(t0)
+80000508	0911	c.addi	s2,4
+    end_word
+8000050A	0411	c.addi	s0,4
+8000050C	2283 0004		lw	t0,0(s0)
+80000510	80E7 0002		jalr	ra,t0,80000512
+    
+word_header swap, "swap", 0, drop, forth_minus
+80000514	7773 7061 	L???
+80000518	0000		unimp
+8000051A	0000		unimp
+8000051C	0000		unimp
+8000051E	0000		unimp
+80000520	0000		unimp
+80000522	0000		unimp
+80000524	0000		unimp
+80000526	0000		unimp
+80000528	0000		unimp
+8000052A	0000		unimp
+8000052C	0000		unimp
+8000052E	0000		unimp
+80000530	0000		unimp
+80000532	0000		unimp
+80000534	0572	c.slli	a0,28
+80000536	8000		???
+80000538	04BC		???
+8000053A	8000		???
+8000053C	0000		unimp
+8000053E	0000		unimp
+    PopDataStack t2
+80000540	1971	c.addi	s2,-4
+80000542	82B3 0124		add	t0,s1,s2
+80000546	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+8000054A	1971	c.addi	s2,-4
+8000054C	82B3 0124		add	t0,s1,s2
+80000550	AE03 0002		lw	t3,0(t0)
+    PushDataStack t2
+80000554	82B3 0124		add	t0,s1,s2
+80000558	A023 0072		sw	t2,0(t0)
+8000055C	0911	c.addi	s2,4
+    PushDataStack t3
+8000055E	82B3 0124		add	t0,s1,s2
+80000562	A023 01C2		sw	t3,0(t0)
+80000566	0911	c.addi	s2,4
+    end_word
+80000568	0411	c.addi	s0,4
+8000056A	2283 0004		lw	t0,0(s0)
+8000056E	80E7 0002		jalr	ra,t0,80000570
+
+word_header drop, "drop", 0, dup2, swap
+80000572	7264		???
+80000574	706F 0 	L???
+80000578	0000		unimp
+8000057A	0000		unimp
+8000057C	0000		unimp
+8000057E	0000		unimp
+80000580	0000		unimp
+80000582	0000		unimp
+80000584	0000		unimp
+80000586	0000		unimp
+80000588	0000		unimp
+8000058A	0000		unimp
+8000058C	0000		unimp
+8000058E	0000		unimp
+80000590	0000		unimp
+80000592	05B2	c.slli	a1,12
+80000594	8000		???
+80000596	0514		???
+80000598	8000		???
+8000059A	0000		unimp
+8000059C	0000		unimp
+    PopDataStack t1
+8000059E	1971	c.addi	s2,-4
+800005A0	82B3 0124		add	t0,s1,s2
+800005A4	A303 0002		lw	t1,0(t0)
+    end_word
+800005A8	0411	c.addi	s0,4
+800005AA	2283 0004		lw	t0,0(s0)
+800005AE	80E7 0002		jalr	ra,t0,800005B0
+    
+word_header dup2, "2dup", 0, findXT, drop
+800005B2	6432		???
+800005B4	7075	c.lui	zero,0xFFFFD
+800005B6	0000		unimp
+800005B8	0000		unimp
+800005BA	0000		unimp
+800005BC	0000		unimp
+800005BE	0000		unimp
+800005C0	0000		unimp
+800005C2	0000		unimp
+800005C4	0000		unimp
+800005C6	0000		unimp
+800005C8	0000		unimp
+800005CA	0000		unimp
+800005CC	0000		unimp
+800005CE	0000		unimp
+800005D0	0000		unimp
+800005D2	0624		???
+800005D4	8000		???
+800005D6	0572	c.slli	a0,28
+800005D8	8000		???
+800005DA	0000		unimp
+800005DC	0000		unimp
+    PopDataStack t1
+800005DE	1971	c.addi	s2,-4
+800005E0	82B3 0124		add	t0,s1,s2
+800005E4	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+800005E8	1971	c.addi	s2,-4
+800005EA	82B3 0124		add	t0,s1,s2
+800005EE	A383 0002		lw	t2,0(t0)
+    PushDataStack t2
+800005F2	82B3 0124		add	t0,s1,s2
+800005F6	A023 0072		sw	t2,0(t0)
+800005FA	0911	c.addi	s2,4
+    PushDataStack t1
+800005FC	82B3 0124		add	t0,s1,s2
+80000600	A023 0062		sw	t1,0(t0)
+80000604	0911	c.addi	s2,4
+    PushDataStack t2
+80000606	82B3 0124		add	t0,s1,s2
+8000060A	A023 0072		sw	t2,0(t0)
+8000060E	0911	c.addi	s2,4
+    PushDataStack t1
+80000610	82B3 0124		add	t0,s1,s2
+80000614	A023 0062		sw	t1,0(t0)
+80000618	0911	c.addi	s2,4
+    end_word
+8000061A	0411	c.addi	s0,4
+8000061C	2283 0004		lw	t0,0(s0)
+80000620	80E7 0002		jalr	ra,t0,80000622
+    
+word_header findXT, "'", 0, forth_and, dup2
+80000624	0027 0 	L???
+80000628	0000		unimp
+8000062A	0000		unimp
+8000062C	0000		unimp
+8000062E	0000		unimp
+80000630	0000		unimp
+80000632	0000		unimp
+80000634	0000		unimp
+80000636	0000		unimp
+80000638	0000		unimp
+8000063A	0000		unimp
+8000063C	0000		unimp
+8000063E	0000		unimp
+80000640	0000		unimp
+80000642	0000		unimp
+80000644	06CE	c.slli	a3,19
+80000646	8000		???
+80000648	05B2	c.slli	a1,12
+8000064A	8000		???
+8000064C	0000		unimp
+8000064E	0000		unimp
+    PopDataStack t5   # t5 == string ptr
+80000650	1971	c.addi	s2,-4
+80000652	82B3 0124		add	t0,s1,s2
+80000656	AF03 0002		lw	t5,0(t0)
+    PopDataStack t6   # t6 == string length
+8000065A	1971	c.addi	s2,-4
+8000065C	82B3 0124		add	t0,s1,s2
+80000660	AF83 0002		lw	t6,0(t0)
+    
+    la t4, vm_p_dictionary_end
+80000664	8E97 0000		auipc	t4,8
+80000668	8E93 B64E		addi	t4,t4,2916
+    lw t4, 0(t4)
+8000066C	AE83 000E		lw	t4,0(t4)
+1:
+    word_code t4, t2
+80000670	83F6	c.mv	t2,t4
+
+    mv a0, t2
+80000672	851E	c.mv	a0,t2
+    mv a1, t5
+80000674	85FA	c.mv	a1,t5
+    mv a2, t6
+80000676	867E	c.mv	a2,t6
+    
+    PushReg t4
+80000678	1171	c.addi	sp,-4
+8000067A	C076	c.swsp	t0,0(sp)
+    PushReg t5
+8000067C	1171	c.addi	sp,-4
+8000067E	C07A	c.swsp	t1,0(sp)
+    PushReg t6
+80000680	1171	c.addi	sp,-4
+80000682	C07E	c.swsp	t2,0(sp)
+
+    call ' strcmp_fs_cs
+80000684	00EF 27B0 	L???
+
+    PopReg t6
+80000688	4F82	c.lwsp	t2,0(sp)
+8000068A	0111	c.addi	sp,4
+    PopReg t5
+8000068C	4F02	c.lwsp	t1,0(sp)
+8000068E	0111	c.addi	sp,4
+    PopReg t4
+80000690	4E82	c.lwsp	t0,0(sp)
+80000692	0111	c.addi	sp,4
+    
+    bnez a3, 3f # its a match! 
+80000694	E28D	c.bnez	s5,0x800006B6
+    lw t1, OFFSET_PREV(t4)
+80000696	A303 024E		lw	t1,36(t4)
+    beqz t1, 2f
+8000069A	0463 3 	L???
+    mv t4, t1
+8000069E	8E9A	c.mv	t4,t1
+    j 1b
+800006A0	BFC1	c.j	0x80000270
+2: 
+    PushDataStack zero
+800006A2	82B3 0124		add	t0,s1,s2
+800006A6	A023 0002		sw	zero,0(t0)
+800006AA	0911	c.addi	s2,4
+    end_word
+800006AC	0411	c.addi	s0,4
+800006AE	2283 0004		lw	t0,0(s0)
+800006B2	80E7 0002		jalr	ra,t0,800006B4
+3:
+    addi t4, t4, HEADER_SIZE
+800006B6	8E93 02CE		addi	t4,t4,44
+    PushDataStack t4
+800006BA	82B3 0124		add	t0,s1,s2
+800006BE	A023 01D2		sw	t4,0(t0)
+800006C2	0911	c.addi	s2,4
+    end_word          
+800006C4	0411	c.addi	s0,4
+800006C6	2283 0004		lw	t0,0(s0)
+800006CA	80E7 0002		jalr	ra,t0,800006CC
+    
+word_header forth_and, "&", 0, forth_or, findXT
+800006CE	0026	c.slli	zero,9
+800006D0	0000		unimp
+800006D2	0000		unimp
+800006D4	0000		unimp
+800006D6	0000		unimp
+800006D8	0000		unimp
+800006DA	0000		unimp
+800006DC	0000		unimp
+800006DE	0000		unimp
+800006E0	0000		unimp
+800006E2	0000		unimp
+800006E4	0000		unimp
+800006E6	0000		unimp
+800006E8	0000		unimp
+800006EA	0000		unimp
+800006EC	0000		unimp
+800006EE	0726	c.slli	a4,9
+800006F0	8000		???
+800006F2	0624		???
+800006F4	8000		???
+800006F6	0000		unimp
+800006F8	0000		unimp
+    PopDataStack t2
+800006FA	1971	c.addi	s2,-4
+800006FC	82B3 0124		add	t0,s1,s2
+80000700	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+80000704	1971	c.addi	s2,-4
+80000706	82B3 0124		add	t0,s1,s2
+8000070A	AE03 0002		lw	t3,0(t0)
+    and t2, t2, t3
+8000070E	F3B3 01C3		and	t2,t2,t3
+    PushDataStack t2
+80000712	82B3 0124		add	t0,s1,s2
+80000716	A023 0072		sw	t2,0(t0)
+8000071A	0911	c.addi	s2,4
+    end_word
+8000071C	0411	c.addi	s0,4
+8000071E	2283 0004		lw	t0,0(s0)
+80000722	80E7 0002		jalr	ra,t0,80000724
+
+word_header forth_or, "|", 0, forth_xor, forth_and
+80000726	007C		???
+80000728	0000		unimp
+8000072A	0000		unimp
+8000072C	0000		unimp
+8000072E	0000		unimp
+80000730	0000		unimp
+80000732	0000		unimp
+80000734	0000		unimp
+80000736	0000		unimp
+80000738	0000		unimp
+8000073A	0000		unimp
+8000073C	0000		unimp
+8000073E	0000		unimp
+80000740	0000		unimp
+80000742	0000		unimp
+80000744	0000		unimp
+80000746	077E	c.slli	a4,31
+80000748	8000		???
+8000074A	06CE	c.slli	a3,19
+8000074C	8000		???
+8000074E	0000		unimp
+80000750	0000		unimp
+    PopDataStack t2
+80000752	1971	c.addi	s2,-4
+80000754	82B3 0124		add	t0,s1,s2
+80000758	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+8000075C	1971	c.addi	s2,-4
+8000075E	82B3 0124		add	t0,s1,s2
+80000762	AE03 0002		lw	t3,0(t0)
+    or t2, t2, t3
+80000766	E3B3 01C3		or	t2,t2,t3
+    PushDataStack t2
+8000076A	82B3 0124		add	t0,s1,s2
+8000076E	A023 0072		sw	t2,0(t0)
+80000772	0911	c.addi	s2,4
+    end_word
+80000774	0411	c.addi	s0,4
+80000776	2283 0004		lw	t0,0(s0)
+8000077A	80E7 0002		jalr	ra,t0,8000077C
+
+word_header forth_xor, "^", 0, here, forth_or
+8000077E	005E	c.slli	zero,23
+80000780	0000		unimp
+80000782	0000		unimp
+80000784	0000		unimp
+80000786	0000		unimp
+80000788	0000		unimp
+8000078A	0000		unimp
+8000078C	0000		unimp
+8000078E	0000		unimp
+80000790	0000		unimp
+80000792	0000		unimp
+80000794	0000		unimp
+80000796	0000		unimp
+80000798	0000		unimp
+8000079A	0000		unimp
+8000079C	0000		unimp
+8000079E	07D6	c.slli	a5,21
+800007A0	8000		???
+800007A2	0726	c.slli	a4,9
+800007A4	8000		???
+800007A6	0000		unimp
+800007A8	0000		unimp
+    PopDataStack t2
+800007AA	1971	c.addi	s2,-4
+800007AC	82B3 0124		add	t0,s1,s2
+800007B0	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+800007B4	1971	c.addi	s2,-4
+800007B6	82B3 0124		add	t0,s1,s2
+800007BA	AE03 0002		lw	t3,0(t0)
+    xor t2, t2, t3
+800007BE	C3B3 01C3		xor	t2,t2,t3
+    PushDataStack t2
+800007C2	82B3 0124		add	t0,s1,s2
+800007C6	A023 0072		sw	t2,0(t0)
+800007CA	0911	c.addi	s2,4
+    end_word
+800007CC	0411	c.addi	s0,4
+800007CE	2283 0004		lw	t0,0(s0)
+800007D2	80E7 0002		jalr	ra,t0,800007D4
+    
+word_header here, "here", 0, rot, forth_xor
+800007D6	6568		???
+800007D8	6572		???
+800007DA	0000		unimp
+800007DC	0000		unimp
+800007DE	0000		unimp
+800007E0	0000		unimp
+800007E2	0000		unimp
+800007E4	0000		unimp
+800007E6	0000		unimp
+800007E8	0000		unimp
+800007EA	0000		unimp
+800007EC	0000		unimp
+800007EE	0000		unimp
+800007F0	0000		unimp
+800007F2	0000		unimp
+800007F4	0000		unimp
+800007F6	0816	c.slli	a6,5
+800007F8	8000		???
+800007FA	077E	c.slli	a4,31
+800007FC	8000		???
+800007FE	0000		unimp
+80000800	0000		unimp
+    PushDataStack s5
+80000802	82B3 0124		add	t0,s1,s2
+80000806	A023 0152		sw	s5,0(t0)
+8000080A	0911	c.addi	s2,4
+    end_word
+8000080C	0411	c.addi	s0,4
+8000080E	2283 0004		lw	t0,0(s0)
+80000812	80E7 0002		jalr	ra,t0,80000814
+
+word_header rot, "rot", 0, push_return, here
+80000816	6F72		???
+80000818	0074		???
+8000081A	0000		unimp
+8000081C	0000		unimp
+8000081E	0000		unimp
+80000820	0000		unimp
+80000822	0000		unimp
+80000824	0000		unimp
+80000826	0000		unimp
+80000828	0000		unimp
+8000082A	0000		unimp
+8000082C	0000		unimp
+8000082E	0000		unimp
+80000830	0000		unimp
+80000832	0000		unimp
+80000834	0000		unimp
+80000836	0888		???
+80000838	8000		???
+8000083A	07D6	c.slli	a5,21
+8000083C	8000		???
+8000083E	0000		unimp
+80000840	0000		unimp
+    PopDataStack t1
+80000842	1971	c.addi	s2,-4
+80000844	82B3 0124		add	t0,s1,s2
+80000848	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+8000084C	1971	c.addi	s2,-4
+8000084E	82B3 0124		add	t0,s1,s2
+80000852	A383 0002		lw	t2,0(t0)
+    PopDataStack t3
+80000856	1971	c.addi	s2,-4
+80000858	82B3 0124		add	t0,s1,s2
+8000085C	AE03 0002		lw	t3,0(t0)
+    PushDataStack t2
+80000860	82B3 0124		add	t0,s1,s2
+80000864	A023 0072		sw	t2,0(t0)
+80000868	0911	c.addi	s2,4
+    PushDataStack t1
+8000086A	82B3 0124		add	t0,s1,s2
+8000086E	A023 0062		sw	t1,0(t0)
+80000872	0911	c.addi	s2,4
+    PushDataStack t3
+80000874	82B3 0124		add	t0,s1,s2
+80000878	A023 01C2		sw	t3,0(t0)
+8000087C	0911	c.addi	s2,4
+    end_word
+8000087E	0411	c.addi	s0,4
+80000880	2283 0004		lw	t0,0(s0)
+80000884	80E7 0002		jalr	ra,t0,80000886
+    
+word_header push_return, ">R", 0, pop_return, rot
+80000888	523E	c.lwsp	tp,236(sp)
+8000088A	0000		unimp
+8000088C	0000		unimp
+8000088E	0000		unimp
+80000890	0000		unimp
+80000892	0000		unimp
+80000894	0000		unimp
+80000896	0000		unimp
+80000898	0000		unimp
+8000089A	0000		unimp
+8000089C	0000		unimp
+8000089E	0000		unimp
+800008A0	0000		unimp
+800008A2	0000		unimp
+800008A4	0000		unimp
+800008A6	0000		unimp
+800008A8	08D2	c.slli	a7,20
+800008AA	8000		???
+800008AC	0816	c.slli	a6,5
+800008AE	8000		???
+800008B0	0000		unimp
+800008B2	0000		unimp
+    PopDataStack t1
+800008B4	1971	c.addi	s2,-4
+800008B6	82B3 0124		add	t0,s1,s2
+800008BA	A303 0002		lw	t1,0(t0)
+    PushReturnStack t1
+800008BE	82B3 0149		add	t0,s3,s4
+800008C2	A023 0062		sw	t1,0(t0)
+800008C6	0A11	c.addi	s4,4
+    end_word
+800008C8	0411	c.addi	s0,4
+800008CA	2283 0004		lw	t0,0(s0)
+800008CE	80E7 0002		jalr	ra,t0,800008D0
+
+word_header pop_return, "<R", 0, forth_fatoi, push_return
+800008D2	523C		???
+800008D4	0000		unimp
+800008D6	0000		unimp
+800008D8	0000		unimp
+800008DA	0000		unimp
+800008DC	0000		unimp
+800008DE	0000		unimp
+800008E0	0000		unimp
+800008E2	0000		unimp
+800008E4	0000		unimp
+800008E6	0000		unimp
+800008E8	0000		unimp
+800008EA	0000		unimp
+800008EC	0000		unimp
+800008EE	0000		unimp
+800008F0	0000		unimp
+800008F2	091C		???
+800008F4	8000		???
+800008F6	0888		???
+800008F8	8000		???
+800008FA	0000		unimp
+800008FC	0000		unimp
+    PopReturnStack t1
+800008FE	1A71	c.addi	s4,-4
+80000900	82B3 0149		add	t0,s3,s4
+80000904	A303 0002		lw	t1,0(t0)
+    PushDataStack t1
+80000908	82B3 0124		add	t0,s1,s2
+8000090C	A023 0062		sw	t1,0(t0)
+80000910	0911	c.addi	s2,4
+    end_word
+80000912	0411	c.addi	s0,4
+80000914	2283 0004		lw	t0,0(s0)
+80000918	80E7 0002		jalr	ra,t0,8000091A
+
+word_header forth_fatoi, "$", 0, show, pop_return
+8000091C	0024		???
+8000091E	0000		unimp
+80000920	0000		unimp
+80000922	0000		unimp
+80000924	0000		unimp
+80000926	0000		unimp
+80000928	0000		unimp
+8000092A	0000		unimp
+8000092C	0000		unimp
+8000092E	0000		unimp
+80000930	0000		unimp
+80000932	0000		unimp
+80000934	0000		unimp
+80000936	0000		unimp
+80000938	0000		unimp
+8000093A	0000		unimp
+8000093C	0974		???
+8000093E	8000		???
+80000940	08D2	c.slli	a7,20
+80000942	8000		???
+80000944	0000		unimp
+80000946	0000		unimp
+    # ( buffer size -- num )
+    PopDataStack a1
+80000948	1971	c.addi	s2,-4
+8000094A	82B3 0124		add	t0,s1,s2
+8000094E	A583 0002		lw	a1,0(t0)
+    PopDataStack a0
+80000952	1971	c.addi	s2,-4
+80000954	82B3 0124		add	t0,s1,s2
+80000958	A503 0002		lw	a0,0(t0)
+    call ' fatoi
+8000095C	00EF 350 	L???
+    PushDataStack a2
+80000960	82B3 0124		add	t0,s1,s2
+80000964	A023 00C2		sw	a2,0(t0)
+80000968	0911	c.addi	s2,4
+    end_word
+8000096A	0411	c.addi	s0,4
+8000096C	2283 0004		lw	t0,0(s0)
+80000970	80E7 0002		jalr	ra,t0,80000972
+
+# Its good to have this one NOT in forth, because you can rely on it working correctly more
+# knowing that its not part of the forth system and it is very useful for debugging. There is just
+# less things to go wrong this way.
+word_header show, "show", 0, execute, forth_fatoi
+80000974	6873 776F 	L???
+80000978	0000		unimp
+8000097A	0000		unimp
+8000097C	0000		unimp
+8000097E	0000		unimp
+80000980	0000		unimp
+80000982	0000		unimp
+80000984	0000		unimp
+80000986	0000		unimp
+80000988	0000		unimp
+8000098A	0000		unimp
+8000098C	0000		unimp
+8000098E	0000		unimp
+80000990	0000		unimp
+80000992	0000		unimp
+80000994	0A5E	c.slli	s4,23
+80000996	8000		???
+80000998	091C		???
+8000099A	8000		???
+8000099C	0000		unimp
+8000099E	0000		unimp
+    # DATA STACK
+    la a0, show_data_stack_begin_str
+800009A0	8517 0000		auipc	a0,8
+800009A4	0513 8C45		addi	a0,a0,2244
+    li a1, UART_BASE
+800009A8	05B7 1000		lui	a1,10000
+    call ' puts
+800009AC	F0EF EA4F 	L???
+
+    mv t1, s1               # t1 = data stack ptr
+800009B0	8326	c.mv	t1,s1
+    mv t2, s2               # t2 = data stack size
+800009B2	83CA	c.mv	t2,s2
+    beqz t2, 3f \ data_stack_empty
+800009B4	8863 803 	L???
+    add t3, t1, t2          # t3 = pointer end point
+800009B8	0E33 0073		add	t3,t1,t2
+    li t0, CELL_SIZE
+800009BC	4291	li	t0,4
+    sub t4, t3, t0 # penultimate pointer value
+800009BE	0EB3 405E		sub	t4,t3,t0
+1:
+    lw t0, 0(t1)
+800009C2	2283 0003		lw	t0,0(t1)
+
+    PushReg t1
+800009C6	1171	c.addi	sp,-4
+800009C8	C01A	c.swsp	t1,0(sp)
+    PushReg t3
+800009CA	1171	c.addi	sp,-4
+800009CC	C072	c.swsp	tp,0(sp)
+    PushReg t4
+800009CE	1171	c.addi	sp,-4
+800009D0	C076	c.swsp	t0,0(sp)
+
+    mv a0, t0
+800009D2	8516	c.mv	a0,t0
+    la a1, vm_scratch_pad
+800009D4	7597 0000		auipc	a1,7
+800009D8	8593 7B05		addi	a1,a1,-80
+    li a2, 64
+800009DC	0613 0400		addi	a2,zero,64
+    call ' itofa
+800009E0	00EF 610 	L???
+    
+    la a0, vm_scratch_pad
+800009E4	7517 0000		auipc	a0,7
+800009E8	0513 7A05		addi	a0,a0,-96
+    li a1, UART_BASE
+800009EC	05B7 1000		lui	a1,10000
+    call ' puts
+800009F0	F0EF E60F 	L???
+    PopReg t4
+800009F4	4E82	c.lwsp	t0,0(sp)
+800009F6	0111	c.addi	sp,4
+    PopReg t3
+800009F8	4E02	c.lwsp	tp,0(sp)
+800009FA	0111	c.addi	sp,4
+    PopReg t1
+800009FC	4302	c.lwsp	t1,0(sp)
+800009FE	0111	c.addi	sp,4
+
+    PushReg t3
+80000A00	1171	c.addi	sp,-4
+80000A02	C072	c.swsp	tp,0(sp)
+    PushReg t1
+80000A04	1171	c.addi	sp,-4
+80000A06	C01A	c.swsp	t1,0(sp)
+    beq t1, t4, 2f  # skip comma if on last stack entry
+80000A08	0A63 1D3 	L???
+    la a0, show_comma_sep_str
+80000A0C	8517 0000		auipc	a0,8
+80000A10	0513 86C5		addi	a0,a0,2156
+    li a1, UART_BASE
+80000A14	05B7 1000		lui	a1,10000
+    call ' puts
+80000A18	F0EF E38F 	L???
+2:
+    PopReg t1
+80000A1C	4302	c.lwsp	t1,0(sp)
+80000A1E	0111	c.addi	sp,4
+    PopReg t3
+80000A20	4E02	c.lwsp	tp,0(sp)
+80000A22	0111	c.addi	sp,4
+    
+    
+    addi t1, t1, CELL_SIZE
+80000A24	0311	c.addi	t1,4
+    bne t1, t3, 1b
+80000A26	1EE3 F9C3 	L???
+
+    la a0, show_stack_end_str
+80000A2A	8517 0000		auipc	a0,8
+80000A2E	0513 8515		addi	a0,a0,2129
+    li a1, UART_BASE
+80000A32	05B7 1000		lui	a1,10000
+    call ' puts
+80000A36	F0EF E1AF 	L???
+    end_word
+80000A3A	0411	c.addi	s0,4
+80000A3C	2283 0004		lw	t0,0(s0)
+80000A40	80E7 0002		jalr	ra,t0,80000A42
+3: \ data_stack_empty:
+    la a0, show_stack_end_str
+80000A44	8517 0000		auipc	a0,8
+80000A48	0513 8375		addi	a0,a0,2103
+    li a1, UART_BASE
+80000A4C	05B7 1000		lui	a1,10000
+    call ' puts
+80000A50	F0EF E00F 	L???
+    end_word
+80000A54	0411	c.addi	s0,4
+80000A56	2283 0004		lw	t0,0(s0)
+80000A5A	80E7 0002		jalr	ra,t0,80000A5C
+
+word_header execute, "execute", 0, showR, show
+80000A5E	7865		???
+80000A60	6365		???
+80000A62	7475		???
+80000A64	0065	c.addi	zero,25
+80000A66	0000		unimp
+80000A68	0000		unimp
+80000A6A	0000		unimp
+80000A6C	0000		unimp
+80000A6E	0000		unimp
+80000A70	0000		unimp
+80000A72	0000		unimp
+80000A74	0000		unimp
+80000A76	0000		unimp
+80000A78	0000		unimp
+80000A7A	0000		unimp
+80000A7C	0000		unimp
+80000A7E	0AA2	c.slli	s5,8
+80000A80	8000		???
+80000A82	0974		???
+80000A84	8000		???
+80000A86	0000		unimp
+80000A88	0000		unimp
+    PopDataStack t2
+80000A8A	1971	c.addi	s2,-4
+80000A8C	82B3 0124		add	t0,s1,s2
+80000A90	A383 0002		lw	t2,0(t0)
+    jalr ra, t2, 0
+80000A94	80E7 0003		jalr	ra,t2,80000A96
+    end_word         # should never be hit
+80000A98	0411	c.addi	s0,4
+80000A9A	2283 0004		lw	t0,0(s0)
+80000A9E	80E7 0002		jalr	ra,t0,80000AA0
+ 
+word_header showR, "showR", 0, setHere, execute
+80000AA2	6873 776F 	L???
+80000AA6	0052	c.slli	zero,20
+80000AA8	0000		unimp
+80000AAA	0000		unimp
+80000AAC	0000		unimp
+80000AAE	0000		unimp
+80000AB0	0000		unimp
+80000AB2	0000		unimp
+80000AB4	0000		unimp
+80000AB6	0000		unimp
+80000AB8	0000		unimp
+80000ABA	0000		unimp
+80000ABC	0000		unimp
+80000ABE	0000		unimp
+80000AC0	0000		unimp
+80000AC2	0B8A	c.slli	s7,2
+80000AC4	8000		???
+80000AC6	0A5E	c.slli	s4,23
+80000AC8	8000		???
+80000ACA	0000		unimp
+80000ACC	0000		unimp
+    # RETURN STACK
+    la a0, show_return_stack_begin_str
+80000ACE	7517 0000		auipc	a0,7
+80000AD2	0513 7A05		addi	a0,a0,-96
+    li a1, UART_BASE
+80000AD6	05B7 1000		lui	a1,10000
+    call ' puts
+80000ADA	F0EF D76F 	L???
+
+    mv t1, s3               # t1 = data stack ptr
+80000ADE	834E	c.mv	t1,s3
+    mv t2, s4               # t2 = data stack size
+80000AE0	83D2	c.mv	t2,s4
+    beqz t2, 3f \ return_stack_empty
+80000AE2	8763 803 	L???
+    add t3, t1, t2          # t3 = pointer end point
+80000AE6	0E33 0073		add	t3,t1,t2
+    li t0, CELL_SIZE
+80000AEA	4291	li	t0,4
+    sub t4, t3, t0 # penultimate pointer value
+80000AEC	0EB3 405E		sub	t4,t3,t0
+1:
+    lw t0, 0(t1)
+80000AF0	2283 0003		lw	t0,0(t1)
+
+    PushReg t1
+80000AF4	1171	c.addi	sp,-4
+80000AF6	C01A	c.swsp	t1,0(sp)
+    PushReg t3
+80000AF8	1171	c.addi	sp,-4
+80000AFA	C072	c.swsp	tp,0(sp)
+    PushReg t4
+80000AFC	1171	c.addi	sp,-4
+80000AFE	C076	c.swsp	t0,0(sp)
+
+    mv a0, t0
+80000B00	8516	c.mv	a0,t0
+    la a1, vm_scratch_pad
+80000B02	7597 0000		auipc	a1,7
+80000B06	8593 6825		addi	a1,a1,-382
+    li a2, 64
+80000B0A	0613 0400		addi	a2,zero,64
+    call ' itofa
+80000B0E	2F0D	c.jal	0x80000E40
+    
+    la a0, vm_scratch_pad
+80000B10	7517 0000		auipc	a0,7
+80000B14	0513 6745		addi	a0,a0,-396
+    li a1, UART_BASE
+80000B18	05B7 1000		lui	a1,10000
+    call ' puts
+80000B1C	F0EF D34F 	L???
+    PopReg t4
+80000B20	4E82	c.lwsp	t0,0(sp)
+80000B22	0111	c.addi	sp,4
+    PopReg t3
+80000B24	4E02	c.lwsp	tp,0(sp)
+80000B26	0111	c.addi	sp,4
+    PopReg t1
+80000B28	4302	c.lwsp	t1,0(sp)
+80000B2A	0111	c.addi	sp,4
+
+    PushReg t3
+80000B2C	1171	c.addi	sp,-4
+80000B2E	C072	c.swsp	tp,0(sp)
+    PushReg t1
+80000B30	1171	c.addi	sp,-4
+80000B32	C01A	c.swsp	t1,0(sp)
+    beq t1, t4, 2f  # skip comma if on last stack entry
+80000B34	0A63 1D3 	L???
+    la a0, show_comma_sep_str
+80000B38	7517 0000		auipc	a0,7
+80000B3C	0513 7405		addi	a0,a0,-192
+    li a1, UART_BASE
+80000B40	05B7 1000		lui	a1,10000
+    call ' puts
+80000B44	F0EF D0CF 	L???
+2:
+    PopReg t1
+80000B48	4302	c.lwsp	t1,0(sp)
+80000B4A	0111	c.addi	sp,4
+    PopReg t3
+80000B4C	4E02	c.lwsp	tp,0(sp)
+80000B4E	0111	c.addi	sp,4
+    
+    addi t1, t1, CELL_SIZE
+80000B50	0311	c.addi	t1,4
+    bne t1, t3, 1b
+80000B52	1FE3 F9C3 	L???
+
+    la a0, show_stack_end_str
+80000B56	7517 0000		auipc	a0,7
+80000B5A	0513 7255		addi	a0,a0,-219
+    li a1, UART_BASE
+80000B5E	05B7 1000		lui	a1,10000
+    call ' puts
+80000B62	F0EF CEEF 	L???
+    end_word
+80000B66	0411	c.addi	s0,4
+80000B68	2283 0004		lw	t0,0(s0)
+80000B6C	80E7 0002		jalr	ra,t0,80000B6E
+3:
+    la a0, show_stack_end_str
+80000B70	7517 0000		auipc	a0,7
+80000B74	0513 70B5		addi	a0,a0,-245
+    li a1, UART_BASE
+80000B78	05B7 1000		lui	a1,10000
+    call ' puts
+80000B7C	F0EF CD4F 	L???
+    end_word
+80000B80	0411	c.addi	s0,4
+80000B82	2283 0004		lw	t0,0(s0)
+80000B86	80E7 0002		jalr	ra,t0,80000B88
+
+word_header setHere, "setHere", 0, return_stack_index, showR
+80000B8A	6573 4874 	L???
+80000B8E	7265		???
+80000B90	0065	c.addi	zero,25
+80000B92	0000		unimp
+80000B94	0000		unimp
+80000B96	0000		unimp
+80000B98	0000		unimp
+80000B9A	0000		unimp
+80000B9C	0000		unimp
+80000B9E	0000		unimp
+80000BA0	0000		unimp
+80000BA2	0000		unimp
+80000BA4	0000		unimp
+80000BA6	0000		unimp
+80000BA8	0000		unimp
+80000BAA	0BCA	c.slli	s7,18
+80000BAC	8000		???
+80000BAE	0AA2	c.slli	s5,8
+80000BB0	8000		???
+80000BB2	0000		unimp
+80000BB4	0000		unimp
+    PopDataStack s5
+80000BB6	1971	c.addi	s2,-4
+80000BB8	82B3 0124		add	t0,s1,s2
+80000BBC	AA83 0002		lw	s5,0(t0)
+    end_word
+80000BC0	0411	c.addi	s0,4
+80000BC2	2283 0004		lw	t0,0(s0)
+80000BC6	80E7 0002		jalr	ra,t0,80000BC8
+
+word_header return_stack_index, "R[]", 0, getDictionaryEnd, setHere
+80000BCA	5B52	c.lwsp	t1,52(sp)
+80000BCC	005D	c.addi	zero,23
+80000BCE	0000		unimp
+80000BD0	0000		unimp
+80000BD2	0000		unimp
+80000BD4	0000		unimp
+80000BD6	0000		unimp
+80000BD8	0000		unimp
+80000BDA	0000		unimp
+80000BDC	0000		unimp
+80000BDE	0000		unimp
+80000BE0	0000		unimp
+80000BE2	0000		unimp
+80000BE4	0000		unimp
+80000BE6	0000		unimp
+80000BE8	0000		unimp
+80000BEA	0C46	c.slli	s8,17
+80000BEC	8000		???
+80000BEE	0B8A	c.slli	s7,2
+80000BF0	8000		???
+80000BF2	0000		unimp
+80000BF4	0000		unimp
+    PopDataStack t3
+80000BF6	1971	c.addi	s2,-4
+80000BF8	82B3 0124		add	t0,s1,s2
+80000BFC	AE03 0002		lw	t3,0(t0)
+    bgtz t3, 3f \ invalid_rstack_index
+80000C00	4863 3C0 	L???
+    mv t0, s3 # s3 - return stack base pointer
+80000C04	82CE	c.mv	t0,s3
+    mv t1, s4 # s4 - return stack size
+80000C06	8352	c.mv	t1,s4
+    addi t1, t1, 0 CELL_SIZE -
+80000C08	1371	c.addi	t1,-4
+    add t0, t0, t1 # t0 points to end of stack
+80000C0A	929A	c.add	t0,t1
+    
+    lw t4, 0(t0)
+80000C0C	AE83 0002		lw	t4,0(t0)
+
+    li t2, CELL_SIZE
+80000C10	4391	li	t2,4
+    mul t3, t3, t2
+80000C12	0E33 027E		mul	t3,t3,t2
+    add t3, t0, t3
+80000C16	9E16	c.add	t3,t0
+    blt t3, s3, 3f \ invalid_rstack_index
+80000C18	4C63 13E 	L???
+    PushDataStack t3
+80000C1C	82B3 0124		add	t0,s1,s2
+80000C20	A023 01C2		sw	t3,0(t0)
+80000C24	0911	c.addi	s2,4
+    end_word
+80000C26	0411	c.addi	s0,4
+80000C28	2283 0004		lw	t0,0(s0)
+80000C2C	80E7 0002		jalr	ra,t0,80000C2E
+3: \ invalid_rstack_index:
+    li t3, 0
+80000C30	4E01	li	t3,0
+    PushDataStack t3
+80000C32	82B3 0124		add	t0,s1,s2
+80000C36	A023 01C2		sw	t3,0(t0)
+80000C3A	0911	c.addi	s2,4
+    end_word
+80000C3C	0411	c.addi	s0,4
+80000C3E	2283 0004		lw	t0,0(s0)
+80000C42	80E7 0002		jalr	ra,t0,80000C44
+
+word_header getDictionaryEnd, "getDictionaryEnd", 0, setDictionaryEnd, return_stack_index
+80000C46	6567 4474 	L???
+80000C4A	6369		???
+80000C4C	6974		???
+80000C4E	6E6F 7261 	L???
+80000C52	4579	li	a0,30
+80000C54	646E		???
+80000C56	0000		unimp
+80000C58	0000		unimp
+80000C5A	0000		unimp
+80000C5C	0000		unimp
+80000C5E	0000		unimp
+80000C60	0000		unimp
+80000C62	0000		unimp
+80000C64	0000		unimp
+80000C66	0C92	c.slli	è8,4
+80000C68	8000		???
+80000C6A	0BCA	c.slli	s7,18
+80000C6C	8000		???
+80000C6E	0000		unimp
+80000C70	0000		unimp
+    # ( -- pDictEnd )
+    la t1, vm_p_dictionary_end
+80000C72	7317 0000		auipc	t1,7
+80000C76	0313 5563		addi	t1,t1,-682
+    lw t1, 0(t1)
+80000C7A	2303 0003		lw	t1,0(t1)
+    PushDataStack t1
+80000C7E	82B3 0124		add	t0,s1,s2
+80000C82	A023 0062		sw	t1,0(t0)
+80000C86	0911	c.addi	s2,4
+    end_word
+80000C88	0411	c.addi	s0,4
+80000C8A	2283 0004		lw	t0,0(s0)
+80000C8E	80E7 0002		jalr	ra,t0,80000C90
+
+word_header setDictionaryEnd, "setDictionaryEnd", 0, toCString, getDictionaryEnd
+80000C92	6573 4474 	L???
+80000C96	6369		???
+80000C98	6974		???
+80000C9A	6E6F 7261 	L???
+80000C9E	4579	li	a0,30
+80000CA0	646E		???
+80000CA2	0000		unimp
+80000CA4	0000		unimp
+80000CA6	0000		unimp
+80000CA8	0000		unimp
+80000CAA	0000		unimp
+80000CAC	0000		unimp
+80000CAE	0000		unimp
+80000CB0	0000		unimp
+80000CB2	0CDE	c.slli	è8,23
+80000CB4	8000		???
+80000CB6	0C46	c.slli	s8,17
+80000CB8	8000		???
+80000CBA	0000		unimp
+80000CBC	0000		unimp
+    # ( pDictEndNew -- )
+    PopDataStack t1
+80000CBE	1971	c.addi	s2,-4
+80000CC0	82B3 0124		add	t0,s1,s2
+80000CC4	A303 0002		lw	t1,0(t0)
+    la t0, vm_p_dictionary_end
+80000CC8	7297 0000		auipc	t0,7
+80000CCC	8293 5002		addi	t0,t0,-768
+    sw t1, 0(t0)
+80000CD0	A023 0062		sw	t1,0(t0)
+    end_word
+80000CD4	0411	c.addi	s0,4
+80000CD6	2283 0004		lw	t0,0(s0)
+80000CDA	80E7 0002		jalr	ra,t0,80000CDC
+
+word_header toCString, "toCString", 0, setNumInputHex, setDictionaryEnd
+80000CDE	6F74		???
+80000CE0	5343 7274 	L???
+80000CE4	6E69		???
+80000CE6	0067 0000		jalr	zero,zero,80000CE8
+80000CEA	0000		unimp
+80000CEC	0000		unimp
+80000CEE	0000		unimp
+80000CF0	0000		unimp
+80000CF2	0000		unimp
+80000CF4	0000		unimp
+80000CF6	0000		unimp
+80000CF8	0000		unimp
+80000CFA	0000		unimp
+80000CFC	0000		unimp
+80000CFE	0D34		???
+80000D00	8000		???
+80000D02	0C92	c.slli	è8,4
+80000D04	8000		???
+80000D06	0000		unimp
+80000D08	0000		unimp
+    # ( inStringLen inString outCString -- )
+    PopDataStack a0
+80000D0A	1971	c.addi	s2,-4
+80000D0C	82B3 0124		add	t0,s1,s2
+80000D10	A503 0002		lw	a0,0(t0)
+    PopDataStack a1
+80000D14	1971	c.addi	s2,-4
+80000D16	82B3 0124		add	t0,s1,s2
+80000D1A	A583 0002		lw	a1,0(t0)
+    PopDataStack a2
+80000D1E	1971	c.addi	s2,-4
+80000D20	82B3 0124		add	t0,s1,s2
+80000D24	A603 0002		lw	a2,0(t0)
+    call ' forth_string_to_c
+80000D28	25B9	c.jal	0x80000F76
+    end_word
+80000D2A	0411	c.addi	s0,4
+80000D2C	2283 0004		lw	t0,0(s0)
+80000D30	80E7 0002		jalr	ra,t0,80000D32
+
+word_header setNumInputHex, "ioHex", 0, setNumInputDec, toCString
+80000D34	6F69		???
+80000D36	6548		???
+80000D38	0078		???
+80000D3A	0000		unimp
+80000D3C	0000		unimp
+80000D3E	0000		unimp
+80000D40	0000		unimp
+80000D42	0000		unimp
+80000D44	0000		unimp
+80000D46	0000		unimp
+80000D48	0000		unimp
+80000D4A	0000		unimp
+80000D4C	0000		unimp
+80000D4E	0000		unimp
+80000D50	0000		unimp
+80000D52	0000		unimp
+80000D54	0D7E	c.slli	s10,31
+80000D56	8000		???
+80000D58	0CDE	c.slli	è8,23
+80000D5A	8000		???
+80000D5C	0000		unimp
+80000D5E	0000		unimp
+    la t1, vm_flags
+80000D60	7317 0000		auipc	t1,7
+80000D64	0313 2A03		addi	t1,t1,672
+    lw t0, 0(t1)
+80000D68	2283 0003		lw	t0,0(t1)
+    ori t0, t0, NUM_IO_HEX_BIT
+80000D6C	E293 0082		ori	t0,t0,8
+    sw t0, 0(t1)
+80000D70	2023 0053		sw	t0,0(t1)
+    end_word
+80000D74	0411	c.addi	s0,4
+80000D76	2283 0004		lw	t0,0(s0)
+80000D7A	80E7 0002		jalr	ra,t0,80000D7C
+
+word_header setNumInputDec, "ioDec", 0, equals, setNumInputHex
+80000D7E	6F69		???
+80000D80	6544		???
+80000D82	0063 0 	L???
+80000D86	0000		unimp
+80000D88	0000		unimp
+80000D8A	0000		unimp
+80000D8C	0000		unimp
+80000D8E	0000		unimp
+80000D90	0000		unimp
+80000D92	0000		unimp
+80000D94	0000		unimp
+80000D96	0000		unimp
+80000D98	0000		unimp
+80000D9A	0000		unimp
+80000D9C	0000		unimp
+80000D9E	0DCE	c.slli	s11,19
+80000DA0	8000		???
+80000DA2	0D34		???
+80000DA4	8000		???
+80000DA6	0000		unimp
+80000DA8	0000		unimp
+    la t1, vm_flags
+80000DAA	7317 0000		auipc	t1,7
+80000DAE	0313 2563		addi	t1,t1,598
+    lw t0, 0(t1)
+80000DB2	2283 0003		lw	t0,0(t1)
+    li t2, NUM_IO_HEX_BIT
+80000DB6	43A1	li	t2,8
+    xori t2, t2, -1
+80000DB8	C393 FFF3		xori	t2,t2,2047
+    and t0, t0, t2 # t0 &= ~NUM_IO_HEX_BIT
+80000DBC	F2B3 0072		and	t0,t0,t2
+    sw t0, 0(t1)
+80000DC0	2023 0053		sw	t0,0(t1)
+    end_word
+80000DC4	0411	c.addi	s0,4
+80000DC6	2283 0004		lw	t0,0(s0)
+80000DCA	80E7 0002		jalr	ra,t0,80000DCC
+
+word_header equals, "=", 0, notEquals, setNumInputDec
+80000DCE	003D	c.addi	zero,15
+80000DD0	0000		unimp
+80000DD2	0000		unimp
+80000DD4	0000		unimp
+80000DD6	0000		unimp
+80000DD8	0000		unimp
+80000DDA	0000		unimp
+80000DDC	0000		unimp
+80000DDE	0000		unimp
+80000DE0	0000		unimp
+80000DE2	0000		unimp
+80000DE4	0000		unimp
+80000DE6	0000		unimp
+80000DE8	0000		unimp
+80000DEA	0000		unimp
+80000DEC	0000		unimp
+80000DEE	0E34		???
+80000DF0	8000		???
+80000DF2	0D7E	c.slli	s10,31
+80000DF4	8000		???
+80000DF6	0000		unimp
+80000DF8	0000		unimp
+    PopDataStack t1
+80000DFA	1971	c.addi	s2,-4
+80000DFC	82B3 0124		add	t0,s1,s2
+80000E00	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000E04	1971	c.addi	s2,-4
+80000E06	82B3 0124		add	t0,s1,s2
+80000E0A	A383 0002		lw	t2,0(t0)
+    beq t1, t2, 3f \ equals_equals
+80000E0E	0863 73 	L???
+    PushDataStack zero
+80000E12	82B3 0124		add	t0,s1,s2
+80000E16	A023 0002		sw	zero,0(t0)
+80000E1A	0911	c.addi	s2,4
+    j 4f \ equals_end
+80000E1C	A039	c.j	0x80000E2A
+3: \ equals_equals:
+    li t1, 1
+80000E1E	4305	li	t1,1
+    PushDataStack t1
+80000E20	82B3 0124		add	t0,s1,s2
+80000E24	A023 0062		sw	t1,0(t0)
+80000E28	0911	c.addi	s2,4
+4: \ equals_end:
+    end_word
+80000E2A	0411	c.addi	s0,4
+80000E2C	2283 0004		lw	t0,0(s0)
+80000E30	80E7 0002		jalr	ra,t0,80000E32
+    
+word_header notEquals, "!=", 0, lessThan, equals
+80000E34	3D21	c.jal	0x8000084C
+80000E36	0000		unimp
+80000E38	0000		unimp
+80000E3A	0000		unimp
+80000E3C	0000		unimp
+80000E3E	0000		unimp
+80000E40	0000		unimp
+80000E42	0000		unimp
+80000E44	0000		unimp
+80000E46	0000		unimp
+80000E48	0000		unimp
+80000E4A	0000		unimp
+80000E4C	0000		unimp
+80000E4E	0000		unimp
+80000E50	0000		unimp
+80000E52	0000		unimp
+80000E54	0E9A	c.slli	t4,6
+80000E56	8000		???
+80000E58	0DCE	c.slli	s11,19
+80000E5A	8000		???
+80000E5C	0000		unimp
+80000E5E	0000		unimp
+    PopDataStack t1
+80000E60	1971	c.addi	s2,-4
+80000E62	82B3 0124		add	t0,s1,s2
+80000E66	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000E6A	1971	c.addi	s2,-4
+80000E6C	82B3 0124		add	t0,s1,s2
+80000E70	A383 0002		lw	t2,0(t0)
+    bne t1, t2, 4f \ nq_equals
+80000E74	1863 73 	L???
+    PushDataStack zero
+80000E78	82B3 0124		add	t0,s1,s2
+80000E7C	A023 0002		sw	zero,0(t0)
+80000E80	0911	c.addi	s2,4
+    j 3f \ nq_end
+80000E82	A039	c.j	0x80000E90
+4: \ nq_equals:
+    li t2, 1
+80000E84	4385	li	t2,1
+    PushDataStack t2 
+80000E86	82B3 0124		add	t0,s1,s2
+80000E8A	A023 0072		sw	t2,0(t0)
+80000E8E	0911	c.addi	s2,4
+3: \ nq_end:
+    end_word
+80000E90	0411	c.addi	s0,4
+80000E92	2283 0004		lw	t0,0(s0)
+80000E96	80E7 0002		jalr	ra,t0,80000E98
+    
+word_header lessThan, "<", 0, greaterThan, notEquals
+80000E9A	003C		???
+80000E9C	0000		unimp
+80000E9E	0000		unimp
+80000EA0	0000		unimp
+80000EA2	0000		unimp
+80000EA4	0000		unimp
+80000EA6	0000		unimp
+80000EA8	0000		unimp
+80000EAA	0000		unimp
+80000EAC	0000		unimp
+80000EAE	0000		unimp
+80000EB0	0000		unimp
+80000EB2	0000		unimp
+80000EB4	0000		unimp
+80000EB6	0000		unimp
+80000EB8	0000		unimp
+80000EBA	0F00		???
+80000EBC	8000		???
+80000EBE	0E34		???
+80000EC0	8000		???
+80000EC2	0000		unimp
+80000EC4	0000		unimp
+    PopDataStack t1
+80000EC6	1971	c.addi	s2,-4
+80000EC8	82B3 0124		add	t0,s1,s2
+80000ECC	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000ED0	1971	c.addi	s2,-4
+80000ED2	82B3 0124		add	t0,s1,s2
+80000ED6	A383 0002		lw	t2,0(t0)
+    blt t2, t1, 4f \ lt
+80000EDA	C863 63 	L???
+    PushDataStack zero
+80000EDE	82B3 0124		add	t0,s1,s2
+80000EE2	A023 0002		sw	zero,0(t0)
+80000EE6	0911	c.addi	s2,4
+    j 3f \ lt_end
+80000EE8	A039	c.j	0x80000EF6
+4: \ lt:
+    li t2, 1
+80000EEA	4385	li	t2,1
+    PushDataStack t2
+80000EEC	82B3 0124		add	t0,s1,s2
+80000EF0	A023 0072		sw	t2,0(t0)
+80000EF4	0911	c.addi	s2,4
+3: \ lt_end:
+    end_word
+80000EF6	0411	c.addi	s0,4
+80000EF8	2283 0004		lw	t0,0(s0)
+80000EFC	80E7 0002		jalr	ra,t0,80000EFE
+
+word_header greaterThan, ">", 0, modulo, lessThan
+80000F00	003E	c.slli	zero,15
+80000F02	0000		unimp
+80000F04	0000		unimp
+80000F06	0000		unimp
+80000F08	0000		unimp
+80000F0A	0000		unimp
+80000F0C	0000		unimp
+80000F0E	0000		unimp
+80000F10	0000		unimp
+80000F12	0000		unimp
+80000F14	0000		unimp
+80000F16	0000		unimp
+80000F18	0000		unimp
+80000F1A	0000		unimp
+80000F1C	0000		unimp
+80000F1E	0000		unimp
+80000F20	0F66	c.slli	t5,25
+80000F22	8000		???
+80000F24	0E9A	c.slli	t4,6
+80000F26	8000		???
+80000F28	0000		unimp
+80000F2A	0000		unimp
+    PopDataStack t1
+80000F2C	1971	c.addi	s2,-4
+80000F2E	82B3 0124		add	t0,s1,s2
+80000F32	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000F36	1971	c.addi	s2,-4
+80000F38	82B3 0124		add	t0,s1,s2
+80000F3C	A383 0002		lw	t2,0(t0)
+    bgt t2, t1, 4f \ gt
+80000F40	4863 73 	L???
+    PushDataStack zero
+80000F44	82B3 0124		add	t0,s1,s2
+80000F48	A023 0002		sw	zero,0(t0)
+80000F4C	0911	c.addi	s2,4
+    j 3f \ gt_end
+80000F4E	A039	c.j	0x80000F5C
+4: \ gt:
+    li t1, 1
+80000F50	4305	li	t1,1
+    PushDataStack t1
+80000F52	82B3 0124		add	t0,s1,s2
+80000F56	A023 0062		sw	t1,0(t0)
+80000F5A	0911	c.addi	s2,4
+3: \ gt_end:
+    end_word
+80000F5C	0411	c.addi	s0,4
+80000F5E	2283 0004		lw	t0,0(s0)
+80000F62	80E7 0002		jalr	ra,t0,80000F64
+
+word_header modulo, "mod", 0, forth_mul, greaterThan
+80000F66	6F6D		???
+80000F68	0064		???
+80000F6A	0000		unimp
+80000F6C	0000		unimp
+80000F6E	0000		unimp
+80000F70	0000		unimp
+80000F72	0000		unimp
+80000F74	0000		unimp
+80000F76	0000		unimp
+80000F78	0000		unimp
+80000F7A	0000		unimp
+80000F7C	0000		unimp
+80000F7E	0000		unimp
+80000F80	0000		unimp
+80000F82	0000		unimp
+80000F84	0000		unimp
+80000F86	0FBE	c.slli	t6,15
+80000F88	8000		???
+80000F8A	0F00		???
+80000F8C	8000		???
+80000F8E	0000		unimp
+80000F90	0000		unimp
+    PopDataStack t1
+80000F92	1971	c.addi	s2,-4
+80000F94	82B3 0124		add	t0,s1,s2
+80000F98	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000F9C	1971	c.addi	s2,-4
+80000F9E	82B3 0124		add	t0,s1,s2
+80000FA2	A383 0002		lw	t2,0(t0)
+    rem t2, t2, t1
+80000FA6	E3B3 0263		rem	t2,t2,t1
+    PushDataStack t2
+80000FAA	82B3 0124		add	t0,s1,s2
+80000FAE	A023 0072		sw	t2,0(t0)
+80000FB2	0911	c.addi	s2,4
+    end_word
+80000FB4	0411	c.addi	s0,4
+80000FB6	2283 0004		lw	t0,0(s0)
+80000FBA	80E7 0002		jalr	ra,t0,80000FBC
+
+HERE CONSTANT last_vm_word  \ IMPORTANT: KEEP THIS LABEL POINTING TO THE LAST VM WORD.
+word_header forth_mul, "*", 0, first_system_word, modulo
+80000FBE	002A	c.slli	zero,10
+80000FC0	0000		unimp
+80000FC2	0000		unimp
+80000FC4	0000		unimp
+80000FC6	0000		unimp
+80000FC8	0000		unimp
+80000FCA	0000		unimp
+80000FCC	0000		unimp
+80000FCE	0000		unimp
+80000FD0	0000		unimp
+80000FD2	0000		unimp
+80000FD4	0000		unimp
+80000FD6	0000		unimp
+80000FD8	0000		unimp
+80000FDA	0000		unimp
+80000FDC	0000		unimp
+80000FDE	0000		unimp
+80000FE0	0000		unimp
+80000FE2	0F66	c.slli	t5,25
+80000FE4	8000		???
+80000FE6	0000		unimp
+80000FE8	0000		unimp
+    PopDataStack t1
+80000FEA	1971	c.addi	s2,-4
+80000FEC	82B3 0124		add	t0,s1,s2
+80000FF0	A303 0002		lw	t1,0(t0)
+    PopDataStack t2
+80000FF4	1971	c.addi	s2,-4
+80000FF6	82B3 0124		add	t0,s1,s2
+80000FFA	A383 0002		lw	t2,0(t0)
+    mul t2, t2, t1
+80000FFE	83B3 0263		mul	t2,t2,t1
+    PushDataStack t2
+80001002	82B3 0124		add	t0,s1,s2
+80001006	A023 0072		sw	t2,0(t0)
+8000100A	0911	c.addi	s2,4
+    end_word
+8000100C	0411	c.addi	s0,4
+8000100E	2283 0004		lw	t0,0(s0)
+80001012	80E7 0002		jalr	ra,t0,80001014
+	
+end-code 
+
+	

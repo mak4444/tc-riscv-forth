@@ -1,0 +1,97 @@
+
+REQUIRE FLC> ~mak\fl.f
+
+: FULLGEN 
+\	CR 9 EMIT ." .attribute unaligned_access, 0"
+\	CR 9 EMIT ." .attribute stack_align, 16"
+
+
+ $10000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .short 0x" I H. THEN LOOP ;
+
+
+: slli64
+ $1000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .short 0x" I 2+ H. THEN $80 +LOOP ;
+
+: mv.
+ $8000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I $8002 + H. THEN $4 +LOOP ;
+
+: CADDI.
+ $8000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I 1+ H. THEN $4 +LOOP ;
+
+: CLW.
+ $4000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I $4000 + H. THEN $4 +LOOP ;
+
+: CLWSP.
+ $4000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I $4002 + H. THEN $4 +LOOP ;
+
+: CBEQZ.
+ $4000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I $C001 + H. THEN $4 +LOOP ;
+
+: JAL.
+ $80
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ CR DUP $6F + ." .half 0x" DUP 0xFFFF AND H. ." ,0x" $10 >> H. 2*
+ 
+;
+
+: CLUI.
+ 4
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ 
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ CR DUP $6001 + ." .half 0x"  H. 2*
+ 
+ CR DUP $6001 + ." .half 0x"  H. 2*
+
+;
+
+: CADDI4SPN
+ 4
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ 
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ CR DUP  ." .half 0x"  H. 2*
+ 
+ CR DUP  ." .half 0x"  H. 2*
+  
+;
+\ $2000 0 DO I 3 AND 3 <> IF CR 9 EMIT ." .half 0x" I $6001 + H. THEN $4 +LOOP ;
+
+S" caddi4spn.s"  FLC> CADDI4SPN
