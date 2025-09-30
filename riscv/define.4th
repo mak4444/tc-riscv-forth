@@ -243,7 +243,7 @@ P: word_code,
 0x80001376 #HEADER forth_string_to_c
 0x80002b64 CONSTANT outerInterpreter_impl
 
-0x8000427f CONSTANT title_string_f
+0x8000427f CONSTANT title_string
 0x800042a3 CONSTANT _dataEnd
 
 ;MODULE
