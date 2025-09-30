@@ -267,7 +267,8 @@ FLOAD ~mak/lib/multipass.4
  SWAP
  OVER  $7FE AND $14 << OR
  OVER  $800 AND 9 << OR
- SWAP  $800FF000 AND OR
+ OVER  $FF000 AND OR
+ SWAP  $100000 AND $B << OR
  SWAP	7  << OR
  L,
   R> BASE M!
