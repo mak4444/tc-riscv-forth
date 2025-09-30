@@ -216,12 +216,12 @@ VECT OP.
 	DROP
 ;
 
-: J-TYPE.
+: JR-TYPE.
  BL EMIT DUP 16 >> 4 H.N
  TAB  OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
-	 $14 >>  $400 XOR $400 - OVER + H.-
+	 $14 >>  $400 XOR $400 - OVER + ." 0x" H.-
 	
 ;
 
@@ -233,6 +233,18 @@ VECT OP.
 	OVER $7E0  $15 << AND $15 >> OR $400 XOR $400 - .-
 	DUP $F >> $1F AND ." (" REG. ." )"
 	DROP
+;
+
+: B-TYPE.
+ BL EMIT DUP 16 >> 4 H.N
+ TAB  OP_TYPE TAB
+	DUP $F >> $1F AND REG,. 
+ 	DUP $14 >> $1F AND REG,. 
+
+ DUP   $1E   7 <<   AND 7 >>
+ OVER  $7E0  $14 << AND $14 >> OR
+ OVER  $800  4 >>   AND 4 <<   OR
+ SWAP  $1000 $13 << AND $13 >> OR $400 XOR $400 - OVER + 2- ." 0x" H.-
 ;
 
 : nop,	1   |;
@@ -298,6 +310,13 @@ VECT OP.
 : sh,	$1023 |;
 : sw,	$2023 |;
 
+: beq,  $0063 |;
+: bne,	$1063 |;
+: blt,	$4063 |;
+: ble,	$5063 |;
+: bltu,	$6063 |;
+: bgeu,	$7063 |;
+
 
 : auipc,	$00000017 |;
 : lui,		$00000037 |;
@@ -338,7 +357,8 @@ EXPORT
  ['] I-TYPE. TO OP.  addi,  slli,   slti,	 sltiu,	 xori,	 srli,	 ori,	 andi,
  ['] L-TYPE. TO OP.  LB, LH, LW, LBU, LHU,
  ['] S-TYPE. TO OP.  SB, SH, SW,
- ['] J-TYPE. TO OP.  jalr;
+ ['] B-TYPE. TO OP.  beq, bne, blt, ble, bltu, bgeu,
+ ['] JR-TYPE. TO OP.  jalr;
 
 
   DUP 0x0000007F AND TO OPCODE
