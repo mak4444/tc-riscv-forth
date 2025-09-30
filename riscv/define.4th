@@ -234,7 +234,7 @@ P: word_code,
 0x80000086 #HEADER getc
 0x8000007c #HEADER notgotchar
 0x800000e0 #HEADER vm_run
-0x80000136 #HEADER emit
+0x80000136 CONSTANT temit
 0x800010fe #HEADER strcmp_fs_cs
 0x80001190 #HEADER fatoi
 

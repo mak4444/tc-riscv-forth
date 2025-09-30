@@ -78,7 +78,7 @@ CODE vm_run
 
     # init dictionary
     la t0, vm_p_dictionary_start
-    la t1, ' emit
+    la t1, temit
     sw t1, 0(t0)
 
     mv a0, t1
@@ -102,7 +102,7 @@ CODE vm_run
     ret
 END-CODE
 
-
+ICREATE TEMIT
 word_header_first emit,   "emit",     0, key
 
     PopDataStack a0
