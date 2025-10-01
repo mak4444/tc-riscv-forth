@@ -2,15 +2,19 @@ REQUIRE { ~mak\locals4.f
 
 C" SCAN" FIND NIP 0=
 [IF]
-: SCAN ( adr len char -- adr' len' )
-\ Scan for char through addr for len, returning addr' and len' of char.
-        >R 2DUP R> -ROT
-        OVER + SWAP
-        ?DO DUP I C@ =
-                IF LEAVE
-                ELSE >R 1 -1 D+ R>
-                THEN
-        LOOP DROP ;
+: SCAN (  addr len char -- addr' len')
+    >R                  \ put char on return stack
+    BEGIN
+      DUP
+    WHILE ( len<>0)    
+      OVER C@ R@ <>     \ fetch char, compare to return stack  
+    WHILE ( R@<>char)   
+      1 /STRING         \ cut off the first character. (does addr+1, len-1)
+    REPEAT
+    THEN
+    R> DROP 
+;
+
 [THEN]
 
 : PASS\N
