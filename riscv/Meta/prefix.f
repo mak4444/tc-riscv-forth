@@ -106,6 +106,11 @@ P: C.LWSP,
 P: C.SWSP,
 
 P: C.SLLI,
+P: C.SRLI,
+P: C.SRAI,
+P: C.ANDI,
+
+
 P: C.SLLI64,
 P: SLLI,
 

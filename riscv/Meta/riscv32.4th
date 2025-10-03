@@ -205,6 +205,10 @@ FLOAD ~mak/lib/multipass.4
 
 : C.ADDI, >C.LI 1 OR W, 0 TO PARM_HESH ;
 : C.SLLI, >C.LI 2 OR W, 0 TO PARM_HESH ;
+: C.SRLI, SWAP 7 AND SWAP >C.LI $8001 OR W, 0 TO PARM_HESH ;
+: C.SRAI, SWAP 7 AND SWAP >C.LI $8401 OR W, 0 TO PARM_HESH ;
+: C.ANDI, SWAP 7 AND SWAP >C.LI $8801 OR W, 0 TO PARM_HESH ;
+
 : C.SLLI64, 0 C.SLLI, ;
 : SLLI, NIP  C.SLLI, ; \ !!!!!
 : C.NOP, 0 SWAP C.ADDI, ;
@@ -555,12 +559,18 @@ FLOAD ~mak/lib/multipass.4
  BASE M@ >R
 \ HEX F7_ED
   
- OVER  $E AND 2 << OR
- OVER $10 AND 7 << OR 
- OVER $20 AND 3 >> OR 	\
- OVER $80 AND 1 >> OR
- OVER $400 AND 2 >> OR
- SWAP $B40 AND 1 << OR W,
+ OVER  $E AND
+ 2 << OR
+ OVER $10 AND
+ 7 << OR 
+ OVER $20 AND
+ 3 >> OR 	\
+ OVER $80 AND
+ 1 >> OR
+ OVER $400 AND
+ 2 >> OR
+ SWAP $B40 AND
+ 1 << OR W,
   R> BASE M!
  ;
 

@@ -111,6 +111,14 @@ VECT OP.
  $20 XOR $20 -  .-
 ;
 
+: C.SRI_TP
+ OP_TYPE TAB
+ DUP 	7 >> $7 AND 8 OR REG,.
+ DUP	2 >> $1F AND
+ SWAP	7 >> $20 AND OR
+ $20 XOR $20 -  .-
+;
+
 : C.OR_TP
  OP_TYPE TAB
  DUP 7 >> $7 AND 8 OR REG,.
@@ -119,7 +127,7 @@ VECT OP.
 
 : C.SWSP_TP
  OP_TYPE TAB
- DUP 2 >> $7 AND REG,.
+ DUP 2 >> $7 AND 8 OR REG,.
  DUP 7 >> $3C AND
  SWAP 1 >> $C0 AND OR .- ." (sp)"
 
@@ -127,7 +135,7 @@ VECT OP.
 
 : C.LWSP_TP
  OP_TYPE TAB
- DUP 7 >> $7 AND REG,.
+ DUP 7 >> $7 AND 8 OR REG,.
  DUP $1C  2 << AND 2 >>
  OVER $20 7 << AND 7 >> OR
  SWAP $C0 4 >> AND 4 << OR  .- ." (sp)"
@@ -136,7 +144,7 @@ VECT OP.
 
 : C.BZ_TP
  OP_TYPE TAB
- DUP 7 >> 7 AND $10 OR  REG,. 
+ DUP 7 >> 7 AND 8 OR  REG,.
 
   DUP  $6   2 << AND 2 >>
   OVER $18  7 << AND 7 >> OR
@@ -259,7 +267,6 @@ VECT OP.
 : c.addi,	$0001 |;
 : li,		$4001 |;
 : lui,		$6001 |;
-: c.andi,	$7001 |;
 : c.slli,	2 |;
 
 
@@ -322,6 +329,11 @@ VECT OP.
 : c.and, $8c61 |;
 : c.swsp, $c002 |;
 : c.lwsp, $4002 |;
+
+: C.SRLI, $8001 |;
+: C.SRAI, $8401 |;
+: C.ANDI, $8801 |;
+
 
 : c.beqz,  $C001 |;
 : c.bnez,  $E001 |;
@@ -406,6 +418,9 @@ EXPORT
  ['] C.J_TP TO OP. c.j, c.jal,
  
   ['] C.BZ_TP TO OP.  c.beqz, c.bnez,
+
+  DUP 0xEC03 AND TO OPCODE
+  ['] C.SRI_TP TO OP. C.SRLI, C.SRAI, C.ANDI,
 
 
  DROP TAB TAB ." ???"
