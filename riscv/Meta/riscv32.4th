@@ -15,6 +15,7 @@ REQUIRE NUMBER? ~mak/lib/fpcnum.f
 
 \- <<	: << LSHIFT ;
 \- >>	: >> RSHIFT ;
+\- A>>	: A>> ARSHIFT ;
 \- BREAK	: BREAK  POSTPONE EXIT POSTPONE THEN ; IMMEDIATE
 \- CELL/	: CELL/  CELL / ;
 \- OR!	:  OR! ( N ADDR -- )	DUP @ ROT OR	SWAP ! ;
@@ -446,10 +447,13 @@ FLOAD ~mak/lib/multipass.4
 : LI,
 \ HEX F7_ED
  dup $20 +
- $3F ANDC 0=
+ $3F ANDC
+ 0=
  IF C.LI,
  BREAK
- DUP $FFF ANDC IF $C >> LUI, BREAK
+ DUP ABS $FFF AND 0=
+ IF $C >> $FFFFF AND
+ LUI, BREAK
   0 SWAP ADDI,
   ;
 
