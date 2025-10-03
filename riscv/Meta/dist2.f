@@ -134,26 +134,6 @@ VECT OP.
 
 ;
 
-/*
-: >C.BEQZ,
- BASE M@ >R
-\ HEX F7_ED
-  SWAP HERE -
-  SWAP
-  OVER $6 AND  2 << OR  \ r ofset cod+
-  OVER $18 AND  7 << OR
-  OVER $20 AND  3 >> OR
-  OVER $C0 AND  1 >> OR
-  SWAP $100 AND  4 <<  OR \ cod'
-  OVER $18 AND 8 <> ( x8..x15 ) IF -333 THROW THEN 
-  SWAP $7 AND
-  7 <<
-  OR  W,
-  0 TO PARM_HESH
-  R> BASE M!
-;
-*/
-
 : C.BZ_TP
  OP_TYPE TAB
  DUP 7 >> 7 AND $10 OR  REG,. 
@@ -168,13 +148,13 @@ VECT OP.
  OVER + ." 0x" H.-
 ;
 
-
 : C.J_TP
  OP_TYPE TAB
- DUP  $E  2 << AND 2 >> 
- OVER $10 7 << AND 7 >> OR 
- OVER $20 3 >> AND 3 << OR 	\
- OVER $80 1 >> AND 1 << OR
+ DUP  $E  2 << AND 2 >>
+ OVER $10 7 << AND 7 >>  OR  
+ OVER $20 3 >> AND 3 <<  OR 
+ OVER $80 1 >> AND 1 <<  OR
+ OVER $400 2 >> AND 2 << OR
  SWAP $B40 1 << AND 1 >> OR
  $800 XOR $800 -
  OVER + ." 0x" H.-
@@ -187,6 +167,17 @@ VECT OP.
 	DUP 7 >> $1F AND REG,. 
 	DUP $C >> H.-
 	DROP
+;
+
+: J-TYPE.
+ BL EMIT DUP 16 >> 4 H.N
+ TAB  OP_TYPE TAB
+	DUP 7 >> $1F AND REG,. 
+ DUP   $7FE $14 << AND $14 >>
+ OVER  $800   9 << AND   9 >> OR
+ OVER  $FF000 AND OR 
+ SWAP  $80000000 AND $B >> OR $100000 XOR $100000 - OVER + 2- ." 0x" H.-
+ 
 ;
 
 : R-TYPE.
@@ -336,6 +327,7 @@ VECT OP.
 : c.bnez,  $E001 |;
 
 : jalr; $67 |;
+: jal; $6F |;
 
 
 EXPORT
@@ -363,6 +355,7 @@ EXPORT
 
   DUP 0x0000007F AND TO OPCODE
  ['] U-TYPE. TO OP.  auipc, lui,		
+ ['] J-TYPE. TO OP.  jal;
  
  ."  " 16 >> H. TAB ." L???" 
 ;
