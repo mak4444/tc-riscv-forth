@@ -150,9 +150,9 @@ VECT OP.
   OVER $18  7 << AND 7 >> OR
   OVER $20  3 >> AND 3 << OR
   OVER $C0  1 >> AND 1 << OR
-  SWAP $100 4 << AND 4 << OR \ cod'
+  SWAP $100 4 << AND 4 >> OR \ cod'
 
- $800 XOR $800 -
+ $100 XOR $100 -
  OVER + ." 0x" H.-
 ;
 
