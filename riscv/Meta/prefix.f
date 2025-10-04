@@ -76,6 +76,8 @@ P:	DIVU,
 P:	REM,
 P:	REMU,
 
+P: NEG,
+
 P: C.ADD,
 
 P: C.SUB,
@@ -91,7 +93,7 @@ P: XORI,
 P: ORI,
 P: ANDI,
 
-P: SRLI,
+P: SEQZ,
 
 P: NOT,
 
@@ -113,6 +115,8 @@ P: C.ANDI,
 
 P: C.SLLI64,
 P: SLLI,
+P: SRLI,
+P: SRAI,
 
 P: LB,
 P: LH,
