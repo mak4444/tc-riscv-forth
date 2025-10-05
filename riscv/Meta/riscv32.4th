@@ -38,11 +38,6 @@ REQUIRE NUMBER? ~mak/lib/fpcnum.f
 
 \- 3DUP : 3DUP DUP 2OVER ROT ;
 
-
-: NEXT
-\	$FB04F85E , \	LDR.W R15, [R14], #4
-  0x4770 W, \  THUMB2_MOD::LR  THUMB2_MOD::BX,
- ;
 DECIMAL
 
 MODULE: RISCV_MOD
@@ -240,7 +235,7 @@ FLOAD ~mak/lib/multipass.4
 
 : B-TYPE ( r1 r2 ofset cod -- ) 
  BASE M@ >R
-\ over 0x800009c2 = if HEX F7_ED then
+\ HEX F7_ED
  SWAP HERE -
  SWAP
  OVER  $1E AND 7 << OR
@@ -249,8 +244,7 @@ FLOAD ~mak/lib/multipass.4
  SWAP  $1000 AND $13 <<  OR
  
  SWAP	$14  << OR
- SWAP	$F  << OR
- L,
+ SWAP	$F  << OR L,
   R> BASE M!
  0 TO PARM_HESH ;
 
@@ -442,6 +436,8 @@ FLOAD ~mak/lib/multipass.4
 
 : C.LW,  $4000 >C.LW, ;
 : C.FLW, $6000 >C.LW, ;
+: C.SW,  $C000 >C.LW, ;
+
 : FLW,
  DUP 2 = IF C.FLWSP, BREAK
  C.FLW, ;
@@ -502,7 +498,13 @@ FLOAD ~mak/lib/multipass.4
 
 : SB,		$0023 S-TYPE ;
 : SH,		$1023 S-TYPE ;
-: SW,	DUP 2 = IF C.SWSP, BREAK	$2023 S-TYPE ;
+: SW,
+	DUP 2OVER \ r1 ofset r2 r2 r1 ofset
+	$FC ANDC   		\ r1 ofset r2 r2 r1 flg
+	SWAP $18 AND 8 XOR OR	\ r1 ofset r2 r2 s0..a5
+	SWAP $18 AND 8 XOR OR	\ r1 ofset r2 flg'
+	0= IF C.SW, BREAK
+	DUP 2 = IF C.SWSP, BREAK	$2023 S-TYPE ;
 
 : BEQ,  $0063 B-TYPE ;
 : BNE,	$1063 B-TYPE ;

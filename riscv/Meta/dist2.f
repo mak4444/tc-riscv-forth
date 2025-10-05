@@ -98,13 +98,13 @@ VECT OP.
 : REG,. REG. ',' EMIT ;
 
 : SL64_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
 \	." x"	 $7 >> $1F AND .- 
 	$7 >> $1F AND REG.
 ;
 
 : CLUI_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
  DUP 	7 >> $1F AND REG,.
  DUP	2 >> $1F AND
  SWAP	7 >> $20 AND OR
@@ -112,7 +112,7 @@ VECT OP.
 ;
 
 : C.SRI_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
  DUP 	7 >> $7 AND 8 OR REG,.
  DUP	2 >> $1F AND
  SWAP	7 >> $20 AND OR
@@ -120,13 +120,13 @@ VECT OP.
 ;
 
 : C.OR_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
  DUP 7 >> $7 AND 8 OR REG,.
   2 >> $7 AND  8 OR REG. 
 ;
 
 : C.SWSP_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
  DUP 2 >> $7 AND 8 OR REG,.
  DUP 7 >> $3C AND
  SWAP 1 >> $C0 AND OR .- ." (sp)"
@@ -134,11 +134,42 @@ VECT OP.
 ;
 
 : C.LWSP_TP
- OP_TYPE TAB
+ TAB OP_TYPE TAB
  DUP 7 >> $7 AND 8 OR REG,.
  DUP $1C  2 << AND 2 >>
  OVER $20 7 << AND 7 >> OR
  SWAP $C0 4 >> AND 4 << OR  .- ." (sp)"
+
+;
+
+/*
+: >C.LW, (  r1 ofset r2 cod --  )
+ BASE M@ >R
+  >R 
+\ HEX F7_ED
+   DUP $18 AND 8 <> ( x8..x15 ) IF -333 THROW THEN 
+  OVER 3 AND IF -333 THROW THEN
+  $7 AND 7 <<
+  OVER $4 AND 4 << OR
+  OVER $38 AND 7 << OR  \ r cod+ 
+  SWAP $40 AND 1 >> OR  \ r cod+ 
+  SWAP $7 AND 2 << OR \ cod'
+   R>  OR
+  W,
+  0 TO PARM_HESH
+
+  R> BASE M!
+;
+*/
+
+: C.LW_TP
+ TAB OP_TYPE TAB
+ DUP $7 2 << AND 2 >>  8 OR REG,.
+  DUP  $4  4 << AND 4 >>
+  OVER $38 7 << AND 7 >> OR
+  OVER $40 1 >> AND 1 << OR .- 
+   
+   7 >> $7 AND ." (" 8 OR REG. ." )"
 
 ;
 
@@ -190,7 +221,7 @@ VECT OP.
 
 : R-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
 	DUP $14 >> $1F AND REG.
@@ -199,7 +230,7 @@ VECT OP.
 
 : I-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
 	DUP $14 >>  $400 XOR $400 - .-
@@ -208,7 +239,7 @@ VECT OP.
 
 : L-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $14 >>  $400 XOR $400 - .-
 	DUP $F >> $1F AND ." (" REG. ." )"
@@ -217,7 +248,7 @@ VECT OP.
 
 : JR-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
 	 $14 >>  $400 XOR $400 - OVER + ." 0x" H.-
@@ -226,7 +257,7 @@ VECT OP.
 
 : S-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP $14 >> $1F AND REG,. 
 	DUP  $1f   $7 << AND $7 >>
 	OVER $7E0  $15 << AND $15 >> OR $400 XOR $400 - .-
@@ -236,7 +267,7 @@ VECT OP.
 
 : B-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP $F >> $1F AND REG,. 
  	DUP $14 >> $1F AND REG,. 
 
@@ -330,9 +361,13 @@ VECT OP.
 : c.swsp, $c002 |;
 : c.lwsp, $4002 |;
 
-: C.SRLI, $8001 |;
-: C.SRAI, $8401 |;
-: C.ANDI, $8801 |;
+: c.lw,  $4000 |;
+: c.flw, $6000 |;
+: c.sw,  $c000 |;
+
+: c.srli, $8001 |;
+: c.srai, $8401 |;
+: c.andi, $8801 |;
 
 
 : c.beqz,  $C001 |;
@@ -400,6 +435,8 @@ EXPORT
  SWAP 5 >>  $20 AND OR $20 - $FFFFF AND  H.-
  BREAK
 
+  DUP 0xEC03 AND TO OPCODE
+  ['] C.SRI_TP TO OP. C.SRLI, C.SRAI, C.ANDI,
 
   DUP 0xE003 AND TO OPCODE
 
@@ -412,6 +449,7 @@ EXPORT
   BREAK
  ['] C.SWSP_TP TO OP. C.SWSP,
  ['] C.LWSP_TP TO OP. C.LWSP,
+ ['] C.LW_TP TO OP. c.lw, c.flw, c.sw, 
 
  ['] CLUI_TP TO OP. c.addi,  li, lui, c.andi, c.slli,
 
@@ -419,8 +457,6 @@ EXPORT
  
   ['] C.BZ_TP TO OP.  c.beqz, c.bnez,
 
-  DUP 0xEC03 AND TO OPCODE
-  ['] C.SRI_TP TO OP. C.SRLI, C.SRAI, C.ANDI,
 
 
  DROP TAB TAB ." ???"
