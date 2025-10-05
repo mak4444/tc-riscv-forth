@@ -296,8 +296,8 @@ VECT OP.
 
 : c.slli64,	2 |;
 : c.addi,	$0001 |;
-: li,		$4001 |;
-: lui,		$6001 |;
+: c.li,		$4001 |;
+: c.lui,	$6001 |;
 : c.slli,	2 |;
 
 
@@ -451,7 +451,7 @@ EXPORT
  ['] C.LWSP_TP TO OP. C.LWSP,
  ['] C.LW_TP TO OP. c.lw, c.flw, c.sw, 
 
- ['] CLUI_TP TO OP. c.addi,  li, lui, c.andi, c.slli,
+ ['] CLUI_TP TO OP. c.addi,  c.li, c.lui, c.andi, c.slli,
 
  ['] C.J_TP TO OP. c.j, c.jal,
  
