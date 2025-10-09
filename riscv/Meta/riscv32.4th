@@ -194,9 +194,23 @@ FLOAD ~mak/lib/multipass.4
 : C.ADD, 2 << SWAP 7 << OR $9002 OR W, 0 TO PARM_HESH ;
 : MV, C.MV, ;
 
-:  >C.LI   DUP $1F AND SWAP $20 AND 5 << OR 2 <<  SWAP 7 << OR ;
+:  >C.LI 
+  DUP $1F AND
+  SWAP 
+  $20 AND
+  5 <<
+  OR
+  2 << 
+  SWAP
+  7 <<
+  OR ;
 : C.LI, >C.LI $4001 OR W, 0 TO PARM_HESH ;
-: C.LUI, >C.LI $6001 OR W, 0 TO PARM_HESH ;
+: C.LUI, 
+\ hex f7_ed
+ >C.LI
+ $6001 OR
+ W,
+ 0 TO PARM_HESH ;
 
 : C.ADDI, >C.LI 1 OR W, 0 TO PARM_HESH ;
 : C.SLLI, >C.LI 2 OR W, 0 TO PARM_HESH ;
@@ -466,7 +480,11 @@ FLOAD ~mak/lib/multipass.4
  IF C.LI,
  BREAK
  DUP ABS $FFF ANDC
- IF	2DUP $C >> $FFFFF AND LUI,
+ IF	2DUP
+	DUP $C >> $FFFFF AND
+	SWAP $800 AND $B >> + \ for borrow
+	 LUI,
+	$FFF AND
 	DUP 0= IF 2DROP BREAK
 	OVER SWAP ADDI,
  BREAK
@@ -549,16 +567,6 @@ FLOAD ~mak/lib/multipass.4
   OVER HERE - $100 + $1FF ANDC   \ r addr RFlg addrFlg
   OR IF  0 SWAP	BEQ, BREAK
   C.BEQZ,
-  ;
-
-: BEQZ_,  ( r addr -- )
- base m@ >r
-	HEX F7_ED
-  OVER $18 AND  8 XOR	\ r addr RFlg
-  OVER HERE - $100 + $1FF ANDC   \ r addr RFlg addrFlg
-  OR IF  0 SWAP	BEQ, r> base m! BREAK
-  C.BEQZ,
-  r> base m!
   ;
 
 : BNEZ,  ( r addr -- )
