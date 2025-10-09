@@ -202,7 +202,7 @@ VECT OP.
 
 : U-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $C >> H.-
 	DROP
@@ -210,7 +210,7 @@ VECT OP.
 
 : J-TYPE.
  BL EMIT DUP 16 >> 4 H.N
- TAB  OP_TYPE TAB
+   OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
  DUP   $7FE $14 << AND $14 >>
  OVER  $800   9 << AND   9 >> OR
@@ -233,7 +233,7 @@ VECT OP.
    OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
-	DUP $14 >>  $400 XOR $400 - .-
+	DUP $14 >>  $800 XOR $800 - .-
 	DROP
 ;
 
@@ -241,7 +241,7 @@ VECT OP.
  BL EMIT DUP 16 >> 4 H.N
    OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
-	DUP $14 >>  $400 XOR $400 - .-
+	DUP $14 >>  $800 XOR $800 - .-
 	DUP $F >> $1F AND ." (" REG. ." )"
 	DROP
 ;
@@ -251,7 +251,7 @@ VECT OP.
    OP_TYPE TAB
 	DUP 7 >> $1F AND REG,. 
 	DUP $F >> $1F AND REG,. 
-	 $14 >>  $400 XOR $400 - OVER + ." 0x" H.-
+	 $14 >>  $800 XOR $800 - OVER + ." 0x" H.-
 	
 ;
 
