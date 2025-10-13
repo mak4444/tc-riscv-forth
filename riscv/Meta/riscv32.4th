@@ -276,7 +276,6 @@ FLOAD ~mak/lib/multipass.4
  
 : J-TYPE ( r2 ofset cod -- ) 
  BASE M@ >R
-\ HEX F7_ED
  SWAP HERE -
  SWAP
  OVER  $7FE AND $14 << OR
@@ -479,7 +478,8 @@ FLOAD ~mak/lib/multipass.4
  0=
  IF C.LI,
  BREAK
- DUP ABS $FFF ANDC
+ DUP ABS
+ $7FF ANDC
  IF	2DUP
 	DUP $C >> $FFFFF AND
 	SWAP $800 AND $B >> + \ for borrow
@@ -654,7 +654,7 @@ FLOAD ~mak/lib/multipass.4
 0 VALUE TEB_CLEAN
 
 : CODL
-\	FF_ALIGN
+\+ :#THS   :#THS
 	TEXEC_?
 	IF
 [IFDEF] TEXEC_BUF
@@ -733,7 +733,7 @@ VECT A?HEAD
 
 EXPORT
 
-\- T-ALIGN : T-ALIGN  BEGIN  HERE 3 AND   WHILE 0xFF C, REPEAT ;
+\- T-ALIGN : T-ALIGN  BEGIN  HERE 1 AND   WHILE 0xFF C, REPEAT ;
 
 : 2ALIGN
     HERE 1 AND
