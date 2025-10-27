@@ -149,8 +149,8 @@ FLOAD ~mak/lib/multipass.4
   R: X5  R: X6  R: X7
   R: X8  R: X9 
   R: X10 R: X11 R: X12 R: X13 R: X14 R: X15 R: X16 R: X17
-  R: X18 R: X19 R: X20 R: X21 R: X22 R: X23 R: X24 R: X25 R: X26 R: X27 R: X28
-  R: X29 R: X30 R: X31
+  R: X18 R: X19 R: X20 R: X21 R: X22 R: X23 R: X24 R: X25 R: X26 R: X27
+  R: X28 R: X29 R: X30 R: X31
     DROP
 
 0
@@ -194,7 +194,7 @@ FLOAD ~mak/lib/multipass.4
 : C.ADD, 2 << SWAP 7 << OR $9002 OR W, 0 TO PARM_HESH ;
 : MV, C.MV, ;
 
-:  >C.LI 
+:  >C.LI ( r imm --  )
   DUP $1F AND
   SWAP 
   $20 AND
